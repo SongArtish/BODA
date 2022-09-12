@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adminpage4</title>
+</head>
+<body>
+    <header class="title">
+        <input type="button" value="<" onclick="history.go(-1)" style="float:left">
+        <h3 style="text-align:center;">찬양 공유 관리자 시스템</h3>
+        </header>  
+    <main>
+        <br>
+        <div class="selectdate">
+            <small style="padding-left:25px ;">*날짜</small>
+            <br> &nbsp;&nbsp;&nbsp;
+            <input id="Date" type="date" style="width:300px;height:25px;"><br>
+             <!-- vue의 datepicker 사용해 날짜 선택 -->
+        </div>
+        <br>
+        <div class="select groupcategory">
+            <small style="padding-left:25px;">*대학부</small>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <small>*카테고리</small>
+            <br> &nbsp;&nbsp;&nbsp;
+            <select name="group" style="width: 125px; height: 25px;">
+            <option value="underg">대학부</option>
+            <option value="graduate">청년부</option>
+        </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <select name="category" style="width: 125px; height: 25px;">
+                <option value="sunday">주일</option>
+                <option value="friday">금요기도회</option>
+            </select>
+            <br><br>
+        </div>
+        <div class="inputtitle">
+            <small style="padding-left:25px ;">*제목</small><br>&nbsp;&nbsp;&nbsp;
+            <input type="text" placeholder="제목을 입력해주세요" style="width:300px;height:25px;">&nbsp;&nbsp;&nbsp;
+            <small style="padding-left:25px ;">*최대20글자</small><br><br>
+        </div>
+        <div class="inputhymn">
+            <div class="hymntitle">
+                <h3 style="padding-left: 25px;">찬양곡</h3>
+                <small style="padding-left:25px;">*곡 제목</small><br>&nbsp;&nbsp;&nbsp;
+                <input type="text" placeholder="곡 제목을 입력해주세요" style="width:300px;height:25px;">&nbsp;&nbsp;&nbsp;
+                <small style="padding-left:25px ;">*최대20글자</small><br><br>
+            </div>
+            <div class="filebox" style="padding-left:25px;">
+                <small>악보 첨부</small><br>
+                <input type="file" id="ex_filename" class="upload-hidden" style="width:250px 30px;"><br><br>
+            </div>
+            <div class="ytlink" style="padding-left: 25px;">
+            <small>유튜브 링크</small><br>
+                <input type="submit" value="추가" style="vertical-align:right;">
+            </div>
+        </div>
+        </div>
+    </main>
+</body>
+</html>
