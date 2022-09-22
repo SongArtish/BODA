@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import AdminView from "../views/AdminView.vue";
-import AdminList from "@/views/Admin/AdminListView.vue";
+import AdminListView from "@/views/Admin/AdminListView.vue";
 import AdminEdit from "@/views/Admin/AdminEditView.vue";
 
 Vue.use(VueRouter);
@@ -20,8 +20,8 @@ const routes = [
   },
   {
     path: "/admin/list",
-    name: "adiminlist",
-    component: AdminList,
+    name: "AdminListView",
+    component: AdminListView,
   },
   {
     path: "/admin/edit",
