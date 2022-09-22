@@ -5,3 +5,33 @@ export default {};
 </script>
 
 <style></style>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>adminpage1</title>
+  </head>
+  <body>
+    <header>
+      <div class="container" style="text-align: center">
+        <h1>찬양공유관리자시스템</h1>
+      </div>
+    </header>
+    <main>
+      <div class="form-group" style="text-align: center">
+        <small>password</small>
+        <br />
+        <input type="password" id="pwd" name="pwd" placeholder="Password" />
+      </div>
+    </main>
+    <footer>
+      <div class="login" style="text-align: center">
+        <br />
+        <input type="submit" value="관리자 로그인" />
+      </div>
+    </footer>
+  </body>
+</html>
