@@ -6,20 +6,21 @@
     <div class="Date-Picker">
       <span>* 날짜</span>
       <date-picker v-model="date" valueType="format"></date-picker>
+      <span>{{ date }}</span>
     </div>
 
     <!--선택-->
     <div class="RadioBtn">
       <AdminSelect />
     </div>
-
+    <!--찬양곡(제목)-->
     <div id="block-title">
       <span>{{ blocktitle }}</span>
     </div>
     <!--edit카드-->
-    <AdminEditBlock />
-
-    <button v-on:click="addEditBlock">곡 추가하기</button>
+    <AdminEditBlock :songdatas="songdatas" />
+    <!--곡 추가 버튼-->
+    <button @click="addEditBlock">곡 추가하기</button>
   </div>
 </template>
 
@@ -43,14 +44,28 @@ export default {
     return {
       blocktitle: "찬양곡",
       date: null,
+      songdatas: {
+        rows: [],
+        itemList: [
+          {
+            songid: 1,
+            songtitle: "",
+            youtubelink: "",
+          },
+        ],
+      },
     };
   },
   methods: {
     addEditBlock() {
-      this.AdminEditBlock.push({
-        songtitle: "",
-        youtubelink: "",
-      });
+      // this.$emit('')
+      this.songdatas.push =
+        // ...this.songdatas,
+        {
+          songid: 1,
+          songtitle: "",
+          youtubelink: "",
+        };
     },
   },
 };

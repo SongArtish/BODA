@@ -25,12 +25,12 @@
 
 <script>
 export default {
-  data() {
-    return {
-      songtitle: "",
-      youtubelink: "",
-    };
-  },
+  //   data() {
+  //     return {
+  //       songtitle: "",
+  //       youtubelink: "",
+  //     };
+  //   },
 };
 </script>
 
@@ -44,7 +44,6 @@ body {
   font-family: "Noto Sans KR";
   text-align: center;
   color: #2c3e50;
-
   padding: 10px;
   background: #d9d9d9;
   border-radius: 10px;
@@ -57,28 +56,24 @@ body {
   font-size: 16px;
   text-align: left;
 }
-
 .block-song-title {
   display: flex;
   flex-direction: column;
   text-align: left;
   margin: 20px 0px;
 }
-
 .block-youtube-link {
   display: flex;
   flex-direction: column;
   text-align: left;
   margin: 20px 0px;
 }
-
 .block-song-image {
   display: flex;
   flex-direction: column;
   text-align: left;
   margin: 20px 0px;
 }
-
 #block-song-image-btn {
   display: flex;
   justify-content: center;
