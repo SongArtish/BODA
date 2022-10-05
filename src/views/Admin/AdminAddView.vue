@@ -18,7 +18,7 @@
       </div>
 
       <div
-        class="title"
+        class="songtitle"
         v-for="(songinfo, counter) in songinfos"
         v-bind:key="counter"
       >
@@ -29,20 +29,36 @@
 
         <label>
           {{ counter + 1 }}) 곡 제목
-          <input type="text" v-model="songinfo.title" required />
+          <input type="text" v-model="songinfo.songtitle" required />
         </label>
+        <span>*최대 20글자</span>
 
         <!--악보 첨부-->
+        <div class="block-song-image">
+          <span>악보 첨부</span>
+          <label id="block-song-image-btn" for="input-file"> 악보추가 </label>
+          <input
+            id="input-file"
+            @change="onInputImage"
+            type="file"
+            ref="songImage"
+            style="display: none"
+            accept="image/*"
+          />
+        </div>
 
         <label>
           유튜브 링크
-          <input type="text" v-model="songinfo.youtubelink" required />
+          <input type="text" v-model="songinfo.youtubelink" />
         </label>
       </div>
       <br /><br />
       <!--곡 추가 버튼-->
       <button @click="addSong">곡 추가하기</button>
       <br />
+
+      <!--submit-->
+      <button id="save-btn" @click="onFormSave">저장</button>
     </form>
   </div>
 </template>
@@ -69,7 +85,8 @@ export default {
       date: null,
       songinfos: [
         {
-          title: "",
+          songtitle: "",
+          songimage: null,
           youtubelink: "",
         },
       ],
@@ -78,12 +95,24 @@ export default {
   methods: {
     addSong() {
       this.songinfos.push({
-        title: "",
+        songtitle: "",
         youtubelink: "",
+        songimage: null,
       });
     },
     deleteSong(counter) {
       this.songinfos.splice(counter, 1);
+    },
+    onInputImage(e) {
+      console.log(e.target.files);
+    },
+    onFormSave() {
+      this.$router.push({
+        name: "uploadConfirm",
+        params: {
+          input: this.input,
+        },
+      });
     },
   },
 };
@@ -101,5 +130,17 @@ body {
   color: #2c3e50;
   margin: 0px 50px;
   padding: 0;
+}
+#block-song-image-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  background: #074ee8;
+  border-radius: 4px;
+  /*폰트*/
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 16px;
 }
 </style>

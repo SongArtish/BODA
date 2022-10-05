@@ -1,11 +1,19 @@
-// import axios from "axios";
+import axios from "axios";
 
-// config
+const getAdminInfo = (password) => {
+    return axios.get('/api/admin/valid/password', {
+        params: {
+            password
+        }
+    })
+}
 
-// //함수 정리
 
-// function geAPI(params) {
-// 	return instance.get(' ', params)
-// }
+export default{
+    async login (password){
+        try {
+            const get
+        }
 
-// export {getAPI,}
+    }
+}

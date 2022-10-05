@@ -3,11 +3,7 @@
     <!--헤더-->
     <AdminHeader />
     <!--로그인폼-->
-    <form v-on:submit.prevent="submitForm">
-      <div class="login-form">
-        <label for="username">ID </label>
-        <input class="login-box" id="username" type="text" v-model="username" />
-      </div>
+    <form @submit.prevent="onLogin">
       <div class="login-form">
         <label for="password">Password </label>
         <input
@@ -17,27 +13,45 @@
           v-model="password"
         />
       </div>
-
-      <button id="login-btn" type="submit">관리자 로그인</button>
+      <button @click="login({ password })" id="login-btn" type="submit">
+        관리자 로그인
+      </button>
+      <button @click="test">테스트</button>
     </form>
   </div>
 </template>
 
 <script>
 import AdminHeader from "@/components/Admin/AdminHeader.vue";
+import axios from "axios";
+import { mapState, mapActions } from "vuex";
+
+const userStore = "userStore";
 
 export default {
   data() {
     return {
-      user: {
-        id: "",
-        password: "",
-      },
+      password: "",
     };
   },
+  computed: {
+    ...mapState(["isLogin", "isLoginError"]),
+  },
   methods: {
-    submitForm: function () {
-      console.log(this.username, this.password);
+    ...mapActions(userStore, ["login"]),
+    test() {
+      // Make a request for a user with a given ID
+      axios
+        .post("https://reqres.in/api/register", {
+          email: "eve.holt@reqres.in",
+          password: "pistol",
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   name: "AdminView",
