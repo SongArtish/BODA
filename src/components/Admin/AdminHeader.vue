@@ -1,19 +1,19 @@
 <template>
   <header>
-    <div class="black-bg" v-if="alert_save == true">
-      <div class="white-bg">
+    <div class="alert_block__bg" v-if="isModalViewed">
+      <div class="alert_block">
         <span>게시글을 저장하지 않고 나가시겠어요?</span>
-        <button @click="alert_save = false">취소</button>
+        <button @click="alert_save == false">취소</button>
         <button @click="pageAdminList">나가기</button>
       </div>
     </div>
 
     <!-- <button>이전으로</button> -->
     <font-awesome-icon
-      @click="alert_save = true"
+      @click="isModalViewed = true"
       icon="fa-solid fa-chevron-left"
     />
-    <h1>찬양공유관리자시스템</h1>
+    <span>게시글 작성</span>
     <div class="form-group"></div>
   </header>
 </template>
@@ -54,20 +54,10 @@ header h1 {
 div {
   box-sizing: border-box;
 }
-.black-bg {
+.alert_block__bg {
   background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  padding: 20px;
-  display: flex;
-  margin: 20px;
 }
-.white-bg {
-  width: 100%;
-  background: white;
-  margin: 20px;
-  border-radius: 8px;
-  border: 2px solid #aaaaaa;
-  font-weight: 400;
-  font-size: 15px;
+.alert_block {
+  background: #48495b;
 }
 </style>

@@ -1,6 +1,18 @@
 <template>
   <div class="AdminAdd">
-    <AdminHeader />
+    <!--헤더-->
+    <!-- <AdminHeader /> -->
+    <div class="header">
+      <font-awesome-icon
+        @click="isModalViewed = true"
+        icon="fa-solid fa-chevron-left"
+      />
+      <span>게시글 작성</span>
+    </div>
+    <AdminHeaderModal
+      v-if="isModalViewed"
+      @close-modal="isModalViewed = false"
+    />
     <form>
       <!--datepicker-->
       <div class="Date-Picker">
@@ -12,10 +24,25 @@
       <div class="RadioBtn">
         <AdminSelect />
       </div>
+
+      <div class="line"></div>
+
       <!--찬양곡(제목)-->
       <div id="block-title">
         <span>{{ blocktitle }}</span>
       </div>
+
+      <!--곡 추가 버튼-->
+      <div class="song_add_btn">
+        <font-awesome-icon icon="fa-solid fa-plus" @click="openModal" />
+        <span>이 곳을 눌러 첫번째 곡을 추가하세요</span>
+      </div>
+
+      <!--바텀업 모달-->
+      <AdminBottomModal v-if="bottommodal">
+        <!-- default 슬롯 콘텐츠 -->
+        <p>Vue.js Modal Window!</p>
+      </AdminBottomModal>
 
       <div
         class="songtitle"
@@ -64,24 +91,30 @@
 </template>
 
 <script>
-import AdminHeader from "@/components/Admin/AdminHeader.vue";
 import DatePicker from "vue2-datepicker";
 import AdminSelect from "@/components/Admin/AdminSelect.vue";
+// import AdminHeader from "@/components/Admin/AdminHeader.vue";
+import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
 import "vue2-datepicker/index.css";
+import AdminBottomModal from "../../components/Admin/AdminBottomModal.vue";
 
 export default {
   name: "AdminAdd",
   components: {
-    AdminHeader,
     DatePicker,
     AdminSelect,
+    AdminHeaderModal,
+    AdminBottomModal,
   },
   props: {
     msg: String,
   },
   data() {
     return {
-      blocktitle: "찬양곡",
+      alert_save: false,
+      isModalViewed: false,
+      bottommodal: false,
+      blocktitle: "곡 추가",
       date: null,
       songinfos: [
         {
@@ -93,6 +126,12 @@ export default {
     };
   },
   methods: {
+    openModal() {
+      this.bottommodal = true;
+    },
+    closeModal() {
+      this.bottommodal = false;
+    },
     addSong() {
       this.songinfos.push({
         songtitle: "",
@@ -124,12 +163,19 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .AdminAdd {
   font-family: "Noto Sans KR";
   text-align: center;
   color: #2c3e50;
-  margin: 0px 50px;
   padding: 0;
+}
+.line {
+  width: 100%;
+  height: 5px;
+  left: 0px;
+  background-color: #646574;
+  margin: 30px 0px;
 }
 #block-song-image-btn {
   display: flex;
@@ -138,7 +184,6 @@ body {
   height: 48px;
   background: #074ee8;
   border-radius: 4px;
-  /*폰트*/
   color: #ffffff;
   font-weight: 400;
   font-size: 16px;

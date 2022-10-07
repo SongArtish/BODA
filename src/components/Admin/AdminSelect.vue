@@ -1,7 +1,7 @@
 <template>
   <div class="AdminSelect">
     <span>소속</span>
-    <div class="Select1">
+    <div class="radio_select">
       <input type="radio" id="U" value="Univ" v-model="select1" />
       <label for="U">대학부</label>
       <input type="radio" id="Y" value="Youth" v-model="select1" />
@@ -9,7 +9,7 @@
     </div>
 
     <span>분류</span>
-    <div class="Select2">
+    <div class="radio_select">
       <input type="radio" id="S" value="Sunday" v-model="select2" />
       <label for="S">주일</label>
       <input type="radio" id="O" value="Others" v-model="select2" />
@@ -38,13 +38,24 @@ export default {
   gap: 1rem;
   font-family: "Noto Sans KR";
 }
+.radio_select input[type="radio"] {
+  display: none;
+}
 
-.Select1 label,
-.Select2 label {
-  margin-left: 15px;
-  margin-right: 30px;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 18px;
+.radio_select input[type="radio"] + label {
+  display: inline-block;
+  cursor: pointer;
+  height: 40px;
+  width: 80px;
+  background: #d5d5d5;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+  justify-content: center;
+}
+.radio_select input[type="radio"]:checked + label {
+  background-color: #44786c;
+  color: #fff;
 }
 </style>
