@@ -121,7 +121,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 html,
 body {
   margin: 0;
@@ -131,7 +131,6 @@ body {
   font-family: "Noto Sans KR";
   text-align: center;
   color: #2c3e50;
-  margin: 0px 50px;
   padding: 0;
 }
 .Date-Picker {

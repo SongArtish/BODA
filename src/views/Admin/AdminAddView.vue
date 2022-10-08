@@ -40,52 +40,39 @@
 
       <!--바텀업 모달-->
       <AdminBottomModal v-if="bottommodal">
-        <!-- default 슬롯 콘텐츠 -->
-        <p>Vue.js Modal Window!</p>
-      </AdminBottomModal>
-
-      <div
-        class="songtitle"
-        v-for="(songinfo, counter) in songinfos"
-        v-bind:key="counter"
-      >
-        <!--곡 삭제 버튼-->
-        <div @click="deleteSong(counter)">
-          <font-awesome-icon icon="fa-regular fa-trash-can" />
-        </div>
-
-        <label>
-          {{ counter + 1 }}) 곡 제목
-          <input type="text" v-model="songinfo.songtitle" required />
-        </label>
-        <span>*최대 20글자</span>
-
-        <!--악보 첨부-->
-        <div class="block-song-image">
-          <span>악보 첨부</span>
-          <label id="block-song-image-btn" for="input-file"> 악보추가 </label>
+        <!-- 슬롯 콘텐츠 -->
+        <div
+          class="songtitle"
+          v-for="(songinfos, counter) in songinfos"
+          v-bind:key="counter"
+        ></div>
+        <!--곡 제목-->
+        <p>곡 제목</p>
+        <div>
           <input
-            id="input-file"
-            @change="onInputImage"
-            type="file"
-            ref="songImage"
-            style="display: none"
-            accept="image/*"
+            type="text"
+            v-model="songinfos.song_title"
+            placeholder="곡 제목을 입력하세요"
+            required
           />
         </div>
-
-        <label>
-          유튜브 링크
-          <input type="text" v-model="songinfo.youtubelink" />
-        </label>
-      </div>
-      <br /><br />
-      <!--곡 추가 버튼-->
-      <button @click="addSong">곡 추가하기</button>
-      <br />
-
-      <!--submit-->
-      <button id="save-btn" @click="onFormSave">저장</button>
+        <!--유튜크 링크 추가-->
+        <p>유튜브 링크</p>
+        <div>
+          <input
+            type="text"
+            v-model="songinfos.song_youtube"
+            placeholder="유튜브 링크를 입력하세요"
+          />
+        </div>
+        <!-- 악보 첨부-->
+        <input type="file" accept="image/*" ref="song_image" />
+        <!--footer 콘텐츠-->
+        <template slot="footer">
+          <button @click="saveSong">완료</button>
+        </template>
+        <!-- /footer -->
+      </AdminBottomModal>
     </form>
   </div>
 </template>
@@ -96,7 +83,7 @@ import AdminSelect from "@/components/Admin/AdminSelect.vue";
 // import AdminHeader from "@/components/Admin/AdminHeader.vue";
 import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
 import "vue2-datepicker/index.css";
-import AdminBottomModal from "../../components/Admin/AdminBottomModal.vue";
+import AdminBottomModal from "@/components/Admin/AdminBottomModal.vue";
 
 export default {
   name: "AdminAdd",
@@ -118,9 +105,9 @@ export default {
       date: null,
       songinfos: [
         {
-          songtitle: "",
-          songimage: null,
-          youtubelink: "",
+          song_title: "",
+          song_youtube: "",
+          song_image: null,
         },
       ],
     };
@@ -132,32 +119,18 @@ export default {
     closeModal() {
       this.bottommodal = false;
     },
-    addSong() {
+    saveSong() {
       this.songinfos.push({
         songtitle: "",
         youtubelink: "",
         songimage: null,
       });
     },
-    deleteSong(counter) {
-      this.songinfos.splice(counter, 1);
-    },
-    onInputImage(e) {
-      console.log(e.target.files);
-    },
-    onFormSave() {
-      this.$router.push({
-        name: "uploadConfirm",
-        params: {
-          input: this.input,
-        },
-      });
-    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 html,
 body {
   margin: 0;
@@ -167,7 +140,8 @@ body {
 .AdminAdd {
   font-family: "Noto Sans KR";
   text-align: center;
-  color: #2c3e50;
+  background: #48495b;
+  color: #fffffd;
   padding: 0;
 }
 .line {
