@@ -55,5 +55,17 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "description": "## Project setup ``` npm install ```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SongArtish/Jungang-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SongArtish/Jungang-Project/issues"
+  },
+  "homepage": "https://github.com/SongArtish/Jungang-Project#readme"
 }

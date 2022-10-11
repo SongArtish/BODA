@@ -2,8 +2,9 @@
 <template>
   <div class="AdminLoginpage">
     <!--헤더-->
-    <AdminHeader />
-
+    <div>
+      <span>찬양공유 관리자시스템</span>
+    </div>
     <div class="title">
       <div class="title__main">
         <span class="title__main" id="title__main_1">서울중앙교회 </span>
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import AdminHeader from "@/components/Admin/AdminHeader.vue";
+
 // import axios from "axios";
 import { mapState, mapActions } from "vuex";
 
@@ -65,10 +66,7 @@ export default {
     //     });
     // },
   },
-  name: "AdminView",
-  components: {
-    AdminHeader,
-  },
+  name: "AdminView"
 };
 </script>
 <style scoped>

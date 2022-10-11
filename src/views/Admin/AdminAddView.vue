@@ -32,26 +32,49 @@
         <span>{{ blocktitle }}</span>
       </div>
 
-      <!--곡 추가 버튼-->
+  
+      <!--곡 표시-->
+      <div class="song_info">
+        <div class="song_detail" v-for="(item,index) in data" :key="index">
+          <div>
+            <div id="song_detail_title">{{item.song_title}}</div>
+            <div>
+              <font-awesome-icon icon="fa-solid fa-check" />
+              첨부사진
+              <font-awesome-icon icon="fa-solid fa-check" />
+              링크
+              </div>
+            
+          </div>
+          
+          <div class=song_detail__icons>
+            <div class=song_detail_icon>
+            <font-awesome-icon icon="fa-regular fa-pen-to-square" />
+            </div>
+            <div class=song_detail_icon @click="deleteSong(index)">
+              <font-awesome-icon icon="fa-solid fa-xmark" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+          <!--곡 추가 버튼-->
       <div class="song_add_btn">
         <font-awesome-icon icon="fa-solid fa-plus" @click="openModal" />
         <span>이 곳을 눌러 첫번째 곡을 추가하세요</span>
       </div>
 
+
+
       <!--바텀업 모달-->
       <AdminBottomModal v-if="bottommodal">
         <!-- 슬롯 콘텐츠 -->
-        <div
-          class="songtitle"
-          v-for="(songinfos, counter) in songinfos"
-          v-bind:key="counter"
-        ></div>
-        <!--곡 제목-->
         <p>곡 제목</p>
         <div>
           <input
             type="text"
-            v-model="songinfos.song_title"
+            v-model="song_title"
             placeholder="곡 제목을 입력하세요"
             required
           />
@@ -61,16 +84,17 @@
         <div>
           <input
             type="text"
-            v-model="songinfos.song_youtube"
+            v-model="song_youtube"
             placeholder="유튜브 링크를 입력하세요"
           />
         </div>
         <!-- 악보 첨부-->
-        <input type="file" accept="image/*" ref="song_image" />
+        <input type="file" @change="onInputImage()" accept="image/*" ref="song_image" />
         <!--footer 콘텐츠-->
         <template slot="footer">
-          <button @click="saveSong">완료</button>
+          <button @click.prevent="addSong">완료</button>
         </template>
+        
         <!-- /footer -->
       </AdminBottomModal>
     </form>
@@ -84,6 +108,8 @@ import AdminSelect from "@/components/Admin/AdminSelect.vue";
 import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
 import "vue2-datepicker/index.css";
 import AdminBottomModal from "@/components/Admin/AdminBottomModal.vue";
+import data from "../../data/index.js";
+
 
 export default {
   name: "AdminAdd",
@@ -98,18 +124,16 @@ export default {
   },
   data() {
     return {
+      data,
       alert_save: false,
       isModalViewed: false,
       bottommodal: false,
       blocktitle: "곡 추가",
       date: null,
-      songinfos: [
-        {
-          song_title: "",
-          song_youtube: "",
-          song_image: null,
-        },
-      ],
+      song_title: "",
+      song_youtube:"",
+      song_image: null,
+
     };
   },
   methods: {
@@ -119,13 +143,21 @@ export default {
     closeModal() {
       this.bottommodal = false;
     },
-    saveSong() {
-      this.songinfos.push({
-        songtitle: "",
-        youtubelink: "",
-        songimage: null,
-      });
+    addSong() {
+      this.data.push({
+        song_title: this.song_title,
+        song_youtube: this.song_youtube,
+        song_image: this.song_image,
+      })
+      this.closeModal()
     },
+    deleteSong(index) {
+      this.data.splice(index,1);
+    },
+    onInputImage(){
+      this.data.song_image = this.$refs.song_image.files
+      console.log("this.data.song_image")
+    }
   },
 };
 </script>
@@ -151,6 +183,24 @@ body {
   background-color: #646574;
   margin: 30px 0px;
 }
+.song_info{
+  
+  margin: 10px 25px;
+  display: flex;
+  flex-direction: column;
+}
+.song_detail{
+  margin: 5px 0px;
+  background: #5A5A6D;
+  display: flex;
+  justify-content: space-between;
+}
+.song_detail__icons{
+  display: flex;
+}
+.song_detail_icon {
+  margin: 0px 10px;
+}
 #block-song-image-btn {
   display: flex;
   justify-content: center;
@@ -163,3 +213,4 @@ body {
   font-size: 16px;
 }
 </style>
+
