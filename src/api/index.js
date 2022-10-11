@@ -9,11 +9,11 @@ const getAdminInfo = (password) => {
 }
 
 
-export default{
-    async login (password){
-        try {
-            const get
-        }
+// export default{
+//     async login (password){
+//         try {
+//             const get
+//         }
 
-    }
-}
+//     }
+// }

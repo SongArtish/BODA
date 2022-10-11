@@ -5,6 +5,7 @@ import AdminView from "../views/AdminView.vue";
 import AdminListView from "@/views/Admin/AdminListView.vue";
 import AdminEdit from "@/views/Admin/AdminEditView.vue";
 import AdminAdd from "@/views/Admin/AdminAddView.vue";
+import Detail from '../views/Detail.vue'
 
 Vue.use(VueRouter);
 
@@ -34,7 +35,12 @@ const routes = [
     name: "adminadd",
     component: AdminAdd,
   },
-];
+  {
+    path: '/list/detail1',
+    name: 'detail1',
+    component: Detail
+  },
+]
 
 const router = new VueRouter({
   mode: "history",
