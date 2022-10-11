@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import AdminView from "../views/AdminView.vue";
 import AdminListView from "@/views/Admin/AdminListView.vue";
 import AdminEdit from "@/views/Admin/AdminEditView.vue";
+import UserListView from "@/views/User/UserListView.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     path: "/admin/edit",
     name: "adminedit",
     component: AdminEdit,
+  },
+  {
+    path: "/user/list",
+    name: "UserListView",
+    component: UserListView,
   },
 ];
 

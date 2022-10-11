@@ -3,13 +3,14 @@
     <MyHeader></MyHeader>
     <div class="cate">
       <label>카테고리:</label>
-      <select v-model="category">
+      <select v-model="selectedCate">
         <option v-for="(category, index) in categories" :key="index">{{category}}</option>
       </select>
     </div>
 
     <div>
       <UserCard></UserCard>
+    
       <UserCard></UserCard>
     </div>
 
@@ -62,9 +63,7 @@
           <a @click="fnAdd" class="btn">+</a>
         </div>
     -->
-    <div class="add-button">
-      <a class="add-btn" href="/api/conti">+</a>
-    </div>
+
     <MyFooter></MyFooter>
   </div>
 </template>
@@ -101,7 +100,8 @@ export default {
         for (var i = start_page; i <= end_page; i++) pageNumber.push(i);
         return pageNumber;
       }
-      ,categories: ['대학부', '청년부']
+      ,categories: ['전체', '대학부', '청년부']
+      ,selectedCate: '전체'
     }
   }
   ,mounted() { //페이지 시작하면은 자동 함수 실행
