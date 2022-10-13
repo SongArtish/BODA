@@ -63,7 +63,7 @@
       </div>
 
       <!--바텀업 모달-->
-      <AdminBottomModal v-if="bottommodal">
+      <AdminBottomModal class="bottom_modal" v-if="bottommodal">
         <!-- 슬롯 콘텐츠 -->
         <p>곡 제목</p>
         <div>
@@ -83,8 +83,27 @@
             placeholder="유튜브 링크를 입력하세요"
           />
         </div>
-        <!-- 악보 첨부-->
-        <input type="file" @change="onInputImage()" ref="song_image" />
+        <!-- 악보 첨부 기능 -->
+        <div class="song_image_upload">
+
+        <!--이미지 업로드 버튼-->
+        <label for ="image_file">악보첨부</label>
+        <input class="image_upload__input" name="image_file" type="file" @change="onUploadImage()" ref="files" multiple/>
+
+        <!--이미지 미리보기-->
+        <div v-if="uploadReady" class="image_preview">
+          <div class="image_preview_container">
+            <div class="image_preview_container__image" v-for="(file,index) in files" :key="index"  >
+              <div class="image_preview_close__btn" @click="fileDeleteButton" :name=file.number>x</div>
+              <img :src="file.preview" />
+            </div>
+          </div>
+
+        </div>
+
+
+        </div>
+
         <!--footer 콘텐츠-->
         <template slot="footer">
           <button @click.prevent="addSong">완료</button>
@@ -122,11 +141,15 @@ export default {
       alert_save: false,
       isModalViewed: false,
       bottommodal: false,
+      uploadReady: false,
       blocktitle: "곡 추가",
       date: null,
       song_title: "",
       song_youtube: "",
       song_image: null,
+      files:[],
+      filesPreview: [],
+      uploadImageIndex: 0
     };
   },
   methods: {
@@ -147,9 +170,34 @@ export default {
     deleteSong(index) {
       this.data.splice(index, 1);
     },
-    onInputImage() {
-      this.data.song_image = this.$refs.song_image.files;
-      console.log(this.data.song_image);
+    onUploadImage(){
+      this.uploadReady = true;
+      console.log(this.$refs.files.files);
+
+      let num = -1;
+      for (let i = 0; i < this.$refs.files.files.length; i++) {
+          this.files = [
+              ...this.files,
+              //이미지 업로드
+              {
+                  //실제 파일
+                  file: this.$refs.files.files[i],
+                  //이미지 프리뷰
+                  preview: URL.createObjectURL(this.$refs.files.files[i]),
+                  //삭제및 관리를 위한 number
+                  number: i
+              }
+          ];
+          num = i;
+    
+      }
+      this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
+      console.log(this.files);
+      // console.log(this.filesPreview);
+    },
+    fileDeleteButton(e) {
+      const name = e.target.getAttribute('name');
+      this.files = this.files.filter(data => data.number !== Number(name));
     },
   },
 };
@@ -160,6 +208,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .AdminAdd {
@@ -192,6 +241,16 @@ body {
 }
 .song_detail_icon {
   margin: 0px 10px;
+}
+
+/*이미지 업로드 버튼*/
+.image_upload__input{
+  border-style: none;
+  width: 65px;
+  height: 65px;
+  background: #5A5A6D;
+  border-radius: 8px;
+  background-image: src('')
 }
 #block-song-image-btn {
   display: flex;

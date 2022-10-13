@@ -2,14 +2,13 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-// import router from "@/router";
+import router from "@/router";
 import axios from "axios";
 
 Vue.use(Vuex);
 
 const userStore = {
   state: {
-    adminpassword: 12345678,
     isLogin: false,
     isLoginError: false,
   },
@@ -27,19 +26,24 @@ const userStore = {
   },
   actions: {
     //로그인 시도
-    login(loginObj) {
+    login({commit},loginObj) {
       axios
         .post(
-          "http://ec2-3-39-205-107.ap-northeast-2.compute.amazonaws.com/api/admin/valid/password",
-          {
+          "http://localhost:8080/api/admin/valid/password",
             loginObj,
-          }
         )
         .then((res) => {
-          console.log(res.status);
+          if (res.status === 200) {
+            console.log(res.data)
+            alert("로그인 되었습니다")
+            commit("loginSuccess")
+            router.push({ name: "AdminListView" });
+          }
         })
         .catch((err) => {
           console.log(err);
+          alert("비밀번호가 틀렸습니다");
+          commit("loginError");
         });
       // if (state.adminpassword != loginObj.password) {
       //   alert("비밀번호가 틀렸습니다");

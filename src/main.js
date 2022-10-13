@@ -3,9 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from "axios";
-import VueNavigationBar from "vue-navigation-bar";
+// import VueNavigationBar from "vue-navigation-bar";
 
-import AxiosPlugin from 'vue-axios-cors';
+// import AxiosPlugin from 'vue-axios-cors';
 
 //fort-awesome
 import { library } from "@fortawesome/fontawesome-svg-core";
