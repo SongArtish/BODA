@@ -1,12 +1,12 @@
 <template>
-  <div class="Home">
-    <h1>This is an home page</h1>
+  <div class="AdminCreate">
+    <h1>AdminCreate</h1>
   </div>
 </template>
 <script>
 
 export default {
-  name: 'HomeView',
+  name: 'AdminCreate',
   components: {
   }
 }
