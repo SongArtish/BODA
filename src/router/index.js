@@ -6,6 +6,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'AdminHome',
+    component: AdminHome
+  },
+  {
     path: '/admin',
     name: 'AdminHome',
     component: AdminHome

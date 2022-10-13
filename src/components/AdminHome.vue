@@ -2,13 +2,12 @@
   <div class="AdminHome">
     <NavBar :textNavbar="textNavbar" />
     <div class="title">
-        <div class="title-1"><span class="title-1-bold">서울중앙교회</span> 찬양공유</div>
-        <div class="title-2">이용을 위해서 로그인이 필요합니다.</div>
+        <div class="title-1"><span class="title-1-stress">서울중앙교회</span> 찬양공유</div>
+        <div class="title-2">이용을 위해서 <span class="title-2-stress">로그인</span>이 필요합니다.</div>
     </div>
     <div class="login">
         <div class="login-label">관리자 로그인</div>
         <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="login" />
-        <span class="login-input-underline"></span>
         <div class="login-alert-message" v-if="message">{{ message }}</div>
     </div>
     <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" @buttonClick="login" />
@@ -29,7 +28,7 @@ export default {
         password: '',
         message: null,
         textButton: "로그인",
-        textNavbar: "찬양공유 관리자 시스템"
+        textNavbar: "찬양공유 관리자시스템"
       }
   },
   computed: {
@@ -79,8 +78,11 @@ export default {
 .title-1 {
     font-size: 1.2rem;
 }
-.title-1-bold {
+.title-1-stress {
     font-weight: bold;
+}
+.title-2-stress {
+  color: #90E5FA;
 }
 .login {
     margin: 4rem 0;
@@ -115,20 +117,6 @@ export default {
   transform: scale(1);
 }
 
-.login-input-underline {
-  background-color: dodgerblue;
-  display: inline-block;
-  height: 2px;
-  left: 50px;
-  margin-top: -4px;
-  position: absolute;
-  top: 185px;
-  -webkit-transform: scale(0, 1);
-  transform: scale(0, 1);
-  -webkit-transition: all 0.5s linear;
-  transition: all 0.5s linear;
-  width: 202px;
-}
 .login-alert-message {
   color: #df4759;
   margin-top: .3rem;
