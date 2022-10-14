@@ -13,14 +13,28 @@
       v-if="isModalViewed"
       @close-modal="isModalViewed = false"
     />
+
+    <div v-if="bottommodal">
+      <div>찬양공유에 새 글을 작성합니다.</div>
+      <div>별도 표시된 부분은 필수로 입력해 주세요.</div>
+    </div>
+
+
+
     <form>
       <!--datepicker-->
-      <div class="Date-Picker">
-        <span>* 날짜</span>
-        <date-picker v-model="date" valueType="format"></date-picker>
-        <!-- <span>{{ date }}</span> -->
-      </div>
-      <!--선택-->
+      <div>날짜</div>
+      <input 
+      type="date"
+      data-placeholder="날짜를 선택해 주세요"
+      required
+      v-model="date"
+      class="date-picker"
+      pattern="\d{4}-\d{2}-\d{2}"
+      />
+      
+      
+      <!--부서선택-->
       <div class="RadioBtn">
         <AdminSelect />
       </div>
@@ -32,11 +46,16 @@
         <span>{{ blocktitle }}</span>
       </div>
 
-      <!--곡 표시-->
+      <!--곡 추가(첫번째 곡) 버튼-->
+      <AdminAddSongBtn v-if="data.length == 0 " :textAddSong="textAddSong_1" @openModal="openModal"/>
+
+
+      <!--곡 리스트 표시-->
       <div class="song_info">
         <div class="song_detail" v-for="(item, index) in data" :key="index">
           <div>
             <div id="song_detail_title">{{ item.song_title }}</div>
+            <!--사진/링크가 있는 경우 체크 표시-->
             <div>
               <font-awesome-icon icon="fa-solid fa-check" />
               첨부사진
@@ -45,6 +64,7 @@
             </div>
           </div>
 
+          <!--수정/삭제 버튼 -->
           <div class="song_detail__icons">
             <div class="song_detail_icon">
               <font-awesome-icon icon="fa-regular fa-pen-to-square" />
@@ -56,28 +76,31 @@
         </div>
       </div>
 
-      <!--곡 추가 버튼-->
-      <div class="song_add_btn">
-        <font-awesome-icon icon="fa-solid fa-plus" @click="openModal" />
-        <span>이 곳을 눌러 첫번째 곡을 추가하세요</span>
-      </div>
+      <!--곡 추가(다음곡) 버튼-->
+      <AdminAddSongBtn v-if="data.length !=0 " :textAddSong="textAddSong_2" @openModal="openModal"/>
 
+
+      
       <!--바텀업 모달-->
       <AdminBottomModal class="bottom_modal" v-if="bottommodal">
         <!-- 슬롯 콘텐츠 -->
         <p>곡 제목</p>
         <div>
           <input
+            class = "modal-input-text"
             type="text"
             v-model="song_title"
             placeholder="곡 제목을 입력하세요"
             required
+            maxlength="20"
           />
+          <div v-if="song_title.length >= 20">곡 제목은 20자를 초과할 수 없습니다.</div>
         </div>
         <!--유튜크 링크 추가-->
         <p>유튜브 링크</p>
         <div>
           <input
+            class = "modal-input-text"
             type="text"
             v-model="song_youtube"
             placeholder="유튜브 링크를 입력하세요"
@@ -106,11 +129,14 @@
 
         <!--footer 콘텐츠-->
         <template slot="footer">
-          <button @click.prevent="addSong">완료</button>
+          <button @click.prevent="addSong" :disabled="song_title.length <1 ">완료</button>
         </template>
 
         <!-- /footer -->
       </AdminBottomModal>
+
+      <input type="submit" value="완료"/>
+
     </form>
   </div>
 </template>
@@ -122,6 +148,7 @@ import AdminSelect from "@/components/Admin/AdminSelect.vue";
 import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
 import "vue2-datepicker/index.css";
 import AdminBottomModal from "@/components/Admin/AdminBottomModal.vue";
+import AdminAddSongBtn from "../../components/Admin/AdminAddSongBtn.vue"
 import data from "../../data/index.js";
 
 export default {
@@ -131,6 +158,7 @@ export default {
     AdminSelect,
     AdminHeaderModal,
     AdminBottomModal,
+    AdminAddSongBtn
   },
   props: {
     msg: String,
@@ -143,6 +171,8 @@ export default {
       bottommodal: false,
       uploadReady: false,
       blocktitle: "곡 추가",
+      textAddSong_1:"이 곳을 눌러 첫번째 곡을 추가하세요",
+      textAddSong_2:"이 곳을 눌러 다음 곡을 추가하세요",
       date: null,
       song_title: "",
       song_youtube: "",
@@ -150,6 +180,7 @@ export default {
       files:[],
       filesPreview: [],
       uploadImageIndex: 0
+
     };
   },
   methods: {
@@ -242,7 +273,56 @@ body {
 .song_detail_icon {
   margin: 0px 10px;
 }
+/*date-picker*/
 
+.date-picker {
+  box-sizing: border-box;
+  position: relative;
+  content: attr(data-placeholder);
+  padding: 13px 40px;
+  background: url(../../assets/CalendarIcon.png),url(../../assets/ChevrondownIcon.png);
+  background-position: left, right; 
+  background-size: 24px,24px; 
+  background-repeat:no-repeat;
+  width: 90%;
+  border: 0px;
+  border-bottom: 2px solid #646574;
+  color: #fffffd;
+}
+.date-picker::-webkit-clear-button{display: none;}
+.date-picker::-webkit-inner-spin-button {display: none;}
+.date-picker::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left:0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+.date-picker::before {
+  content: attr(data-placeholder);
+  width: 100%;
+}
+.date-picker:valid::before{
+  display: none;
+}
+
+/*바텀업 모달 인풋*/
+.modal-input-text{
+  background: #48495B;
+  border:0;
+  color: #6E707F;
+  border-bottom: 2px solid #646574;
+  height: 49px;
+  width: 80%;
+}
+.modal-input-text:focus{
+  outline: none !important;
+  color: #FFFFFD;
+  border-bottom: 2px solid #90E5FA;
+}
 /*이미지 업로드 버튼*/
 .image_upload__input{
   border-style: none;
