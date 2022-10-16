@@ -7,23 +7,29 @@ import VueNavigationBar from "vue-navigation-bar";
 
 import AxiosPlugin from 'vue-axios-cors';
 
-Vue.config.productionTip = false
-Vue.prototype.$axios = axios
+//fort-awesome
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-Vue.component('navigation-bar', VueNavigationBar)
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+
+library.add(fas, far, fab);
 
 //Vue.use(axios)
 Vue.prototype.$http = axios;
 Vue.use(AxiosPlugin)
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
-axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
-  render: h => h(App)
-}).$mount('#app')
+  axios,
+  render: (h) => h(App),
+}).$mount("#app");
 
 /*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
 const sections = document.querySelectorAll('section[id]')

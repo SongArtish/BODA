@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <!-- <nav>
-      <router-link to="/">Home</router-link> |
+    <nav>
       <router-link to="/list/detail1">Detail</router-link>
-    </nav> -->
-    <router-view/>
+    </nav>
+    <router-view />
   </div>
 </template>
 
@@ -25,5 +24,4 @@ nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 </style>

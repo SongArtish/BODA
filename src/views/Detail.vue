@@ -5,7 +5,7 @@
         <button @click="goBack" style="float:left; width:10%; border:0; outline:0; background-color:transparent; margin-top:4%; font-weight: bolder;">〈</button>
       </div>
       <div class="hymndate"  :data="article">
-        <span class = "date"><b>{{ article.date[0] }}년{{ article.date[1] }}월{{ article.date[2] }}일</b></span>
+<!--        <span class = "date"><b>{{ article.date[0] }}년{{ article.date[1] }}월{{ article.date[2] }}일</b></span>-->
       </div>
       <div class="share">
         <p>공유버튼자리</p>
@@ -39,13 +39,13 @@
 <script>
 
 export default {
-  name: 'app',
+  name: 'detail1',
   data : function() {
     return {
       article: [],
     }
   },
-  beforeCreate(){
+  beforeCreated() {
     this.$axios.get('http://localhost:8080/api/conti/2').then(response => {
       console.log('article', response.data)
       // if(data && article.length > 0){
@@ -55,6 +55,14 @@ export default {
     }).catch(error => {
       console.log(error)
     })
+  },
+  mounted(){
+    //  this.$axios.get('http://localhost:8080/api/conti/2').then(response => {
+    //     console.log('article', response.data)
+    //     this.article = response.data.result
+    //   }).catch(error => {
+    //     console.log(error)
+    //   })
   },
   methods: {
     goBack(){
