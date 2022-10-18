@@ -1,19 +1,7 @@
 import axios from "axios";
 
-const getAdminInfo = (password) => {
-    return axios.get('/api/admin/valid/password', {
-        params: {
-            password
-        }
-    })
+export const API_LIST = {
+  getAdminInfo(password) {
+    return axios.post('/api/admin/valid/password', {password});
+  }
 }
-
-
-// export default{
-//     async login (password){
-//         try {
-//             const get
-//         }
-
-//     }
-// }

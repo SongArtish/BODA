@@ -3,6 +3,11 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {
-    proxy: "http://ec2-3-39-205-107.ap-northeast-2.compute.amazonaws.com/",
+    proxy: {
+      '/api': {
+        target: process.env.PROXY_API,
+        changeOrigin: true
+      }
+    }
   },
 });

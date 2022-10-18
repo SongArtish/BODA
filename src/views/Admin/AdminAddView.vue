@@ -9,34 +9,33 @@
       />
       <span>게시글 작성</span>
     </div>
-    <AdminHeaderModal
+    <admin-header-modal
       v-if="isModalViewed"
       @close-modal="isModalViewed = false"
     />
 
-    <div v-if="bottommodal">
+    <div v-if="bottomModal">
       <div>찬양공유에 새 글을 작성합니다.</div>
       <div>별도 표시된 부분은 필수로 입력해 주세요.</div>
     </div>
 
-
-
     <form>
       <!--datepicker-->
       <div>날짜</div>
-      <input 
-      type="date"
-      data-placeholder="날짜를 선택해 주세요"
-      required
-      v-model="date"
-      class="date-picker"
-      pattern="\d{4}-\d{2}-\d{2}"
+      <input
+          type="date"
+          data-placeholder="날짜를 선택해 주세요"
+          required
+          v-model="date"
+          class="date-picker"
+          pattern="\d{4}-\d{2}-\d{2}"
+          ref="date"
       />
-      
-      
+
+
       <!--부서선택-->
       <div class="RadioBtn">
-        <AdminSelect />
+        <admin-select />
       </div>
 
       <div class="line"></div>
@@ -47,12 +46,11 @@
       </div>
 
       <!--곡 추가(첫번째 곡) 버튼-->
-      <AdminAddSongBtn v-if="data.length == 0 " :textAddSong="textAddSong_1" @openModal="openModal"/>
-
+      <admin-add-song-btn :textAddSong="textAddSong" @openModal="openModal"/>
 
       <!--곡 리스트 표시-->
       <div class="song_info">
-        <div class="song_detail" v-for="(item, index) in data" :key="index">
+        <div class="song_detail" v-for="(item, index) in songList" :key="index">
           <div>
             <div id="song_detail_title">{{ item.song_title }}</div>
             <!--사진/링크가 있는 경우 체크 표시-->
@@ -76,13 +74,8 @@
         </div>
       </div>
 
-      <!--곡 추가(다음곡) 버튼-->
-      <AdminAddSongBtn v-if="data.length !=0 " :textAddSong="textAddSong_2" @openModal="openModal"/>
-
-
-      
       <!--바텀업 모달-->
-      <AdminBottomModal class="bottom_modal" v-if="bottommodal">
+      <admin-bottom-modal class="bottom_modal" v-if="bottomModal">
         <!-- 슬롯 콘텐츠 -->
         <p>곡 제목</p>
         <div>
@@ -111,7 +104,7 @@
 
         <!--이미지 업로드 버튼-->
         <label for ="image_file">악보첨부</label>
-        <input class="image_upload__input" name="image_file" type="file" @change="onUploadImage()" ref="files" multiple/>
+        <input class="image_upload__input" name="image_file" type="file" @change="onUploadImage" ref="files" multiple/>
 
         <!--이미지 미리보기-->
         <div v-if="uploadReady" class="image_preview">
@@ -133,7 +126,7 @@
         </template>
 
         <!-- /footer -->
-      </AdminBottomModal>
+      </admin-bottom-modal>
 
       <input type="submit" value="완료"/>
 
@@ -165,17 +158,15 @@ export default {
   },
   data() {
     return {
-      data,
-      alert_save: false,
+      songList     : [{}],
+      alert_save   : false,
       isModalViewed: false,
-      bottommodal: false,
-      uploadReady: false,
-      blocktitle: "곡 추가",
-      textAddSong_1:"이 곳을 눌러 첫번째 곡을 추가하세요",
-      textAddSong_2:"이 곳을 눌러 다음 곡을 추가하세요",
-      date: null,
-      song_title: "",
-      song_youtube: "",
+      bottomModal  : false,
+      uploadReady  : false,
+      blocktitle   : "곡 추가",
+      date         : '날짜를 선택해 주세요.',
+      song_title   : "",
+      song_youtube : "",
       song_image: null,
       files:[],
       filesPreview: [],
@@ -183,15 +174,20 @@ export default {
 
     };
   },
+  computed: {
+    textAddSong () {
+      return `이 곳을 눌러 ${this.songList.length === 0 ? '첫번째' : '다음'} 곡을 추가하세요.`;
+    }
+  },
   methods: {
     openModal() {
-      this.bottommodal = true;
+      this.bottomModal = true;
     },
     closeModal() {
-      this.bottommodal = false;
+      this.bottomModal = false;
     },
     addSong() {
-      this.data.push({
+      this.songList.push({
         song_title: this.song_title,
         song_youtube: this.song_youtube,
         song_image: this.song_image,
@@ -199,7 +195,7 @@ export default {
       this.closeModal();
     },
     deleteSong(index) {
-      this.data.splice(index, 1);
+      this.songList.splice(index, 1);
     },
     onUploadImage(){
       this.uploadReady = true;
@@ -220,7 +216,7 @@ export default {
               }
           ];
           num = i;
-    
+
       }
       this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
       console.log(this.files);
@@ -230,6 +226,9 @@ export default {
       const name = e.target.getAttribute('name');
       this.files = this.files.filter(data => data.number !== Number(name));
     },
+    onClickDate () {
+      this.$refs.date.click();
+    }
   },
 };
 </script>
@@ -281,8 +280,8 @@ body {
   content: attr(data-placeholder);
   padding: 13px 40px;
   background: url(../../assets/CalendarIcon.png),url(../../assets/ChevrondownIcon.png);
-  background-position: left, right; 
-  background-size: 24px,24px; 
+  background-position: left, right;
+  background-size: 24px,24px;
   background-repeat:no-repeat;
   width: 90%;
   border: 0px;

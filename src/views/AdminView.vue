@@ -1,14 +1,14 @@
 <!--Admin 첫번째(로그인) 페이지-->
 
 <template>
-  <div class="AdminLoginpage">
+  <div class="admin_login_page">
     <!--헤더-->
     <div>
       <span>찬양공유 관리자시스템</span>
     </div>
     <div class="title">
-      <div class="title__main">
-        <span class="title__main" id="title__main_1">서울중앙교회 </span>
+      <div class="title_main">
+        <span class="title_main" id="title_main_1">서울중앙교회 </span>
         <span>찬양공유</span>
       </div>
       <div>
@@ -16,21 +16,22 @@
       </div>
     </div>
     <!--로그인폼-->
-    <form @submit.prevent="login">
-      <div class="login-form">
+    <div class="form">
+      <div class="login_form">
         <label for="password">관리자 로그인</label>
         <input
-          class="login-box"
+          class="login_box"
           id="password"
           type="password"
           v-model="password"
+          @keyup="onKeyupPassword"
         />
       </div>
-      <button @click="login({ password })" id="login-btn" type="submit">
+      <button @click="onClickLoginBtn" id="login-btn">
         로그인
       </button>
       <!-- <button @click="test">테스트</button> -->
-    </form>
+    </div>
   </div>
 </template>
 
@@ -38,8 +39,6 @@
 
 // import axios from "axios";
 import { mapState, mapActions } from "vuex";
-
-const userStore = "userStore";
 
 export default {
   data() {
@@ -51,7 +50,18 @@ export default {
     ...mapState(["isLogin", "isLoginError"]),
   },
   methods: {
-    ...mapActions(userStore, ["login"]),
+    ...mapActions({
+      login: 'userStore/login'
+    }),
+    onKeyupPassword(e) {
+      if (e.keyCode === 13) {
+        this.login(this.password);
+      }
+    },
+    onClickLoginBtn() {
+      this.login(this.password);
+    }
+  },
     // test() {
     //   // Make a request for a user with a given ID
     //   axios
@@ -66,7 +76,7 @@ export default {
     //       console.log(err);
     //     });
     // },
-  },
+  // },
   name: "AdminView"
 };
 </script>
@@ -86,21 +96,21 @@ body {
   font-size: 14px;
 }
 
-form {
+.form {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex;
 }
 
-.login-form {
+.login_form {
   margin: 15px 45px;
   text-align: left;
   display: flex;
   flex-direction: column;
 }
 
-.login-box {
+.login_box {
   width: 200px;
   height: 48px;
   border: 2px solid #aaaaaa;
@@ -113,12 +123,12 @@ form {
   flex-direction: column;
 }
 
-.title__main {
+.title_main {
   font-size: 18px;
   margin-bottom: 10px;
 }
 
-#title__main_1 {
+#title_main_1 {
   font-weight: 700;
 }
 
