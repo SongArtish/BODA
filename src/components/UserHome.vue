@@ -17,11 +17,14 @@
           >{{item.categoryName}}</option>
         </select>
     </div>
-    <ContiCard 
+    <div
+      class="conti"
       v-for="conti in contiList"
       :key="conti.contiId"
-      :conti="conti"
-    />
+      @click="toDetail(conti.contiId)"
+    >
+      <ContiCard :conti="conti" />
+    </div>
     <footer class="footer">
         03136 서울특별시 종로구 창경궁로 129-11 <br />
         TEL 02-765-7761~2 | FAX 02-765-7763 <br /><br />
@@ -54,7 +57,8 @@ export default {
   created() {
     let today = new Date()
     this.date.year = today.getFullYear();
-    this.date.month = today.getMonth() + 1;
+    // this.date.month = today.getMonth() + 1;
+    this.date.month = 9
 
     getCategoryAPI()
       .then((res) => {
@@ -65,33 +69,16 @@ export default {
     getContiListAPI(this.date.year, this.date.month)
       .then((res) => {
         // 이거 수정해야 합니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        console.log(res.result)
-        if (res.result.contents.length >= 1) {
-          this.contiList = res.result.contents
-          this.contiListAll = res.result.contents
-        }
-        else {
-          let dummyList = [
-            {
-              contiId: 1,
-              categoryName: '대학부 행사',
-              depart: '1',
-              date: '2022년 10월 18일',
-              title: '밤이나 낮이나'
-            },
-            {
-              contiId: 2,
-              categoryName: '청년부 행사',
-              depart: '2',
-              date: '2022년 10월 18일',
-              title: '밤이나 낮이나'
-            }
-          ]
-          this.contiList = dummyList
-          this.contiListAll = dummyList
-        }
+        console.log(res.result.contents)
+        this.contiList = res.result.contents
+        this.contiListAll = res.result.contents
       })
       .catch((err) => console.log(err))
+  },
+  methods: {
+    toDetail(id) {
+      this.$router.push({ path: `/conti/${id}` })
+    }
   }
 }
 </script>
@@ -125,6 +112,9 @@ export default {
 .category-item {
   color: #D4D4D4;
   width: 100%;
+}
+.conti {
+  cursor: pointer;
 }
 .footer {
   bottom: 0;

@@ -1,7 +1,8 @@
 <template>
-  <div class="ContiCard" :class="[conti.depart === '1'? 'conti-1': 'conti-2']">
-    <small class="conti-category" :class="[conti.depart === '1'? 'conti-category-1': 'conti-category-2']">{{ conti.categoryName }}</small>
-    <div class="conti-date">{{ conti.date }}</div>
+  <div class="ContiCard" :class="[conti.depart === 'Y'? 'conti-1': 'conti-2']">
+    <small v-if="conti.depart === 'Y'" class="conti-category conti-category-1">대학부 {{ conti.categoryName }}</small>
+    <small v-else class="conti-category conti-category-2">청년부 {{ conti.categoryName }}</small>
+    <div class="conti-date">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
     <li class="conti-content">{{ conti.title }}</li>
   </div>
 </template>

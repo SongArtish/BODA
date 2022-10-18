@@ -7,6 +7,7 @@
 <style>
 body {
   background: #48495B;
+  user-select: none;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
