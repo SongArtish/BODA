@@ -1,3 +1,5 @@
 export { default as AdminCreate } from "./AdminCreate"
 export { default as AdminHome } from "./AdminHome"
 export { default as AdminList } from "./AdminList"
+export { default as UserDetail } from "./UserDetail"
+export { default as UserHome } from "./UserHome"

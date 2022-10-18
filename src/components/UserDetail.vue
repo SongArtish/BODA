@@ -1,18 +1,18 @@
 <template>
-  <div class="AdminCreate">
-    <h1>AdminCreate</h1>
+  <div class="UserDetail">
+    <h1>UserDetail</h1>
   </div>
 </template>
 <script>
 
 export default {
-  name: 'AdminCreate',
+  name: 'UserDetail',
   components: {
   }
 }
 </script>
 <style scoped>
-.AdminCreate {
+.UserDetail {
   margin-left: 2rem;
   margin-right: 2rem;
 }
