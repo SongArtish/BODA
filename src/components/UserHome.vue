@@ -78,12 +78,14 @@ export default {
 
     getCategoryAPI()
       .then((res) => {
+        console.log(res)
         this.category = res.result
       })
       .catch((err) => console.log(err))
 
     getContiListAPI(this.date.year, this.date.month)
       .then((res) => {
+        console.log(res)
         this.contiList = res.result.contents
         this.isLoaded = true
       })
