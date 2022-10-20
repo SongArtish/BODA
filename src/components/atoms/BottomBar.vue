@@ -1,43 +1,46 @@
 <template>
   <div class="BottomBar">
-    <div class="item" @click="toPrevious()">이전 곡</div>
-    <!-- <div class="item item-bold" @click="openModal()">찬양 목록</div> -->
-    <div class="dropup" @click="openList()">
-        <div class="item item-bold">찬양 목록</div>
-        <div class="dropup-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
+    <div v-if="songOrder <= 0" class="item">이전 곡</div>
+    <div v-else class="item item-enabled" @click="toPrevious()">이전 곡</div>
+    <div class="dropup" @click="toggleList()">
+        <div class="item item-enabled item-bold">찬양 목록</div>
+        <div v-if="isOpen" class="dropup-content">
+            <div class="dropup-item" v-for="song in songList" :key="song.songId" @click="selectSong(song.songOrder)">[{{song.songOrder}}] {{ song.title }}</div>
         </div>
     </div>
-    <div class="item" @click="toNext()">다음 곡</div>
-
+    <div v-if="songList && songOrder >= songList.length-1" class="item">다음 곡</div>
+    <div v-else class="item item-enabled" @click="toNext()">다음 곡</div>
   </div>
 </template>
 <script>
 export default {
   name: 'BottomBar',
-  props: ['songList'],
-  components: {
+  props: ['songList', 'songOrder'],
+  data() {
+    return {
+      isOpen: false
+    }
   },
   methods: {
-    openList() {
-        let list = document.querySelector(".dropup-content")
-        list.style.display = "block"
-    },
     closeList() {
-        let list = document.querySelector(".dropup-content")
-        list.style.display = "none"
+      if (this.isOpen) this.isOpen = false
+    },
+    toggleList() {
+      this.isOpen = !this.isOpen
+    },
+    selectSong(songId) {
+      if (this.songOrder != songId) {
+        this.closeList()
+        this.$emit('selectSong', songId)
+        // window.location.reload(true);
+      }
     },
     toPrevious() {
-        console.log('hello')
+      this.$emit('selectSong', this.songOrder)
     },
     toNext() {
-        console.log('hello')
-    }
-    // buttonClick() {
-    //   this.$emit('buttonClick')
-    // }
+      this.$emit('selectSong', this.songOrder+2)
+    },
   }
 }
 </script>
@@ -59,10 +62,9 @@ export default {
     margin: 0 auto;
 
     left: 10%;
-    position: absolute;
+    /* position: absolute; */
+    position: fixed;
     bottom: 1.5rem;
-
-    user-select: none;
 }
 .item {
     flex: 1;
@@ -72,14 +74,15 @@ export default {
     color: #f2f2f2;
     text-align: center;
     margin: 0 auto;
-    /* padding: 14px 16px; */
     text-decoration: none;
-    cursor: pointer;
 }
 /* .item:hover {
     background-color: #ddd;
     color: black;
 } */
+.item-enabled {
+    cursor: pointer;
+}
 .item-bold {
     color: white;
     font-weight: bold;
@@ -88,7 +91,8 @@ export default {
   display: inline-block;
 }
 .dropup-content {
-  display: none;
+  /* display: none; */
+  display: block;
   position: fixed;
   bottom: 4.5rem;
   left: 20%;
@@ -97,14 +101,16 @@ export default {
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
-
-.dropup-content a {
+.dropup-item {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  cursor: pointer;
+  margin: 0 1rem;
+  text-align: left;
 }
-.dropup-content a:hover {
+.dropup-item:hover {
     background-color: #ddd
 }
 </style>

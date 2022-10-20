@@ -2,13 +2,11 @@ import axios from "axios"
 const SERVER_URL = process.env.VUE_APP_SERVER_URL || 'http://ec2-3-39-205-107.ap-northeast-2.compute.amazonaws.com'
 
 export async function getCategoryAPI() {
-  console.log(SERVER_URL)
   try {
     let res = await axios({
-      url: SERVER_URL + "/api/category/list",
+      url: SERVER_URL + "/api/user/category/list",
       method: "GET",
     });
-    console.log(res)
     return res.data
   } catch (error) {
     throw new Error(error)
@@ -18,7 +16,7 @@ export async function getCategoryAPI() {
 export async function getContiListAPI(year, month) {
   try {
     let res = await axios({
-      url: SERVER_URL + "/api/conti/list",
+      url: SERVER_URL + "/api/user/conti/list",
       method: "GET",
         params: {
           year: year,
@@ -34,7 +32,7 @@ export async function getContiListAPI(year, month) {
 export async function getContiDetailAPI(contiId) {
   try {
     let res = await axios({
-      url: SERVER_URL + `/api/conti/${contiId}`,
+      url: SERVER_URL + `/api/user/conti/${contiId}`,
       method: "GET",
     });
     return res.data

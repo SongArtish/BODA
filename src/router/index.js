@@ -11,7 +11,7 @@ const routes = [
     component: UserHome
   },
   {
-    path: '/conti/:pk',
+    path: '/conti/:id',
     name: 'UserDetail',
     component: UserDetail
   },

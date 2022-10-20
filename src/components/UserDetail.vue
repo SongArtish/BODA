@@ -1,17 +1,24 @@
 <template>
   <div class="UserDetail">
-    <div class="wrapper">
+    <div v-if="isLoaded" class="wrapper" @mouseup="closeList()">
       <div class="navbar">
         <div class="navbar-title">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
         <div class="navbar-button" @click="share()"><img class="navbar-button-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
       <div class="content">
-        <div class="category">{{ conti.categoryName }}</div>
-        <div class="title">{{ conti.songList }}</div>
-        <div class="sheet"></div>
+        <small v-if="conti.depart == 'Y'" class="category-1">대학부 {{ conti.categoryName }}</small>
+        <small v-else class="category-2">청년부 {{ conti.categoryName }}</small>
+
+        <div class="title">{{ conti.songList[songOrder].title }}</div>
+        <div class="sheet">
+          <img class="sheet-image" v-for="sheet in conti.songList[songOrder].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl" />
+        </div>
+        <div v-if="getVideoLink !== null" class="video">
+          <iframe class="video-content" width="560" height="315" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
-    <BottomBar :songList="this.conti.songList" />
+    <BottomBar :songList="conti.songList" :songOrder="songOrder" @selectSong="selectSong" ref="bottombar" />
   </div>
 </template>
 <script>
@@ -25,31 +32,41 @@ export default {
   },
   data() {
     return {
-      conti: {
-        categoryName: '',
-        contiId: '',
-        date: [],
-        depart: '',
-        title: '',
-        songList: []
-      },
-      song: {
-
+      conti: {},
+      contiId: this.$route.params.id,
+      songOrder: 0,
+      videoLink: '',
+      isLoaded: false,
+    }
+  },
+  computed: {
+    getVideoLink() {
+      if (this.isLoaded) {
+        let url = this.conti.songList[this.songOrder].link
+        if (url.includes("/embed/")) return url
+        else return "https://www.youtube.com/embed/" + url.slice(-11)
       }
+      else return null
     }
   },
   created() {
-    getContiDetailAPI(this.$route.params.pk)
+    getContiDetailAPI(this.$route.params.id)
       .then((res) => {
         this.conti = res.result
-        console.log(res.result)
+        this.isLoaded = true
       })
       .catch((err) => console.log(err))
   },
   methods: {
+    closeList() {
+      this.$refs.bottombar.closeList()
+    },
     share() {
       console.log('share-button')
-    }
+    },
+    selectSong(songOrder) {
+      this.songOrder = songOrder-1
+    },
   }
 }
 </script>
@@ -63,13 +80,37 @@ export default {
     left: 0px;
     margin: 3rem 0;
 }
-.navbar-title {
-
-}
 .navbar-button {
   cursor: pointer;
 }
 .navbar-button-img {
   width: 1rem;
+}
+.category-1 {
+    color: #A9B66E;
+}
+.category-2 {
+    color: #86C8EA;
+}
+.title {
+  font-weight: bold;
+  margin: .5rem 0;
+}
+.sheet-image {
+  margin: 1rem 0;
+  object-fit: contain;
+  width: 100%;
+}
+.video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 비율 */
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+}
+.video-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -16,5 +16,6 @@ body {
   text-align: center;
   color: white;
   text-align: left;
+  overflow-y: auto;
 }
 </style>
