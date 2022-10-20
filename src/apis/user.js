@@ -8,7 +8,6 @@ export async function getCategoryAPI() {
       url: SERVER_URL + "/api/user/category/list",
       method: "GET",
     });
-    console.log('res: ' + res)
     return res.data
   } catch (error) {
     throw new Error(error)
