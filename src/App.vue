@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/list/detail1">Detail</router-link>
-    </nav>
     <router-view />
   </div>
 </template>

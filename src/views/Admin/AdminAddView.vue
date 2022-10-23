@@ -1,5 +1,5 @@
 <template>
-  <div class="AdminAdd">
+  <div id="AdminAdd">
     <!--헤더-->
     <!-- <AdminHeader /> -->
     <div class="header">
@@ -14,29 +14,21 @@
       @close-modal="isModalViewed = false"
     />
 
-    <div v-if="bottommodal">
+    <div v-if="bottomModal">
       <div>찬양공유에 새 글을 작성합니다.</div>
       <div>별도 표시된 부분은 필수로 입력해 주세요.</div>
     </div>
 
 
 
-    <form>
+    <div>
       <!--datepicker-->
-      <div>날짜</div>
-      <input 
-      type="date"
-      data-placeholder="날짜를 선택해 주세요"
-      required
-      v-model="date"
-      class="date-picker"
-      pattern="\d{4}-\d{2}-\d{2}"
-      />
-      
+      <AdminCalendar v-model="date"/>
       
       <!--부서선택-->
       <div class="RadioBtn">
-        <AdminSelect />
+        <AdminSelect :selections="selections_depart" :radioSelectTitle="radioSelectDepart" @change='onDepartChange' :name="depart"/>
+        <AdminSelect :selections="selections_category" :radioSelectTitle="radioSelectCategory" @change="onCategoryChange" :name="category"/>
       </div>
 
       <div class="line"></div>
@@ -46,21 +38,19 @@
         <span>{{ blocktitle }}</span>
       </div>
 
-      <!--곡 추가(첫번째 곡) 버튼-->
-      <AdminAddSongBtn v-if="data.length == 0 " :textAddSong="textAddSong_1" @openModal="openModal"/>
-
-
       <!--곡 리스트 표시-->
       <div class="song_info">
-        <div class="song_detail" v-for="(item, index) in data" :key="index">
+        <div class="song_detail" v-for="(item, index) in songList" :key="index">
           <div>
             <div id="song_detail_title">{{ item.song_title }}</div>
             <!--사진/링크가 있는 경우 체크 표시-->
             <div>
               <font-awesome-icon icon="fa-solid fa-check" />
               첨부사진
-              <font-awesome-icon icon="fa-solid fa-check" />
-              링크
+              <div :style="[]">
+                <font-awesome-icon icon="fa-solid fa-check" />
+                링크 없음
+              </div>
             </div>
           </div>
 
@@ -77,12 +67,12 @@
       </div>
 
       <!--곡 추가(다음곡) 버튼-->
-      <AdminAddSongBtn v-if="data.length !=0 " :textAddSong="textAddSong_2" @openModal="openModal"/>
+      <AdminAddSongBtn :textAddSong="textAddSong" @openModal="openModal"/>
 
 
       
       <!--바텀업 모달-->
-      <AdminBottomModal class="bottom_modal" v-if="bottommodal">
+      <AdminBottomModal class="bottom_modal" v-if="bottomModal">
         <!-- 슬롯 콘텐츠 -->
         <p>곡 제목</p>
         <div>
@@ -102,7 +92,7 @@
           <input
             class = "modal-input-text"
             type="text"
-            v-model="song_youtube"
+            v-model="song_link"
             placeholder="유튜브 링크를 입력하세요"
           />
         </div>
@@ -129,7 +119,7 @@
 
         <!--footer 콘텐츠-->
         <template slot="footer">
-          <button @click.prevent="addSong" :disabled="song_title.length <1 ">완료</button>
+          <button @click="addSong" :disabled="song_title.length <1">완료</button>
         </template>
 
         <!-- /footer -->
@@ -137,69 +127,104 @@
 
       <input type="submit" value="완료"/>
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
-import DatePicker from "vue2-datepicker";
 import AdminSelect from "@/components/Admin/AdminSelect.vue";
 // import AdminHeader from "@/components/Admin/AdminHeader.vue";
 import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
+import AdminCalendar from "../../components/Admin/AdminCalendar.vue"
 import "vue2-datepicker/index.css";
 import AdminBottomModal from "@/components/Admin/AdminBottomModal.vue";
 import AdminAddSongBtn from "../../components/Admin/AdminAddSongBtn.vue"
-import data from "../../data/index.js";
 
 export default {
   name: "AdminAdd",
+  emits:[
+    'change'
+  ],
   components: {
-    DatePicker,
     AdminSelect,
     AdminHeaderModal,
     AdminBottomModal,
-    AdminAddSongBtn
+    AdminAddSongBtn,
+    AdminCalendar,
   },
   props: {
     msg: String,
   },
   data() {
     return {
-      data,
       alert_save: false,
       isModalViewed: false,
-      bottommodal: false,
+      bottomModal: false,
       uploadReady: false,
       blocktitle: "곡 추가",
-      textAddSong_1:"이 곳을 눌러 첫번째 곡을 추가하세요",
-      textAddSong_2:"이 곳을 눌러 다음 곡을 추가하세요",
+      radioSelectDepart: "소속",
+      radioSelectCategory: "분류",
+      songList:[],
+      depart:"",
+      category:"",
       date: null,
       song_title: "",
-      song_youtube: "",
+      song_link: "",
       song_image: null,
       files:[],
       filesPreview: [],
-      uploadImageIndex: 0
-
+      uploadImageIndex: 0,
+      selections_depart: [{
+        txt: '대학부',
+        val: 'U'
+      },{
+        txt: '청년부',
+        val: 'Y'
+      }
+      ],
+      selections_category: [{
+        txt: '주일',
+        val: 'S'
+      },{
+        txt:'행사',
+        val:'O'
+      }]
     };
+  },
+  computed: {
+    // 곡 추가 메시지
+    textAddSong() {
+      return `이 곳을 눌러 ${this.songList.length === 0 ? '첫번째' : '다음'} 곡을 추가하세요. `;
+    }
   },
   methods: {
     openModal() {
-      this.bottommodal = true;
+      this.bottomModal = true;
     },
     closeModal() {
-      this.bottommodal = false;
+      this.bottomModal = false;
+    },
+    onInputAdminSelect(param) {
+      console.log("param", param);
+    },
+    onDepartChange(value){
+      this.depart = value;
+      console.log(this.depart)
+    },
+    onCategoryChange(value){
+      this.category = value;
+      console.log(this.category)
     },
     addSong() {
-      this.data.push({
+      this.songList.push({
         song_title: this.song_title,
-        song_youtube: this.song_youtube,
+        song_link: this.song_link,
         song_image: this.song_image,
       });
       this.closeModal();
     },
     deleteSong(index) {
-      this.data.splice(index, 1);
+      this.songList.splice(index, 1);
     },
     onUploadImage(){
       this.uploadReady = true;
@@ -228,7 +253,7 @@ export default {
     },
     fileDeleteButton(e) {
       const name = e.target.getAttribute('name');
-      this.files = this.files.filter(data => data.number !== Number(name));
+      this.files = this.files.filter(songList => songList.number !== Number(name));
     },
   },
 };
@@ -239,15 +264,18 @@ html,
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  height: 100%;
+  overflow: auto;
 }
 
-.AdminAdd {
+#AdminAdd {
   font-family: "Noto Sans KR";
   text-align: center;
   background: #48495b;
   color: #fffffd;
   padding: 0;
+  height: 100vh;
+
 }
 .line {
   width: 100%;
@@ -273,41 +301,7 @@ body {
 .song_detail_icon {
   margin: 0px 10px;
 }
-/*date-picker*/
 
-.date-picker {
-  box-sizing: border-box;
-  position: relative;
-  content: attr(data-placeholder);
-  padding: 13px 40px;
-  background: url(../../assets/CalendarIcon.png),url(../../assets/ChevrondownIcon.png);
-  background-position: left, right; 
-  background-size: 24px,24px; 
-  background-repeat:no-repeat;
-  width: 90%;
-  border: 0px;
-  border-bottom: 2px solid #646574;
-  color: #fffffd;
-}
-.date-picker::-webkit-clear-button{display: none;}
-.date-picker::-webkit-inner-spin-button {display: none;}
-.date-picker::-webkit-calendar-picker-indicator {
-  position: absolute;
-  left:0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  color: transparent;
-  cursor: pointer;
-}
-.date-picker::before {
-  content: attr(data-placeholder);
-  width: 100%;
-}
-.date-picker:valid::before{
-  display: none;
-}
 
 /*바텀업 모달 인풋*/
 .modal-input-text{

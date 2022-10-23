@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "AdminModal",
+  name: "AdminHeaderModal",
   methods: {
     pageAdminList() {
       this.$router.push({ path: "/admin/list" });

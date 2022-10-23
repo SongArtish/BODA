@@ -1,32 +1,48 @@
+<!--부서와 분류 선택 -->
 <template>
   <div class="AdminSelect">
-    <span>소속</span>
+    <span>{{ radioSelectTitle }}</span>
     <div class="radio_select">
-      <input type="radio" id="U" value="Univ" v-model="select1" />
-      <label for="U">대학부</label>
-      <input type="radio" id="Y" value="Youth" v-model="select1" />
-      <label for="Y">청년부</label>
-    </div>
-
-    <span>분류</span>
-    <div class="radio_select">
-      <input type="radio" id="S" value="Sunday" v-model="select2" />
-      <label for="S">주일</label>
-      <input type="radio" id="O" value="Others" v-model="select2" />
-      <label for="O">행사</label>
-    </div>
+        <div class="radio_select" v-for="(item, index) in selections" :key="index">
+          <input 
+          type="radio" 
+          :id="item.val" 
+          :value="item.val"
+          @change="onRadioChange"
+          :name="name"
+          />
+          <label :for="item.val">{{item.txt}}</label>
+        </div>
+      </div>
   </div>
 </template>
-<!-- https://www.youtube.com/watch?v=rAMScov1RO4 -->
+
 <script>
 export default {
-  data() {
-    return {
-      data: "대학부/청년부",
-      select1: "",
-      select2: "",
-    };
+  name: "AdminSelect",
+  props: {
+    radioSelectTitle: {
+      type: String,
+      default: undefined
+    },
+    selections: {
+      type: Array,
+      default: () => ({})
+    },
+    name:{}
+    },
+  methods: {
+    onRadioChange(event) {
+      this.$emit('change', event.target.value);
+    }
+    // update(key, value) {
+    //   this.$emit(key, value)
+    // }
   },
+  // mounted: 
+  // function() {
+  //   console.log(this.target.value)
+  // }
 };
 </script>
 
@@ -38,6 +54,7 @@ export default {
   gap: 1rem;
   font-family: "Noto Sans KR";
 }
+/*  라디오 버튼 커스텀  */
 .radio_select input[type="radio"] {
   display: none;
 }

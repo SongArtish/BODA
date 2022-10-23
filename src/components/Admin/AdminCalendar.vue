@@ -5,7 +5,8 @@
         type="date"
         data-placeholder="날짜를 선택해 주세요"
         required
-        v-model="date"
+        :value="date"
+        @input = "ondateChange"
         class="date-picker"
         />
 
@@ -15,6 +16,14 @@
 <script>
 export default {
     name: "AdminCalendar",
+    props: [
+        'date',
+    ],
+    methods: {
+        ondateChange(event) {
+            this.$emit('input', event.target.value);
+        }
+    }
 };
 </script>
 

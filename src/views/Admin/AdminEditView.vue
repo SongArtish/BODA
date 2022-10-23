@@ -10,7 +10,12 @@
       </div>
       <!--선택-->
       <div class="RadioBtn">
-        <AdminSelect />
+        <span>{{selectDepart}}</span>
+        <div v-for="(item, index) in selections" :key="index">
+          <input type="radio" :id="item.val" v-model="checked" :value="item.val"/>
+          <label :for="item.val">{{item.txt}}</label>
+          
+        </div>
       </div>
       <!--찬양곡(제목)-->
       <div id="block-title">
@@ -69,7 +74,6 @@
 <script>
 import AdminHeader from "@/components/Admin/AdminHeader.vue";
 import DatePicker from "vue2-datepicker";
-import AdminSelect from "@/components/Admin/AdminSelect.vue";
 import "vue2-datepicker/index.css";
 
 export default {
@@ -77,7 +81,6 @@ export default {
   components: {
     AdminHeader,
     DatePicker,
-    AdminSelect,
   },
   props: {
     msg: String,
@@ -93,6 +96,16 @@ export default {
           youtubelink: "",
         },
       ],
+      selectDepart : '소속',
+      selections: [{
+        txt: '대학부',
+        val: 'U'
+      },{
+        txt: '청년부',
+        val: 'Y'
+      }
+      ],
+      checked: '',
     };
   },
   methods: {
