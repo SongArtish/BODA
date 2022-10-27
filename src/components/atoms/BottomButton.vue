@@ -35,7 +35,7 @@ export default {
 
     /* Point/admin */
 
-    background: #44786C;
+    background: var(--color-main);
     cursor: pointer;
 }
 </style>

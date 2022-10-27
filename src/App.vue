@@ -5,8 +5,16 @@
 </template>
 
 <style>
+:root {
+  --color-bg: #48495B;
+  --color-main: #44786C;
+  --color-light-1: #FFFFFD;
+  --color-light-2: #D4D4D4;
+  --color-green: #A9B66E;
+  --color-blue: #86C8EA;
+}
 body {
-  background: #48495B;
+  background: var(--color-bg);
   user-select: none;
 }
 #app {
@@ -14,8 +22,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: white;
+  color: var(--color-light-1);
   text-align: left;
-  overflow-y: auto;
+  overflow: hidden;
 }
 </style>

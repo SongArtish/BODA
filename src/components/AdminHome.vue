@@ -41,9 +41,9 @@ export default {
       if (this.password === null || this.password.length < 1) {
         this.message = "비밀번호를 입력하세요"
       }
-      else if (isNaN(this.password)) {
-        this.message = "숫자만 입력할 수 있습니다."
-      }
+      // else if (isNaN(this.password)) {
+      //   this.message = "숫자만 입력할 수 있습니다."
+      // }
       else {
         this.message = null
         return true
@@ -72,12 +72,8 @@ export default {
 }
 </script>
 <style scoped>
-.AdminHome {
-  margin-left: 2rem;
-  margin-right: 2rem;
-}
 .title {
-    margin: 3rem 0;
+    margin: 3rem 2rem;
 }
 .title-1 {
     font-size: 1.2rem;
@@ -89,7 +85,7 @@ export default {
   color: #90E5FA;
 }
 .login {
-    margin: 4rem 0;
+    margin: 4rem 2rem;
 }
 .login-input {
     background-color: transparent;

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { AdminCreate, AdminHome, AdminList, UserDetail, UserHome } from '../components'
+import { AdminDetail, AdminHome, AdminList, UserDetail, UserHome } from '../components'
 
 Vue.use(VueRouter)
 
@@ -21,14 +21,14 @@ const routes = [
     component: AdminHome
   },
   {
-    path: '/admin/create',
-    name: 'AdminCreate',
-    component: AdminCreate
-  },
-  {
     path: '/admin/list',
     name: 'AdminList',
     component: AdminList
+  },
+  {
+    path: '/admin/:id',
+    name: 'AdminDetail',
+    component: AdminDetail
   },
 ]
 

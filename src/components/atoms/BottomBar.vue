@@ -2,8 +2,8 @@
   <div class="BottomBar">
     <div v-if="songOrder <= 0" class="item">이전 곡</div>
     <div v-else class="item item-enabled" @click="toPrevious()">이전 곡</div>
-    <div class="dropup" @click="toggleList()">
-        <div class="item item-enabled item-bold">찬양 목록</div>
+    <div class="dropup" >
+        <div class="item item-enabled item-bold" @click="toggleList()">찬양 목록</div>
         <div v-if="isOpen" class="dropup-content">
             <div class="dropup-item" v-for="song in songList" :key="song.songId" @click="selectSong(song.songOrder)">[{{song.songOrder}}] {{ song.title }}</div>
         </div>
@@ -29,8 +29,8 @@ export default {
       this.isOpen = !this.isOpen
     },
     selectSong(songId) {
-      if (this.songOrder != songId) {
-        this.closeList()
+      if (this.songOrder != songId-1) {
+        // this.closeList()
         this.$emit('selectSong', songId)
         // window.location.reload(true);
       }
@@ -47,7 +47,7 @@ export default {
 <style scoped>
 .BottomBar {
     background: #9b9dad;
-    opacity: 0.8;
+    opacity: 0.9;
     border-radius: 1.2rem;
     width: 80%;
 

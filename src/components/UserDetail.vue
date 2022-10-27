@@ -6,21 +6,22 @@
         <div class="navbar-button" @click="share()"><img class="navbar-button-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
       <div class="content">
-        <small v-if="conti.depart == 'Y'" class="category-1">대학부 {{ conti.categoryName }}</small>
-        <small v-else class="category-2">청년부 {{ conti.categoryName }}</small>
+        <small v-if="conti.depart == 'Y'" class="category-1">청년부 {{ conti.categoryName }}</small>
+        <small v-else class="category-2">대학부 {{ conti.categoryName }}</small>
 
         <div class="title">{{ conti.songList[songOrder].title }}</div>
         <div class="sheet">
           <img class="sheet-image" v-for="sheet in conti.songList[songOrder].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl" />
         </div>
         <div v-if="getVideoLink !== null" class="video">
-          <iframe class="video-content" width="560" height="315" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
     <BottomBar :songList="conti.songList" :songOrder="songOrder" @selectSong="selectSong" ref="bottombar" />
   </div>
 </template>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.0/kakao.min.js" integrity="sha384-PFHeU/4gvSH8kpvhrigAPfZGBDPs372JceJq3jAXce11bVA6rMvGWzvP4fMQuBGL" crossorigin="anonymous" />
 <script>
 import { BottomBar } from './atoms'
 import { getContiDetailAPI } from '../apis/user'
@@ -62,7 +63,16 @@ export default {
       this.$refs.bottombar.closeList()
     },
     share() {
-      console.log('share-button')
+      window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY)
+      Kakao.Share.sendDefault({
+        objectType: 'text',
+        text:
+          `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
+        link: {
+          mobileWebUrl: `${window.location.href}`,
+          webUrl: `${window.location.href}`
+        },
+      });
     },
     selectSong(songOrder) {
       this.songOrder = songOrder-1
@@ -87,10 +97,10 @@ export default {
   width: 1rem;
 }
 .category-1 {
-    color: #A9B66E;
+    color: var(--color-blue);
 }
 .category-2 {
-    color: #86C8EA;
+    color: var(--color-green);
 }
 .title {
   font-weight: bold;

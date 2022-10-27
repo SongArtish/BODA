@@ -16,7 +16,7 @@ export default {
 .NavBar {
     width: 100%;
     left: 0px;
-    margin: 3rem 0;
+    margin: 3rem 2rem;
     /* display: block; */
     /* position: absolute; */
     /* height: 60px; */
