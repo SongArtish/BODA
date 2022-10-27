@@ -3,9 +3,24 @@
     <div id="DeleteModal">
       <div class="modal_overlay"></div>
       <div class="modal_card">
-        <span>게시글을 삭제하시겠습니까?</span>
-        <button @click="$emit('close-modal')">취소</button>
-        <button @click="deleteCard(index)">삭제</button>
+        <form @submit.prevent="login">
+        <div class="login-form">
+        <span>게시글 삭제
+          <font-awesome-icon @click="$emit('close-modal')" icon="fa-solid fa-xmark" />
+        </span>
+        <label for="password">게시글 비밀번호를 입력하여 주세요</label>
+        <input
+          class="login-box"
+          id="password"
+          type="password"
+          v-model="password"
+        />
+      </div>
+      <button @click="deleteContiCardAPI(contiId)" id="login-btn" type="submit">
+        확인
+      </button>
+      <!-- <button @click="test">테스트</button> -->
+    </form>
       </div>
     </div>
   </header>
@@ -13,11 +28,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      password: null,
+    };
+  },
   name: "DeleteModal",
   methods: {
-    deleteCard(index) {
+    DeleteCard(index) {
       this.cardinfos.splice(index, 1);
     },
+    remove (index) {
+      this.$delete(this.finds, index)
+    }
   },
 };
 </script>
