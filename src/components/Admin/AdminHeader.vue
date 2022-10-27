@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="admin-header">
     <div class="alert_block__bg" v-if="isModalViewed">
       <div class="alert_block">
         <span>게시글을 저장하지 않고 나가시겠어요?</span>
@@ -34,23 +34,16 @@ export default {
 </script>
 
 <style scoped>
-header {
+admin-header {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 20px;
   display: flex;
-
   align-items: center;
   justify-content: center;
   height: 100px;
 }
-header h1 {
-  display: flex;
-  text-align: center;
-  font-size: 15px;
-  top: 0;
-  left: 100px;
-}
+
 div {
   box-sizing: border-box;
 }

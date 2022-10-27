@@ -14,7 +14,7 @@
       @close-modal="isModalViewed = false"
     />
 
-    <div v-if="bottomModal">
+    <div class="header-subtext" v-if="bottomModal">
       <div>찬양공유에 새 글을 작성합니다.</div>
       <div>별도 표시된 부분은 필수로 입력해 주세요.</div>
     </div>
@@ -26,41 +26,43 @@
       <AdminCalendar v-model="date"/>
       
       <!--부서선택-->
-      <div class="RadioBtn">
+      <div class="radio-btn">
         <AdminSelect :selections="selections_depart" :radioSelectTitle="radioSelectDepart" @change='onDepartChange' :name="depart"/>
-        <AdminSelect :selections="selections_category" :radioSelectTitle="radioSelectCategory" @change="onCategoryChange" :name="category"/>
+        <AdminSelect :selections="selections_category" :radioSelectTitle="radioSelectCategory" @change="onCategoryChange" :name="categoryId"/>
       </div>
 
       <div class="line"></div>
 
       <!--찬양곡(제목)-->
-      <div id="block-title">
-        <span>{{ blocktitle }}</span>
+      <div id="addsong-title">
+        {{ blocktitle }}
       </div>
 
       <!--곡 리스트 표시-->
-      <div class="song_info">
-        <div class="song_detail" v-for="(item, index) in songList" :key="index">
+      <div class="song-info">
+        <div class="song-detail" v-for="(item, index) in songList" :key="index">
           <div>
-            <div id="song_detail_title">{{ item.song_title }}</div>
+            <div class="song-detail-title">{{ item.title }}</div>
             <!--사진/링크가 있는 경우 체크 표시-->
-            <div>
-              <font-awesome-icon icon="fa-solid fa-check" />
-              첨부사진
-              <div :style="[]">
-                <font-awesome-icon icon="fa-solid fa-check" />
+            <div class="song-detail-txt">
+              <div class="song-detail-check">
+                <img :src="checkIcon" alt="체크" class="check-icon"/>
+                첨부사진
+              </div>
+              <div class="song-detail-check">
+                <img :src="checkIcon" alt="체크" class="check-icon" :class="{'check-disabled': item.link.length < 1}"/>
                 링크 없음
               </div>
             </div>
           </div>
 
           <!--수정/삭제 버튼 -->
-          <div class="song_detail__icons">
-            <div class="song_detail_icon">
-              <font-awesome-icon icon="fa-regular fa-pen-to-square" />
+          <div class="song-detail-icons">
+            <div class="song-detail-icon">
+              <img :src="pencilIcon" alt="수정"/>
             </div>
-            <div class="song_detail_icon" @click="deleteSong(index)">
-              <font-awesome-icon icon="fa-solid fa-xmark" />
+            <div class="song-detail-icon" @click="deleteSong(index)">
+              <img :src="closeicon" alt="삭제">
             </div>
           </div>
         </div>
@@ -72,27 +74,28 @@
 
       
       <!--바텀업 모달-->
-      <AdminBottomModal class="bottom_modal" v-if="bottomModal">
+      <AdminBottomModal class="bottom_modal" v-if="bottomModal" @modalClose="bottomModal = false">
         <!-- 슬롯 콘텐츠 -->
-        <p>곡 제목</p>
+        <div class="modal-txt">곡 제목</div>
         <div>
           <input
             class = "modal-input-text"
+            :class="{'titlelength-warning': song_title.length >= 20}"
             type="text"
             v-model="song_title"
             placeholder="곡 제목을 입력하세요"
             required
             maxlength="20"
           />
-          <div v-if="song_title.length >= 20">곡 제목은 20자를 초과할 수 없습니다.</div>
+          <div class="titlelength-warning-txt" v-if="song_title.length >= 20">곡 제목은 20자를 초과할 수 없습니다.</div>
         </div>
         <!--유튜크 링크 추가-->
-        <p>유튜브 링크</p>
+        <div class="modal-txt">유튜브 링크</div>
         <div>
           <input
             class = "modal-input-text"
             type="text"
-            v-model="song_link"
+            v-model="link"
             placeholder="유튜브 링크를 입력하세요"
           />
         </div>
@@ -100,33 +103,39 @@
         <div class="song_image_upload">
 
         <!--이미지 업로드 버튼-->
-        <label for ="image_file">악보첨부</label>
-        <input class="image_upload__input" name="image_file" type="file" @change="onUploadImage()" ref="files" multiple/>
+        <label for ="image-file">악보첨부</label>
+        <input class="image-upload-input" name="image-file" type="file" @change="onUploadImage()" ref="fileList" multiple/>
 
         <!--이미지 미리보기-->
-        <div v-if="uploadReady" class="image_preview">
-          <div class="image_preview_container">
-            <div class="image_preview_container__image" v-for="(file,index) in files" :key="index"  >
-              <div class="image_preview_close__btn" @click="fileDeleteButton" :name=file.number>x</div>
-              <img :src="file.preview" />
+        <div v-if="uploadReady" class="image-preview">
+          <div class="image-preview-container">
+            <div class="image-preview-container-image" v-for="(file,index) in fileList" :key="index"  >
+              <div class="image-preview-close-btn" @click="fileDeleteButton" :name=file.number>
+                <img :src="closeicon" alt="삭제" style="width: 16px; height: 16px;">
+              </div>
+              <img class="image-preview-image" :src="file.preview" />
             </div>
           </div>
-
         </div>
-
-
         </div>
-
         <!--footer 콘텐츠-->
         <template slot="footer">
-          <button @click="addSong" :disabled="song_title.length <1">완료</button>
+          <AdminBtn @buttonClick="addSong" :class="{'disabledbtn': song_title.length <1}" :textButton="textButton"/>
         </template>
 
         <!-- /footer -->
       </AdminBottomModal>
 
-      <input type="submit" value="완료"/>
-
+      <AdminBtn 
+      :textButton="textButton" 
+      v-if="bottomModal === false" 
+      @buttonClick="passwordModal = true"/>
+      <!--비밀번호 입력-->
+      <AdminPasswordModal 
+      v-if="passwordModal == true"
+      :password="password"
+      @modalButtonClick="onSavePassword"
+      @modalCloseClick="passwordModal = false"/>
     </div>
   </div>
 </template>
@@ -135,10 +144,13 @@
 import AdminSelect from "@/components/Admin/AdminSelect.vue";
 // import AdminHeader from "@/components/Admin/AdminHeader.vue";
 import AdminHeaderModal from "@/components/Admin/AdminHeaderModal.vue";
+import AdminPasswordModal from "@/components/Admin/AdminPasswordModal.vue"
 import AdminCalendar from "../../components/Admin/AdminCalendar.vue"
 import "vue2-datepicker/index.css";
 import AdminBottomModal from "@/components/Admin/AdminBottomModal.vue";
 import AdminAddSongBtn from "../../components/Admin/AdminAddSongBtn.vue"
+import AdminBtn from "@/components/Admin/AdminBtn.vue";
+import {postFileAPI} from '@/api/index'
 
 export default {
   name: "AdminAdd",
@@ -149,8 +161,10 @@ export default {
     AdminSelect,
     AdminHeaderModal,
     AdminBottomModal,
+    AdminPasswordModal,
     AdminAddSongBtn,
     AdminCalendar,
+    AdminBtn
   },
   props: {
     msg: String,
@@ -161,17 +175,21 @@ export default {
       isModalViewed: false,
       bottomModal: false,
       uploadReady: false,
+      passwordModal: false,
       blocktitle: "곡 추가",
       radioSelectDepart: "소속",
       radioSelectCategory: "분류",
+      textButton:"완료",
       songList:[],
       depart:"",
-      category:"",
+      categoryId:"",
       date: null,
+      title: "",
       song_title: "",
-      song_link: "",
-      song_image: null,
-      files:[],
+      link: "",
+      sheetList: null,
+      password:"",
+      fileList:[],
       filesPreview: [],
       uploadImageIndex: 0,
       selections_depart: [{
@@ -184,11 +202,15 @@ export default {
       ],
       selections_category: [{
         txt: '주일',
-        val: 'S'
+        val: 1,
       },{
         txt:'행사',
-        val:'O'
-      }]
+        val: 2
+      }],
+      closeicon: require('@/assets/closeIcon.svg'),
+      pencilIcon: require('@/assets/pencilIcon.svg'),
+      checkIcon: require('@/assets/checkIcon.svg'),
+      checkDisabledIcon: require('@/assets/checkDisabledIcon.svg')
     };
   },
   computed: {
@@ -212,34 +234,65 @@ export default {
       console.log(this.depart)
     },
     onCategoryChange(value){
-      this.category = value;
-      console.log(this.category)
+      this.categoryId = value;
+      console.log(this.categoryId)
     },
     addSong() {
+      if (this.song_title.length <=0 ){
+        return false;
+      }
       this.songList.push({
-        song_title: this.song_title,
-        song_link: this.song_link,
-        song_image: this.song_image,
+        title: this.song_title,
+        link: this.link,
+        sheetList: this.fileList,
       });
+      //파일 업로드
+      const frm = new FormData();
+
+      if (this.$refs.fileList.files.length > -1) {
+        for (let i=0; i< this.$refs.fileList.files.length; i++){
+          const imageForm = this.$refs.fileList.files[i]
+
+          frm.append('fileList', imageForm)
+        }
+      }
+      console.log(this.$refs.fileList.files[0])
+      postFileAPI(frm)
+        .then((res) =>{
+          if(res.data.status === 200) {
+            console.log(res.data.result)
+          }
+          else {
+            alert("업로드 실패")
+          }
+        })
+        .catch((err) => console.log(err))
+      this.song_title = '';
+      this.link = '';
+      this.fileList = '';
       this.closeModal();
     },
     deleteSong(index) {
       this.songList.splice(index, 1);
     },
+    onSavePassword(password){
+      this.password = password
+      console.log(this.password)
+      this.passwordModal = false;
+    },
     onUploadImage(){
       this.uploadReady = true;
-      console.log(this.$refs.files.files);
-
+      console.log(this.$refs.fileList.files);
       let num = -1;
-      for (let i = 0; i < this.$refs.files.files.length; i++) {
-          this.files = [
-              ...this.files,
+      for (let i = 0; i < this.$refs.fileList.files.length; i++) {
+          this.fileList = [
+              ...this.fileList,
               //이미지 업로드
               {
                   //실제 파일
-                  file: this.$refs.files.files[i],
+                  file: this.$refs.fileList.files[i],
                   //이미지 프리뷰
-                  preview: URL.createObjectURL(this.$refs.files.files[i]),
+                  preview: URL.createObjectURL(this.$refs.fileList.files[i]),
                   //삭제및 관리를 위한 number
                   number: i
               }
@@ -248,24 +301,23 @@ export default {
     
       }
       this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
-      console.log(this.files);
+      console.log(this.fileList);
       // console.log(this.filesPreview);
     },
     fileDeleteButton(e) {
       const name = e.target.getAttribute('name');
-      this.files = this.files.filter(songList => songList.number !== Number(name));
+      this.fileList = this.fileList.filter(songList => songList.number !== Number(name));
     },
   },
 };
 </script>
 
 <style scoped>
-html,
-body {
+html body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: auto;
+  height: 100vh;
+  background: #48495b;
 }
 
 #AdminAdd {
@@ -275,56 +327,162 @@ body {
   color: #fffffd;
   padding: 0;
   height: 100vh;
-
+  width: 100%;
+    overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 14px;
+}
+.header {
+  display: flex;
+  width: 375px;
+  height: 60px;
+  padding: 30px 24px 0px 24px; 
+  gap: 16px;
+  align-items: center;
+}
+.header-subtext {
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px 24px 20px 24px;
+  gap: 5px
+}
+.radio-btn {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 .line {
   width: 100%;
   height: 5px;
   left: 0px;
   background-color: #646574;
-  margin: 30px 0px;
+  margin: 32px 0px;
 }
-.song_info {
+#addsong-title {
+  display: flex;
+  padding: 0px 24px;
+}
+.song-info {
   margin: 10px 25px;
   display: flex;
   flex-direction: column;
 }
-.song_detail {
+.song-detail {
   margin: 5px 0px;
   background: #5a5a6d;
   display: flex;
+  padding: 20px 16px;
   justify-content: space-between;
 }
-.song_detail__icons {
+.song-detail-title {
   display: flex;
+  justify-content: flext-start;
+  margin-bottom: 4px;
+  font-size: 16px;
 }
-.song_detail_icon {
-  margin: 0px 10px;
+.song-detail-check {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #ACACAE;
+}
+.check-icon {
+  width: 16px;
+  height: 16px;
+}
+.check-disabled {
+  background: src(checkDisabledIcon) no-repeat;
+}
+.song-detail-txt {
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+}
+.song-detail-icons {
+  display: flex;
+  align-items: center;
+}
+.song-detail-icon {
+  width: 20px;
+  height: 20px;
+  gap:8px;
 }
 
 
 /*바텀업 모달 인풋*/
+.modal-txt {
+  display: flex;
+}
 .modal-input-text{
   background: #48495B;
   border:0;
-  color: #6E707F;
+  color: #D4D4D4;
   border-bottom: 2px solid #646574;
   height: 49px;
-  width: 80%;
+  width: 100%;
+  font-size: 16px;
+  margin-bottom: 32px;
+}
+.modal-input-text::placeholder {
+  color: #6E707F;
+  
 }
 .modal-input-text:focus{
   outline: none !important;
   color: #FFFFFD;
   border-bottom: 2px solid #90E5FA;
 }
+.titlelength-warning:focus{
+  color: #D7917F;
+  border-bottom: 2px solid #D7917F;
+}
+.titlelength-warning-txt{
+  color: #D7917F;
+  margin-top: 4px;
+  display: flex;
+  justify-items: flex-start;
+}
+.image-preview-container {
+  display: flex;
+  gap: 12px;
+}
+.image-preview-container-image {
+  position: relative;
+  width: 65px;
+  height: 65px;
+}
+.image-preview-close-btn{
+  position: absolute;
+  top:2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  background: #6E707F;
+  opacity: 0.5;
+  border-radius: 5px;
+}
+.image-preview-image{
+  width: 65px;
+  height: 65px;
+  border-radius: 8px;
+}
+.disabledbtn {
+  background: #505062;
+  color: gray;
+  cursor: none;
+}
+
 /*이미지 업로드 버튼*/
-.image_upload__input{
+/* .song_image_upload{
+} */
+.image-upload-input{
   border-style: none;
   width: 65px;
   height: 65px;
   background: #5A5A6D;
   border-radius: 8px;
-  background-image: src('')
+  /* background: url('') */
 }
 #block-song-image-btn {
   display: flex;

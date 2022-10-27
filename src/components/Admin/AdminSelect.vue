@@ -2,8 +2,8 @@
 <template>
   <div class="AdminSelect">
     <span>{{ radioSelectTitle }}</span>
-    <div class="radio_select">
-        <div class="radio_select" v-for="(item, index) in selections" :key="index">
+    <div class="radio-select-group">
+        <div class="radio-select" v-for="(item, index) in selections" :key="index">
           <input 
           type="radio" 
           :id="item.val" 
@@ -35,14 +35,7 @@ export default {
     onRadioChange(event) {
       this.$emit('change', event.target.value);
     }
-    // update(key, value) {
-    //   this.$emit(key, value)
-    // }
   },
-  // mounted: 
-  // function() {
-  //   console.log(this.target.value)
-  // }
 };
 </script>
 
@@ -51,28 +44,43 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 10px;
   font-family: "Noto Sans KR";
 }
 /*  라디오 버튼 커스텀  */
-.radio_select input[type="radio"] {
+.radio-select-group {
+  display: flex;
+  background: #d5d5d5;
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  border-radius: 5px;
+}
+
+.radio-select input[type="radio"] {
   display: none;
 }
 
-.radio_select input[type="radio"] + label {
+.radio-select input[type="radio"] + label {
   display: inline-block;
+  display: flex;
   cursor: pointer;
   height: 40px;
-  width: 80px;
-  background: #d5d5d5;
-  color: #333;
-  text-align: center;
-  font-weight: bold;
-  font-size: 13px;
-  justify-content: center;
+  width: 78.75px;
+  justify-content: space-around;
+  align-items: center;
+  font-style: normal;
+  font-weight: 400;
 }
-.radio_select input[type="radio"]:checked + label {
+.radio-select-group div:first-child input[type="radio"] + label {
+  border-radius: 5px 0px 0px 5px;
+}
+.radio-select-group div:last-child input[type="radio"] + label {
+  border-radius: 0px 5px 5px 0px;
+}
+.radio-select input[type="radio"]:checked + label {
   background-color: #44786c;
   color: #fff;
+  font-weight: 700;
 }
 </style>

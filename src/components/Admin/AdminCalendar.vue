@@ -1,13 +1,13 @@
 <template>
     <div id="AdminCalendar">
-        <div>날짜</div>
+        <div class="date-picker-title">날짜</div>
         <input 
+        class="date-picker"
         type="date"
         data-placeholder="날짜를 선택해 주세요"
         required
         :value="date"
         @input = "ondateChange"
-        class="date-picker"
         />
 
     </div>
@@ -29,6 +29,17 @@ export default {
 
 <style scoped>
 /*date-picker*/
+#AdminCalendar{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px 24px;
+    padding-bottom: 24px;
+    gap: 4px;
+}
+.date-picker-title {
+    font-size: 14px;
+}
 .date-picker {
     box-sizing: border-box;
     position: relative;
@@ -38,7 +49,7 @@ export default {
     background-position: left, right; 
     background-size: 24px,24px; 
     background-repeat:no-repeat;
-    width: 90%;
+    width: 100%;
     border: 0px;
     border-bottom: 2px solid #646574;
     color: #fffffd;

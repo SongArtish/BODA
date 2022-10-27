@@ -22,10 +22,10 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  axios,
-  render: (h) => h(App),
+    router,
+    store,
+    axios,
+    render: (h) => h(App),
 }).$mount("#app");
 
 /*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
@@ -49,7 +49,7 @@ function scrollActive(){
 window.addEventListener('scroll', scrollActive)
 
 
-/*=============== CHANGE BACKGROUND HEADER ===============*/
+// /*=============== CHANGE BACKGROUND HEADER ===============*/
 function scrollHeader(){
     const header = document.getElementById('header')
     // When the scroll is greater than 80 viewport height, add the scroll-header class to the header tag

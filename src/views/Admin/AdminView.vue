@@ -36,8 +36,7 @@
 
 <script>
 
-// import axios from "axios";
-import {loginAPI} from '../api/index'
+import {loginAPI} from '@/api/index'
 // import { mapState, mapActions } from "vuex";
 // const userStore = "userStore";
 
@@ -70,27 +69,23 @@ export default {
     login() {
       if(this.checkValidity()) {
         loginAPI(this.password)
-          .then((res) => {
-            console.log(res)
-            return res.result
-          })
-          .then((result) => {
-            console.log('Login Result: ' + result)
-            this.$router.push('/admin/list')
-            if (result) {
-              this.$router.push('/admin/list')
+          .then((res) =>{
+            console.log(res.data)
+            if( res.data.status === 200) {
+              console.log(res.data.result)
+            }
+            if( res.data.result ) {
+              alert("로그인 되었습니다")
+              router.push({name:"AdminListView"})
+            }
+            else{
+              alert("비밀번호가 틀렸습니다")
             }
           })
           .catch((err) => console.log(err))
       }
     }
   }
-  // computed: {
-  //   ...mapState(["isLogin", "isLoginError"]),
-  // },
-  // methods: {
-  //   ...mapActions(userStore, ["login"]),
-  // },
 
 };
 </script>
