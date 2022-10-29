@@ -118,7 +118,7 @@ export default {
 }
 
 .login-alert-message {
-  color: #df4759;
+  color: var(--color-alert);
   margin-top: .3rem;
 }
 
