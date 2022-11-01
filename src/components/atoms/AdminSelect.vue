@@ -30,10 +30,10 @@ export default {
         },
         name:{}
         },
-        methods: {
-        onRadioChange(event) {
-            this.$emit('change', event.target.value);
-        }
+    methods: {
+    onRadioChange(event) {
+        this.$emit('change', event.target.value);
+    }
     },
 };
 </script>

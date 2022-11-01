@@ -7,7 +7,7 @@
         data-placeholder="날짜를 선택해 주세요"
         required
         :value="date"
-        @input = "ondateChange"
+        @input="onDateChange"
         />
 
     </div>
@@ -16,14 +16,14 @@
 <script>
 export default {
     name: "AdminCalendar",
-    props: [
-        'date',
-    ],
-    methods: {
-        ondateChange(event) {
-            this.$emit('input', event.target.value);
-        }
-    }
+    props: {
+        date:{}
+    },
+            methods: {
+            onDateChange(event) {
+                this.$emit('input', event.target.value);
+            }
+        },
 };
 </script>
 

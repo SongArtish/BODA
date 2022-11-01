@@ -13,7 +13,7 @@
         />
         <div class="conti">
             <!--date-picker-->
-            <AdminCalendar v-model="date"/>
+            <AdminCalendar @input='onDateChange'/>
             <!-- 라디오 버튼 -->
             <div class="radio-btn">
                 <!-- 부서 선택 -->
@@ -132,7 +132,7 @@
                     <div v-if="uploadReady" class="image-preview">
                         <div class="image-preview-container">
                             <div class="image-preview-container-image" v-for="(file,index) in fileList" :key="index"  >
-                                <div class="image-preview-close-btn" @click="fileDeleteButton" :name=file.number>
+                                <div class="image-preview-close-btn" @click="fileDeleteButton" :name=file.sheetList>
                                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
                                 </div>
                                 <img class="image-preview-image" :src="file.preview" />
@@ -142,7 +142,7 @@
                 </div>
                 <!--footer 콘텐츠-->
                 <template slot="footer">
-                    <BottomButton @buttonClick="addSong" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
+                    <BottomButton @buttonClick="addSong()" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
                 </template>
         <!-- /footer -->
         </AdminBottomModal>
@@ -154,6 +154,7 @@
             @buttonClick="passwordModal = true"
             :class="{'disabledbtn': this.songList.length == 0}"
         />
+        <!--콘티 비밀번호 설정 -->
         <AdminPasswordModal 
             v-if="passwordModal == true"
             :password="password"
@@ -169,7 +170,8 @@ import { postFileAPI} from '../apis/admin'
 export default {
     name: 'AdminAdd',
     emits: [
-        'change'
+        'change',
+        'input'
     ],
     components: {
         AdminAddSongBtn,
@@ -185,13 +187,16 @@ export default {
             categoryId:"",
             date:null,
             depart: "",
-            songList:[],
-            sheetList: null,
-            password: "",
             fileList:[],
             filesPreview: [],
-            song_title:"",
             link:"",
+            password: "",
+            sheetList: [],
+            song_title:"",
+            songList:[],
+            songOrder:0,
+            title:"",
+            fileResTemp:[],
             uploadImageIndex:0,
             alert_save: false,
             isModalViewed: false,
@@ -225,11 +230,20 @@ export default {
         }
     },
     methods: {
-        onDepartChange(value){
+        onDateChange(value){
+            this.date= value;
+            console.log(this.date);
+            //날짜로 타이틀 만들기
+            const dateArr = this.date.split('-')
+            this.title=dateArr[0]+"년 "+dateArr[1]+"월 "+dateArr[2]+"일";
+            console.log(this.title);
+        },
+        onDepartChange(value){  //부서 선택
             this.depart = value;
             // console.log(this.depart)
         },
-        onCategoryChange(value){
+        onCategoryChange(value){    //카테고리 선택
+            value=Number(value);
             this.categoryId = value;
             // console.log(this.categoryId)
         },
@@ -237,7 +251,19 @@ export default {
             this.bottomModal = true;
             // console.log(this.bottomModal)
         },
-        onSavePassword(password){
+        onSubmitConti(){
+            this.onSavePassword();
+            const conti = new FormData()
+            conti.append('categoryId', this.categoryId);
+            conti.append('depart', this.depart);
+            conti.append('date', this.date);
+            conti.append('title', this.title);
+            conti.append('password',this.password)
+            conti.append('songList', this.songList);
+
+        }
+        ,
+        onSavePassword(password){   //게시글 저장 비밀번호
             this.password = password
             console.log(this.password)
             this.passwordModal = false;
@@ -245,15 +271,10 @@ export default {
         closeBottomModal() {
             this.bottomModal = false;
         },
-        addSong() {
+        addSong() {     //곡 추가
             if (this.song_title.length <=0 ){
                 return false;
             }
-            this.songList.push({
-                title: this.song_title,
-                link: this.link,
-                sheetList: this.fileList,
-            });
             //파일 업로드
             const frm = new FormData();
 
@@ -264,19 +285,41 @@ export default {
             }
             }
             console.log(this.$refs.fileList.files[0])
+            //파일 등록 api
             postFileAPI(frm)
                 .then((res) =>{
                     if(res.data.status === 200) {
-                    console.log(res.data.result)
+                        console.log(res.data.result);
+                        this.fileResTemp = res.data.result;
                     }
                     else {
                     alert("업로드 실패")
                     }
                 })
                 .catch((err) => console.log(err))
+
+            let tempfileinfo = [];
+            for ( let i=0; i< this.fileResTemp.length; i++) {
+                this.tempfileinfo = [
+                    ...this.tempfileinfo,
+                    {
+                        fileId: this.fileResTemp.files.fileId,
+                        sheetOrder: i
+                    }
+                ];
+                this.sheetList = tempfileinfo;
+            }
+
+            this.songList.push({
+                title: this.song_title,
+                link: this.link,
+                sheetList: this.sheetList,
+                songOrder: this.songOrder,
+            });
             this.song_title = '';
             this.link = '';
             this.fileList = '';
+            this.songOrder++;
             this.closeBottomModal();
         },
         deleteSong(index) {
@@ -295,8 +338,8 @@ export default {
                         file: this.$refs.fileList.files[i],
                         //이미지 프리뷰
                         preview: URL.createObjectURL(this.$refs.fileList.files[i]),
-                        //삭제및 관리를 위한 number
-                        number: i
+                        //삭제및 관리를 위한 sheetList
+                        sheetList: i
                     }
                 ];
                 num = i;
@@ -308,7 +351,7 @@ export default {
         },
         fileDeleteButton(e) {
             const name = e.target.getAttribute('name');
-            this.fileList = this.fileList.filter(songList => songList.number !== Number(name));
+            this.fileList = this.fileList.filter(songList => songList.sheetList !== Number(name));
         },
     }
 }
@@ -317,6 +360,7 @@ export default {
 
 
 <style scoped>
+
 .AdminAdd {
     margin-left: 2rem;
     margin-right: 2rem;

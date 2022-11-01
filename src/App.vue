@@ -15,7 +15,6 @@
   --color-alert: #D7917F;
   --color-line: #646574;
   --color-bg-text: #6E707F;
-
 }
 body {
   background: var(--color-bg);
