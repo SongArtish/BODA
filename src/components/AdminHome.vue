@@ -60,9 +60,12 @@ export default {
           })
           .then((result) => {
             console.log('Login Result: ' + result)
-            this.$router.push('/admin/list')
-            if (result) {
+            // this.$router.push('/admin/list')
+            if (result === true ) {
               this.$router.push('/admin/list')
+            }
+            else {
+              alert("비밀번호가 틀렸습니다")
             }
           })
           .catch((err) => console.log(err))

@@ -47,7 +47,7 @@
                         <!--사진/링크가 있는 경우 체크 표시-->
                         <div class="song-detail-txt">
                         <div class="song-detail-check">
-                            <div class="check-icon" :class="{'check-disabled': item.sheetList.length == 0}">
+                            <div class="check-icon" :class="{'check-disabled': item.sheetList.length < 0}">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -196,7 +196,7 @@ export default {
             songList:[],
             songOrder:0,
             title:"",
-            fileResTemp:[],
+            tempResultData:[],
             uploadImageIndex:0,
             alert_save: false,
             isModalViewed: false,
@@ -252,21 +252,20 @@ export default {
             // console.log(this.bottomModal)
         },
         onSubmitConti(){
-            this.onSavePassword();
             const conti = new FormData()
             conti.append('categoryId', this.categoryId);
             conti.append('depart', this.depart);
             conti.append('date', this.date);
             conti.append('title', this.title);
-            conti.append('password',this.password)
+            conti.append('password',this.password);
             conti.append('songList', this.songList);
-
-        }
-        ,
+            console.log(conti);
+        },
         onSavePassword(password){   //게시글 저장 비밀번호
-            this.password = password
-            console.log(this.password)
+            this.password = password;
+            console.log(this.password);
             this.passwordModal = false;
+            this.onSubmitConti();
         },
         closeBottomModal() {
             this.bottomModal = false;
@@ -278,44 +277,43 @@ export default {
             //파일 업로드
             const frm = new FormData();
 
-            if (this.$refs.fileList.files.length > -1) {
+            if (this.$refs.fileList.files.length > 0 ) {
             for (let i=0; i< this.$refs.fileList.files.length; i++){
                 const imageForm = this.$refs.fileList.files[i]
                 frm.append('fileList', imageForm)
             }
-            }
-            console.log(this.$refs.fileList.files[0])
+            // console.log(this.$refs.fileList.files[0])
             //파일 등록 api
             postFileAPI(frm)
                 .then((res) =>{
                     if(res.data.status === 200) {
+                        this.sheetList=[];
+                        this.tempResultData= res.data.result;
+                        console.log('tempResultData=',this.tempResultData[0].fileId);
                         console.log(res.data.result);
-                        this.fileResTemp = res.data.result;
+                        // console.log(res.data.result[0].fileId)
+                        for ( let i=0; i <= res.data.result.length; i++) {
+                            this.sheetList=
+                            [...this.sheetList,{
+                                    fileId: res.data.result[i].fileId,
+                                    sheetOrder: i
+                                }];
+                        }
                     }
                     else {
-                    alert("업로드 실패")
+                    alert("업로드 실패");
                     }
                 })
-                .catch((err) => console.log(err))
-
-            let tempfileinfo = [];
-            for ( let i=0; i< this.fileResTemp.length; i++) {
-                this.tempfileinfo = [
-                    ...this.tempfileinfo,
-                    {
-                        fileId: this.fileResTemp.files.fileId,
-                        sheetOrder: i
-                    }
-                ];
-                this.sheetList = tempfileinfo;
+                .catch((err) => console.log(err));
             }
-
             this.songList.push({
                 title: this.song_title,
                 link: this.link,
                 sheetList: this.sheetList,
                 songOrder: this.songOrder,
             });
+            console.log("songList:",this.songList);
+
             this.song_title = '';
             this.link = '';
             this.fileList = '';
@@ -343,10 +341,9 @@ export default {
                     }
                 ];
                 num = i;
-            
             }
             this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
-            console.log(this.fileList);
+            console.log("fileList:",this.fileList);
             // console.log(this.filesPreview);
         },
         fileDeleteButton(e) {
