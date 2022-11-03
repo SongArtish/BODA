@@ -165,7 +165,7 @@
 </template>
 <script>
 import { AdminAddSongBtn, AdminBottomModal, AdminCalendar, AdminHeaderModal, AdminSelect, AdminPasswordModal, BottomButton} from './atoms'
-import { postFileAPI} from '../apis/admin'
+import { postFileAPI, postContiAPI } from '../apis/admin'
 
 export default {
     name: 'AdminAdd',
@@ -252,14 +252,22 @@ export default {
             // console.log(this.bottomModal)
         },
         onSubmitConti(){
-            const conti = new FormData()
-            conti.append('categoryId', this.categoryId);
-            conti.append('depart', this.depart);
-            conti.append('date', this.date);
-            conti.append('title', this.title);
-            conti.append('password',this.password);
-            conti.append('songList', this.songList);
-            console.log(conti);
+            let conti = JSON.stringify({
+                "categoryId":this.categoryId,
+                "depart": this.depart,
+                "date": this.date,
+                "title": this.title,
+                "password":this.password,
+                "songList": this.songList
+            });
+
+            postContiAPI(conti)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         },
         onSavePassword(password){   //게시글 저장 비밀번호
             this.password = password;
@@ -270,55 +278,62 @@ export default {
         closeBottomModal() {
             this.bottomModal = false;
         },
-        addSong() {     //곡 추가
-            if (this.song_title.length <=0 ){
+        async addSong() {     //곡 추가
+            if (this.song_title.length <= 0 ){
                 return false;
             }
             //파일 업로드
-            const frm = new FormData();
+            await this.uploadFile();
 
-            if (this.$refs.fileList.files.length > 0 ) {
-            for (let i=0; i< this.$refs.fileList.files.length; i++){
-                const imageForm = this.$refs.fileList.files[i]
-                frm.append('fileList', imageForm)
-            }
-            // console.log(this.$refs.fileList.files[0])
-            //파일 등록 api
-            postFileAPI(frm)
-                .then((res) =>{
-                    if(res.data.status === 200) {
-                        this.sheetList=[];
-                        this.tempResultData= res.data.result;
-                        console.log('tempResultData=',this.tempResultData[0].fileId);
-                        console.log(res.data.result);
-                        // console.log(res.data.result[0].fileId)
-                        for ( let i=0; i <= res.data.result.length; i++) {
-                            this.sheetList=
-                            [...this.sheetList,{
-                                    fileId: res.data.result[i].fileId,
-                                    sheetOrder: i
-                                }];
-                        }
-                    }
-                    else {
-                    alert("업로드 실패");
-                    }
-                })
-                .catch((err) => console.log(err));
-            }
             this.songList.push({
                 title: this.song_title,
                 link: this.link,
                 sheetList: this.sheetList,
                 songOrder: this.songOrder,
             });
-            console.log("songList:",this.songList);
+
+            console.log("2songList:",this.songList);
 
             this.song_title = '';
             this.link = '';
             this.fileList = '';
             this.songOrder++;
             this.closeBottomModal();
+        },
+        async uploadFile() {
+            const frm = new FormData();
+
+            if (this.$refs.fileList.files.length > 0 ) {
+                for (let i=0; i< this.$refs.fileList.files.length; i++){
+                    const imageForm = this.$refs.fileList.files[i]
+                    frm.append('fileList', imageForm)
+                }
+                // console.log(this.$refs.fileList.files[0])
+                //파일 등록 api
+                await postFileAPI(frm)
+                .then((res) =>{
+                    if(res.data.status === 200) {
+                        this.sheetList=[];
+                        this.tempResultData = res.data.result;
+                        console.log('1tempResultData =',this.tempResultData[0].fileId);
+                        // console.log(res.data.result);
+                        // console.log(res.data.result[0].fileId)
+                    }
+                    else {
+                    alert("업로드 실패");
+                    }
+                })
+                .then(()=>{
+                    for ( let i=0; i <= this.tempResultData.length; i++) {
+                            this.sheetList=
+                            [...this.sheetList,{
+                                fileId: this.tempResultData[i].fileId,
+                                sheetOrder: i
+                            }];
+                        }
+                })
+                .catch((err) => console.log(err));
+            }
         },
         deleteSong(index) {
             this.songList.splice(index, 1);

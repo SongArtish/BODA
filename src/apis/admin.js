@@ -45,19 +45,13 @@ export async function loginAPI(password) {
 }
 
 // 콘티 등록
-export async function postContiAPI(categoryId, depart, date, title, password, songList){
+export async function postContiAPI(conti){
   try {
       let res = await axios({
+          headers: {'Content-Type': 'application/json'},
           url: "/api/admin/conti",
           method: "POST",
-          data: {
-              categoryId: categoryId,
-              depart: depart,
-              date:date,
-              title: title,
-              password: password,
-              songList: songList
-          }
+          data: conti
       });
       return res
   } catch (error) {
