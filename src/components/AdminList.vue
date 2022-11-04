@@ -3,7 +3,7 @@
     <div v-if="isLoaded" class="wrapper">
       <div class="navbar">
         <div class="navbar-title">찬양공유 관리자시스템</div>
-        <div class="navbar-button"><button class="navbar-button-logout"><small>로그아웃</small></button></div>
+        <div class="navbar-button"><button class="navbar-button-logout" @click="logout"><small>로그아웃</small></button></div>
       </div>
       <div class="category">
           <div class="category-title">소속</div>
@@ -36,12 +36,14 @@
 <script>
 import { AdminContiCard } from './atoms'
 import { getContiListAPI } from '../apis/admin'
+import Login from "@/mixins/login";
 
 export default {
   name: 'AdminList',
   components: {
     AdminContiCard,
   },
+  mixins: [Login],
   data() {
     return {
       category: [

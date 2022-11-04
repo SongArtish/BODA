@@ -9,7 +9,7 @@
         </div>
         <AdminHeaderModal
         v-if="isModalViewed"
-        @close-modal="isModalViewed = false" 
+        @close-modal="isModalViewed = false"
         />
         <div class="conti">
             <!--date-picker-->
@@ -17,24 +17,24 @@
             <!-- 라디오 버튼 -->
             <div class="radio-btn">
                 <!-- 부서 선택 -->
-                <AdminSelect 
-                :selections="selectionsDepart" 
-                :radioSelectTitle="radioSelectDepart" 
+                <AdminSelect
+                :selections="selectionsDepart"
+                :radioSelectTitle="radioSelectDepart"
                 :name="depart"
-                @change='onDepartChange' 
+                @change='onDepartChange'
                 />
                 <!-- 카테고리 선택 -->
-                <AdminSelect 
-                :selections="selectionsCategory" 
-                :radioSelectTitle="radioSelectCategory" 
+                <AdminSelect
+                :selections="selectionsCategory"
+                :radioSelectTitle="radioSelectCategory"
                 :name="categoryId"
-                @change="onCategoryChange" 
+                @change="onCategoryChange"
                 />
             </div>
             <!-- 분리 선 -->
             <div class="line"></div>
             </div>
-            
+
             <!--찬양곡(제목)-->
             <div class="addsong-title">
                 곡 추가
@@ -81,10 +81,10 @@
             <AdminAddSongBtn :textAddSong="textAddSong" @openBottomModal="openBottomModal"/>
 
             <!--바텀업 모달-->
-            
+
             <AdminBottomModal class="bottom-modal" v-if="bottomModal" @closeBottomModal="bottomModal = false">
                 <!-- 슬롯 콘텐츠 -->
-                
+
                 <div class="bottom-modal-input">
                     <div class="bottom-modal-txt">
                     곡 제목
@@ -119,15 +119,15 @@
                         <img class="image-input-camera" src="../assets/camera_icon.svg"/>
                         <div class="image-input-txt">악보첨부</div>
                         <label for ="image-file"></label>
-                        <input 
-                        class="image-input-button" 
-                        name="image-file" 
-                        type="file" 
-                        @change="onUploadImage()" 
-                        ref="fileList" 
+                        <input
+                        class="image-input-button"
+                        name="image-file"
+                        type="file"
+                        @change="onUploadImage()"
+                        ref="fileList"
                         multiple />
                     </div>
-                
+
                     <!--이미지 미리보기-->
                     <div v-if="uploadReady" class="image-preview">
                         <div class="image-preview-container">
@@ -148,14 +148,14 @@
         </AdminBottomModal>
 
         <!--콘티 제출 버튼-->
-        <BottomButton 
-            :textButton="textButton" 
-            v-if="bottomModal === false" 
+        <BottomButton
+            :textButton="textButton"
+            v-if="bottomModal === false"
             @buttonClick="passwordModal = true"
             :class="{'disabledbtn': this.songList.length == 0}"
         />
         <!--콘티 비밀번호 설정 -->
-        <AdminPasswordModal 
+        <AdminPasswordModal
             v-if="passwordModal == true"
             :password="password"
             @modalButtonClick="onSavePassword"
@@ -166,6 +166,7 @@
 <script>
 import { AdminAddSongBtn, AdminBottomModal, AdminCalendar, AdminHeaderModal, AdminSelect, AdminPasswordModal, BottomButton} from './atoms'
 import { postFileAPI, postContiAPI } from '../apis/admin'
+import Login from "@/mixins/login";
 
 export default {
     name: 'AdminAdd',
@@ -182,6 +183,7 @@ export default {
         AdminPasswordModal,
         BottomButton
     },
+    mixins: [Login],
     data() {
         return {
             categoryId:"",
@@ -381,7 +383,7 @@ export default {
     display: flex;
     width: 375px;
     height: 60px;
-    padding-top: 30px; 
+    padding-top: 30px;
     gap: 16px;
     align-items: center;
 }
@@ -472,7 +474,7 @@ export default {
     color: #FFFFFD;
     border-bottom: 2px solid #90E5FA;
 }
-.titlelength-warning, 
+.titlelength-warning,
 .titlelength-warning:focus {
     color: var(--color-alert);
     border-bottom: 2px solid var(--color-alert);
@@ -483,7 +485,7 @@ export default {
     display: flex;
     justify-items: flex-start;
     font-weight: 400;
-    font-size: 12px;    
+    font-size: 12px;
 }
 /*이미지 프리뷰*/
 .image-preview-container {
@@ -532,8 +534,8 @@ export default {
     justify-content: center;
 }
 .image-upload-input input{
-    opacity:0; 
-    filter: alpha  (opacity=0); 
+    opacity:0;
+    filter: alpha  (opacity=0);
     cursor: pointer;
     width: 65px;
     height: 65px;
