@@ -52,7 +52,7 @@
                                     <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div>
-                            첨부사진
+                            첨부사진 {{item.sheetList.length}}장
                         </div>
                         <div class="song-detail-check">
                             <div class="check-icon" :class="{'check-disabled': item.link.length > 0}">
@@ -67,7 +67,7 @@
 
                 <!--수정/삭제 버튼 -->
                 <div class="song-detail-icons">
-                    <div class="song-detail-icon">
+                    <div class="song-detail-icon" @click="updateSongModal(index)">
                     <img src="../assets/pencil_icon.svg" alt="수정"/>
                     </div>
                     <div class="song-detail-icon" @click="deleteSong(index)">
@@ -84,7 +84,6 @@
 
             <AdminBottomModal class="bottom-modal" v-if="bottomModal" @closeBottomModal="bottomModal = false">
                 <!-- 슬롯 콘텐츠 -->
-
                 <div class="bottom-modal-input">
                     <div class="bottom-modal-txt">
                     곡 제목
@@ -131,7 +130,7 @@
                     <!--이미지 미리보기-->
                     <div v-if="uploadReady" class="image-preview">
                         <div class="image-preview-container">
-                            <div class="image-preview-container-image" v-for="(file,index) in fileList" :key="index"  >
+                            <div class="image-preview-container-image" v-for="(file,index) in fileList" :key="index" >
                                 <div class="image-preview-close-btn" @click="fileDeleteButton" :name=file.sheetList>
                                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
                                 </div>
@@ -142,7 +141,7 @@
                 </div>
                 <!--footer 콘텐츠-->
                 <template slot="footer">
-                    <BottomButton @buttonClick="addSong()" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
+                    <BottomButton @buttonClick=" updateModal==true ? updateSong() : addSong()" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
                 </template>
         <!-- /footer -->
         </AdminBottomModal>
@@ -198,6 +197,8 @@ export default {
             songList:[],
             songOrder:0,
             title:"",
+            updateIndex: "",
+            updateFileList:[],
             tempResultData:[],
             uploadImageIndex:0,
             alert_save: false,
@@ -205,6 +206,7 @@ export default {
             bottomModal: false,
             uploadReady: false,
             passwordModal: false,
+            updateModal: false,
             radioSelectDepart: "소속",
             radioSelectCategory: "분류",
             textButton: "완료",
@@ -276,6 +278,7 @@ export default {
             console.log(this.password);
             this.passwordModal = false;
             this.onSubmitConti();
+            this.$router.push({ path: "/admin/list" });
         },
         closeBottomModal() {
             this.bottomModal = false;
@@ -300,7 +303,7 @@ export default {
             this.link = '';
             this.fileList = '';
             this.songOrder++;
-            this.closeBottomModal();
+            await this.closeBottomModal();
         },
         async uploadFile() {
             const frm = new FormData();
@@ -337,10 +340,34 @@ export default {
                 .catch((err) => console.log(err));
             }
         },
+        updateSongModal(index){ //곡 수정을 위한 위한 모달창 준비
+            this.updateModal = true;
+            this.bottomModal = true;
+            // this.openUpdateModal(index);
+            this.song_title = this.songList[index].title
+            this.link = this.songList[index].link
+            this.fileList = [this.updateFileList[index]]
+            this.updateIndex = index;
+        },
+        async updateSong(){     //곡 수정
+            await this.uploadFile();
+            this.songList[this.updateIndex].title = this.song_title;
+            this.songList[this.updateIndex].link = this.link;
+            this.songList[this.updateIndex].sheetList = this.sheetList;
+
+            console.log("초기화")
+            this.updateModal = false;
+            this.song_title = "";
+            this.link="";
+            this.fileList = '';
+
+            await this.closeBottomModal();
+        },
         deleteSong(index) {
             this.songList.splice(index, 1);
+            this.updateFileList.splice(index,1);
         },
-        onUploadImage(){
+        onUploadImage(){    //이미지 업로드
             this.uploadReady = true;
             console.log(this.$refs.fileList.files);
             let num = -1;
@@ -359,6 +386,7 @@ export default {
                 ];
                 num = i;
             }
+            this.updateFileList.push(this.fileList);
             this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
             console.log("fileList:",this.fileList);
             // console.log(this.filesPreview);
@@ -366,7 +394,7 @@ export default {
         fileDeleteButton(e) {
             const name = e.target.getAttribute('name');
             this.fileList = this.fileList.filter(songList => songList.sheetList !== Number(name));
-        },
+        }
     }
 }
 </script>
