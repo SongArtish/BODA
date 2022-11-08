@@ -128,10 +128,20 @@
                     </div>
 
                     <!--이미지 미리보기-->
-                    <div v-if="uploadReady" class="image-preview">
+                    <div v-if="uploadReady && !updateModal" class="image-preview">
                         <div class="image-preview-container">
                             <div class="image-preview-container-image" v-for="(file,index) in fileList" :key="index" >
                                 <div class="image-preview-close-btn" @click="fileDeleteButton" :name=file.sheetList>
+                                <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
+                                </div>
+                                <img class="image-preview-image" :src="file.preview" />
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="uploadReady && updateModal" class="image-preview">
+                        <div class="image-preview-container">
+                            <div class="image-preview-container-image" v-for="(file,index) in fileList[0]" :key="index" >
+                                <div class="image-preview-close-btn" @click="updateDeleteButton" :name=file.sheetList>
                                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
                                 </div>
                                 <img class="image-preview-image" :src="file.preview" />
@@ -197,7 +207,7 @@ export default {
             songList:[],
             songOrder:0,
             title:"",
-            updateIndex: "",
+            updateIndex: 0,
             updateFileList:[],
             tempResultData:[],
             uploadImageIndex:0,
@@ -207,6 +217,7 @@ export default {
             uploadReady: false,
             passwordModal: false,
             updateModal: false,
+            deleteImage: false,
             radioSelectDepart: "소속",
             radioSelectCategory: "분류",
             textButton: "완료",
@@ -231,7 +242,25 @@ export default {
         // 곡 추가 메시지
         textAddSong() {
             return `이 곳을 눌러 ${this.songList.length === 0 ? '첫번째' : '다음'} 곡을 추가하세요. `;
-        }
+        },
+        updating() {
+            return [this.bottomModal, this.updateModal]
+        },
+    },
+    watch : {
+        updating(newValue, oldValue) {
+            if (newValue[0] == false && oldValue[1] == true){
+                this.updateModal = false
+                this.removeDatas()
+            }
+        },
+        // deleteImage(newValue) {
+        //     if(newValue == true){
+        //         this.sheetList = this.fileList 
+        //     }
+        // }
+            
+        
     },
     methods: {
         onDateChange(value){
@@ -288,29 +317,36 @@ export default {
                 return false;
             }
             //파일 업로드
+            console.log("sheetlist length",this.sheetList.length)
             await this.uploadFile();
+            console.log("uploadFile")
+            console.log("sheetlist length",this.sheetList.length)
 
-            this.songList.push({
+            await this.songList.push({
                 title: this.song_title,
                 link: this.link,
                 sheetList: this.sheetList,
                 songOrder: this.songOrder,
             });
+            console.log("push")
 
-            console.log("2songList:",this.songList);
+            // console.log("2songList:",this.songList);
+            if(this.fileList.length == 0) {
+                this.updateFileList.push([{}])
+                // console.log(this.updateFileList.length);
+            }
 
-            this.song_title = '';
-            this.link = '';
-            this.fileList = '';
+            await this.removeDatas()
             this.songOrder++;
             await this.closeBottomModal();
         },
         async uploadFile() {
             const frm = new FormData();
-
-            if (this.$refs.fileList.files.length > 0 ) {
-                for (let i=0; i< this.$refs.fileList.files.length; i++){
-                    const imageForm = this.$refs.fileList.files[i]
+            
+            console.log("fileList.length",this.fileList.length)
+            if (this.fileList.length > 0 ) {
+                for (let i=0; i< this.fileList.length; i++){
+                    const imageForm = this.fileList[i].file
                     frm.append('fileList', imageForm)
                 }
                 // console.log(this.$refs.fileList.files[0])
@@ -350,18 +386,18 @@ export default {
             this.updateIndex = index;
         },
         async updateSong(){     //곡 수정
+
             await this.uploadFile();
-            this.songList[this.updateIndex].title = this.song_title;
-            this.songList[this.updateIndex].link = this.link;
-            this.songList[this.updateIndex].sheetList = this.sheetList;
+            if(this.updateModal){
+                this.songList[this.updateIndex].title = this.song_title;
+                this.songList[this.updateIndex].link = this.link;
+                this.songList[this.updateIndex].sheetList = this.sheetList;
 
-            console.log("초기화")
-            this.updateModal = false;
-            this.song_title = "";
-            this.link="";
-            this.fileList = '';
+                this.updateModal = false;
+                await this.removeDatas();
 
-            await this.closeBottomModal();
+                await this.closeBottomModal();
+            }
         },
         deleteSong(index) {
             this.songList.splice(index, 1);
@@ -388,12 +424,27 @@ export default {
             }
             this.updateFileList.push(this.fileList);
             this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
-            console.log("fileList:",this.fileList);
+            // console.log("fileList:",this.fileList);
             // console.log(this.filesPreview);
         },
         fileDeleteButton(e) {
             const name = e.target.getAttribute('name');
+            // console.log("deleteImage",this.deleteImage);
+            console.log("name:",name)
             this.fileList = this.fileList.filter(songList => songList.sheetList !== Number(name));
+            this.updateFileList[this.updateIndex]=this.fileList
+            this.sheetList = this.fileList 
+            // console.log(this.fileList.length);
+            // console.log("deleteImage",this.deleteImage);
+        },
+        updateDeleteButton(e){
+            const name = e.target.getAttribute(':name');
+            console.log("update delete", name);
+        },
+        removeDatas(){
+            this.song_title = "";
+            this.link="";
+            this.fileList = '';
         }
     }
 }
