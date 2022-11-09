@@ -2,6 +2,7 @@
   <div class="UserDetail">
     <div v-if="isLoaded" class="wrapper" @mouseup="closeList()">
       <div class="navbar">
+        <div class="navbar-home" @click="toHome()">↩</div>
         <div class="navbar-title">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
         <div class="navbar-button" @click="share()"><img class="navbar-button-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
@@ -11,7 +12,7 @@
 
         <div class="title">{{ conti.songList[songOrder].title }}</div>
         <div class="sheet">
-          <img class="sheet-image" v-for="sheet in conti.songList[songOrder].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl" />
+          <img class="sheet-image" v-for="sheet in conti.songList[songOrder].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
         <div v-if="getVideoLink !== null" class="video">
           <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -52,27 +53,32 @@ export default {
   },
   created() {
     getContiDetailAPI(this.$route.params.id)
-      .then((res) => {
-        this.conti = res.result
-        this.isLoaded = true
-      })
-      .catch((err) => console.log(err))
+        .then((res) => {
+          this.conti = res.result
+          this.isLoaded = true
+        })
+        .catch((err) => console.log(err))
   },
   methods: {
+    toHome() {
+      this.$router.push('/')
+    },
     closeList() {
       this.$refs.bottombar.closeList()
     },
     share() {
-      window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY)
-      Kakao.Share.sendDefault({
-        objectType: 'text',
-        text:
-          `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
-        link: {
-          mobileWebUrl: `${window.location.href}`,
-          webUrl: `${window.location.href}`
-        },
-      });
+      if (!Kakao.isInitialized()) {
+        window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY)
+      }
+        Kakao.Share.sendDefault({
+          objectType: 'text',
+          text:
+              `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
+          link: {
+            mobileWebUrl: `${window.location.href}`,
+            webUrl: `${window.location.href}`
+          },
+        });
     },
     selectSong(songOrder) {
       this.songOrder = songOrder-1
@@ -86,9 +92,9 @@ export default {
   margin-right: 2rem;
 }
 .navbar {
-    width: 100%;
-    left: 0px;
-    margin: 3rem 0;
+  width: 100%;
+  left: 0px;
+  margin: 3rem 0;
 }
 .navbar-button {
   cursor: pointer;
@@ -97,10 +103,10 @@ export default {
   width: 1rem;
 }
 .category-1 {
-    color: var(--color-blue);
+  color: var(--color-blue);
 }
 .category-2 {
-    color: var(--color-green);
+  color: var(--color-green);
 }
 .title {
   font-weight: bold;
