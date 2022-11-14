@@ -37,6 +37,12 @@ export default {
       return this.password.length
     }
   },
+  created() {
+    // 로그인 돼있으면 목록화면으로 이동
+    if (localStorage.getItem('accessToken')) {
+      this.$router.push({name: 'AdminList'});
+    }
+  },
   methods: {
     checkValidity() {
       if (this.password === null || this.password.length < 1) {
