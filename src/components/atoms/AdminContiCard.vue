@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     deleteConti() {
+      this.$emit('deleteConti')
       // deleteContiAPI(this.conti.contiId)
       //   .then((res) => {
       //   console.log(res)

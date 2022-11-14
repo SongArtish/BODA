@@ -12,6 +12,9 @@
   --color-light-2: #D4D4D4;
   --color-green: #A9B66E;
   --color-blue: #86C8EA;
+  --color-alert: #D7917F;
+  --color-line: #646574;
+  --color-bg-text: #6E707F;
 }
 body {
   background: var(--color-bg);

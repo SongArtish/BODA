@@ -4,11 +4,13 @@
   </div>
 </template>
 <script>
+import Login from "@/mixins/login";
 
 export default {
   name: 'AdminDetail',
   components: {
-  }
+  },
+  mixins: [Login]
 }
 </script>
 <style scoped>

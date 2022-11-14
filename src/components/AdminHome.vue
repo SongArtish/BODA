@@ -7,15 +7,15 @@
     </div>
     <div class="login">
         <div class="login-label">관리자 로그인</div>
-        <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="login" />
+        <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="checkValidity" />
         <div class="login-alert-message" v-if="message">{{ message }}</div>
     </div>
-    <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" @buttonClick="login" />
+    <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" @buttonClick="checkValidity" />
   </div>
 </template>
 <script>
 import { BottomButton, NavBar } from './atoms'
-import { loginAPI } from '../apis/admin'
+import Login from "@/mixins/login";
 
 export default {
   name: 'AdminHome',
@@ -23,6 +23,7 @@ export default {
     BottomButton,
     NavBar
   },
+  mixins: [Login],
   data() {
       return {
         password: '',
@@ -46,27 +47,9 @@ export default {
       // }
       else {
         this.message = null
-        return true
+        this.login(this.password);
       }
-      return false
-    },
-    login() {
-      if(this.checkValidity()) {
-
-        loginAPI(this.password)
-          .then((res) => {
-            console.log(res)
-            return res.result
-          })
-          .then((result) => {
-            console.log('Login Result: ' + result)
-            this.$router.push('/admin/list')
-            if (result) {
-              this.$router.push('/admin/list')
-            }
-          })
-          .catch((err) => console.log(err))
-      }
+      return false;
     }
   }
 }
@@ -103,7 +86,7 @@ export default {
     width: 100%;
 }
 .login-input:focus {
-    outline: none;    
+    outline: none;
 }
 .login-input::-webkit-input-placeholder {
   color: #AAA;
@@ -118,7 +101,7 @@ export default {
 }
 
 .login-alert-message {
-  color: #df4759;
+  color: var(--color-alert);
   margin-top: .3rem;
 }
 

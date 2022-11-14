@@ -3,7 +3,7 @@
     <div v-if="isLoaded" class="wrapper">
       <div class="navbar">
         <div class="navbar-title">찬양공유 관리자시스템</div>
-        <div class="navbar-button"><button class="navbar-button-logout"><small>로그아웃</small></button></div>
+        <div class="navbar-button"><button class="navbar-button-logout" @click="logout"><small>로그아웃</small></button></div>
       </div>
       <div class="category">
           <div class="category-title">소속</div>
@@ -23,25 +23,35 @@
           v-for="conti in contiListCategorized"
           :key="conti.contiId"
         >
-          <AdminContiCard :conti="conti" />
+          <AdminContiCard :conti="conti" @deleteConti="deleteConti(conti.contiId)" />
         </div>
       </div>
       <div v-else class="content-none">
         <h3 class="content-none-message">등록된 찬양곡이 없습니다 😢</h3>
       </div>
+      <AdminPasswordModal 
+        v-if="passwordModal == true"
+        :modalTitle="passwordModalTitle"
+        :modalSubtext="passwordModalSubtext"
+        @modalCloseClick="passwordModal = false"
+        @modalButtonClick="deleteConti(this.conti.contiId)"
+      />
     <button class="button-add">+</button>
     </div>
   </div>
 </template>
 <script>
-import { AdminContiCard } from './atoms'
-import { getContiListAPI } from '../apis/admin'
+import { AdminContiCard, AdminPasswordModal } from './atoms'
+import { getContiListAPI, deleteContiAPI } from '../apis/admin'
+import Login from "@/mixins/login";
 
 export default {
   name: 'AdminList',
   components: {
     AdminContiCard,
+    AdminPasswordModal
   },
+  mixins: [Login],
   data() {
     return {
       category: [
@@ -61,6 +71,10 @@ export default {
         month: null,
       },
       isLoaded: false,
+      passwordModal: false,
+      passwordModalTitle:"게시글 삭제",
+      passwordModalSubtext:"게시글 비밀번호를 입력해주세요",
+
     }
   },
   computed: {
@@ -85,6 +99,13 @@ export default {
   methods: {
     select(e) {
       this.categoryValue = e.target.value
+    },
+    async deleteConti(contiId) {
+      deleteContiAPI(contiId)
+        .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => console.log(err))
     }
   }
 }
