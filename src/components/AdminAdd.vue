@@ -151,7 +151,7 @@
                 </div>
                 <!--footer 콘텐츠-->
                 <template slot="footer">
-                    <BottomButton @buttonClick=" updateModal==true ? updateSong() : addSong()" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
+                    <BottomButton @buttonClick="updateModal==true ? updateSong() : addSong()" :class="{'disabledbtn': song_title.length < 1}" :textButton="textButton"/>
                 </template>
         <!-- /footer -->
         </AdminBottomModal>
@@ -167,6 +167,8 @@
         <AdminPasswordModal
             v-if="passwordModal == true"
             :password="password"
+            :modalTitle="passwordModalTitle"
+            :modalSubtext="passwordModalSubtext"
             @modalButtonClick="onSavePassword"
             @modalCloseClick="passwordModal = false"
         />
@@ -221,6 +223,8 @@ export default {
             radioSelectDepart: "소속",
             radioSelectCategory: "분류",
             textButton: "완료",
+            passwordModalTitle:"게시글 작성",
+            passwordModalSubtext:"비밀번호를 설정해주세요",
             selectionsDepart: [{
                 txt: '대학부',
                 val: 'U'

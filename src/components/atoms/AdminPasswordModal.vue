@@ -4,7 +4,9 @@
         <div class="modal-overlay"></div>
         <div class="modal-card">
         <div class="modal-text">
-            <div class="modal-title">게시글 작성</div>
+            <div class="modal-title">
+                {{ modalTitle }}
+            </div>
             <img 
             class="modal-close-icon" 
             src="../../assets/close_icon.svg"
@@ -12,7 +14,7 @@
             @click="modalCloseClick" />
         </div>
         
-        <div class="modalcard-subtext">비밀번호를 설정해주세요</div>
+        <div class="modalcard-subtext">{{ modalSubtext }}</div>
         <input 
         class="password-input"
         type="password"
@@ -31,6 +33,7 @@
 <script>
 export default {
     name: "AdminPasswordModal",
+    props: ['modalTitle','modalSubtext'],
     data() {
         return {
             password: "",
