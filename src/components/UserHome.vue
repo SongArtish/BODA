@@ -3,7 +3,18 @@
     <div v-if="isLoaded" class="wrapper">
       <NavBar :textNavbar='textNavbar' />
       <div class="header">
-          <h1 class="header-title">{{ date.year }}년 {{ season }}🍂</h1>
+          <h1 class="header-title">{{ date.year }}년
+            <div class="semiannual-dropdown-wrapper">
+              <select class="semiannual-dropdown" @change="selectSemiannual" :value="semiannual.id" @focus="focusSemiannualSelect">
+                <option
+                v-for="item in semiannualList"
+                :key="item.id"
+                :value="item.id"
+                >{{item.name}}</option>
+              </select>
+<!--              <img class="semiannual-select-icon" src="../assets/chevron_down_icon.svg"/>-->
+            </div>
+          </h1>
           <div class="header-content">여호와를 찬송하라 여호와는 선하시며 그의 이름이 아름다우니 그의 이름을 찬양하라(시편 135:3)</div>
       </div>
       <div class="category">
@@ -41,7 +52,7 @@
 </template>
 <script>
 import { UserContiCard, NavBar } from './atoms'
-import { getContiListAPI } from '../apis/user'
+import {getContiListByHalfYearAPI} from '../apis/user'
 
 export default {
   name: 'UserHome',
@@ -87,6 +98,19 @@ export default {
           "seasonNumList": [12, 1, 2]
         }
       },
+      semiannual: 0,
+      semiannualList: [
+        {
+          id: 0,
+          name: '상반기',
+          months: [1,2,3,4,5,6]
+        },
+        {
+          id: 1,
+          name: '하반기',
+          months: [7,8,9,10,11,12]
+        }
+      ],
       textNavbar: '찬양공유',
     }
   },
@@ -103,17 +127,12 @@ export default {
     this.date.month = today.getMonth() + 1;
 
     // 계절 구하기
-    if (3 <= this.date.month && this.date.month <= 5) this.season = this.seasonList.spring.seasonName
-    else if (6 <= this.date.month && this.date.month <= 8) this.season = this.seasonList.summer.seasonName
-    else if (9 <= this.date.month && this.date.month <= 11) this.season = this.seasonList.fall.seasonName
-    else this.season = this.seasonList.winter.seasonName
-
-    getContiListAPI(this.date.year, this.date.month)
-      .then((res) => {
-        this.contiList = res.result.contents
-        this.isLoaded = true
-      })
-      .catch((err) => console.log(err))
+    // if (3 <= this.date.month && this.date.month <= 5) this.season = this.seasonList.spring.seasonName
+    // else if (6 <= this.date.month && this.date.month <= 8) this.season = this.seasonList.summer.seasonName
+    // else if (9 <= this.date.month && this.date.month <= 11) this.season = this.seasonList.fall.seasonName
+    // else this.season = this.seasonList.winter.seasonName
+    this.semiannual = this.semiannualList.find(semi => {return semi.months.includes(this.date.month)});
+    this.getContiList(this.semiannual.id);
   },
   methods: {
     toDetail(id) {
@@ -121,6 +140,22 @@ export default {
     },
     select(e) {
       this.categoryValue = e.target.value
+    },
+    selectSemiannual(e) {
+      this.semiannual = this.semiannualList[e.target.value];
+      this.getContiList(e.target.value);
+    },
+    getContiList(semiannual) {
+      // getContiListAPI(this.date.year, this.date.month)
+      getContiListByHalfYearAPI(this.date.year, semiannual)
+          .then((res) => {
+            this.contiList = res.result.contents
+            this.isLoaded = true
+          })
+          .catch((err) => console.log(err))
+    },
+    focusSemiannualSelect (e) {
+      console.log('e', e);
     }
   }
 }
@@ -137,6 +172,38 @@ export default {
   /* color: #D4D4D4; */
   font-size: .5rem;
 }
+.semiannual-dropdown-wrapper {
+  position: relative;
+  width: 90px;
+  height: inherit;
+  display: inline-block;
+}
+.semiannual-dropdown {
+  background: inherit;
+  width: inherit;
+  height: inherit;
+  border: 0;
+  color: var(--color-light-1);
+  font-weight: bold;
+  font-size: 1.5rem;
+  /*-o-appearance: none;*/
+  /*-webkit-appearance: none;*/
+  /*-moz-appearance: none;*/
+  /*appearance: none;*/
+}
+/* https://wazacs.tistory.com/34 */
+.semiannual-select-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  height: inherit;
+  justify-content: center;
+  align-items: center;
+}
+.semiannual-dropdown-wrapper:focus + .semiannual-select-icon img {
+   transform: rotate(180deg);
+ }
 .category {
   margin: 2rem;
 }
@@ -147,10 +214,16 @@ export default {
 .category-dropdown {
   background: #6E707F;
   border: 1px solid #505062;
-  border-radius: .2rem;
+  border-radius: .5rem;
   color: var(--color-light-1);
-  height: 2rem;
+  height: 3rem;
+  padding-left: 10px;
+  padding-right: 10px;
   width: 100%;
+  /*-o-appearance: none;*/
+  /*-webkit-appearance: none;*/
+  /*-moz-appearance: none;*/
+  /*appearance: none;*/
 }
 .category-item {
   color: var(--color-light-1);

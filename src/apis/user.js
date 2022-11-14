@@ -16,6 +16,22 @@ export async function getContiListAPI(year, month) {
   }
 }
 
+export async function getContiListByHalfYearAPI(year, halfYear) {
+  try {
+    let res = await axios({
+      url: "/api/user/conti/list/half-year",
+      method: "GET",
+        params: {
+          year,
+          halfYear
+      }
+    });
+    return res.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export async function getContiDetailAPI(contiId) {
   try {
     let res = await axios({
