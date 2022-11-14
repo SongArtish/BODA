@@ -176,7 +176,7 @@
 </template>
 <script>
 import { AdminAddSongBtn, AdminBottomModal, AdminCalendar, AdminHeaderModal, AdminSelect, AdminPasswordModal, BottomButton} from './atoms'
-import { postFileAPI, postContiAPI, getAdminContiAPI } from '../apis/admin'
+import { postFileAPI, postContiAPI, updateContiAPI, getAdminContiAPI } from '../apis/admin'
 import Login from "@/mixins/login";
 
 export default {
@@ -334,8 +334,26 @@ export default {
             this.password = password;
             console.log(this.password);
             this.passwordModal = false;
-            this.onSubmitConti();
+            this.contiId !== undefined ? this.onUpdateConti(this.contiId) : this.onSubmitConti()
             this.$router.push({ path: "/admin/list" });
+        },
+        onUpdateConti(contiId){
+            let conti = JSON.stringify({
+                "categoryId":this.categoryId,
+                "contiId": contiId,
+                "depart": this.depart,
+                "date": this.date,
+                "title": this.title,
+                "password":this.password,
+                "songList": this.songList
+            });
+            updateContiAPI(conti)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         },
         closeBottomModal() {
             this.bottomModal = false;
