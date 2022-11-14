@@ -6,10 +6,10 @@ export default {
       loginAPI(password)
         .then((res) => {
           console.log(res)
-          if (res.result) {
+          if (res.result.loginResult) {
             localStorage.setItem('accessToken', res.result.accessToken);
             this.$router.push('/admin/list');
-          } 
+          }
           else {
             // TODO 로그인 실패 얼럿
             alert('로그인 실패');

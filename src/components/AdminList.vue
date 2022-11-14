@@ -23,18 +23,29 @@
           v-for="conti in contiListCategorized"
           :key="conti.contiId"
         >
-          <AdminContiCard :conti="conti" @deleteConti="deleteConti(conti.contiId)" />
+          <AdminContiCard :conti="conti" @deleteConti="openDeletePasswordModal(conti.contiId)" @updateConti="openUpdatePasswordModal(conti.contiId)" />
         </div>
       </div>
       <div v-else class="content-none">
         <h3 class="content-none-message">등록된 찬양곡이 없습니다 😢</h3>
       </div>
+      <!--수정-->
       <AdminPasswordModal 
-        v-if="passwordModal == true"
-        :modalTitle="passwordModalTitle"
-        :modalSubtext="passwordModalSubtext"
-        @modalCloseClick="passwordModal = false"
-        @modalButtonClick="deleteConti(this.conti.contiId)"
+        v-if="updatePasswordModal == true"
+        :password="password"
+        :modalTitle="updateModalTitle"
+        :modalSubtext="modalSubtext"
+        @modalCloseClick="updatePasswordModal = false"
+        @modalButtonClick="contiPasswordCheck"
+      />
+      <!-- 삭제 -->
+      <AdminPasswordModal 
+        v-if="deletePasswordModal == true"
+        :password="password"
+        :modalTitle="deleteModalTitle"
+        :modalSubtext="modalSubtext"
+        @modalCloseClick="deletePasswordModal = false"
+        @modalButtonClick="contiPasswordCheck"
       />
     <button class="button-add">+</button>
     </div>
@@ -42,7 +53,7 @@
 </template>
 <script>
 import { AdminContiCard, AdminPasswordModal } from './atoms'
-import { getContiListAPI, deleteContiAPI } from '../apis/admin'
+import { getContiListAPI, contiPasswordAPI, deleteContiAPI} from '../apis/admin'
 import Login from "@/mixins/login";
 
 export default {
@@ -70,11 +81,14 @@ export default {
         year: null,
         month: null,
       },
+      contiIndex:"",
       isLoaded: false,
-      passwordModal: false,
-      passwordModalTitle:"게시글 삭제",
-      passwordModalSubtext:"게시글 비밀번호를 입력해주세요",
-
+      deletepasswordModal: false,
+      updatepasswordModal: false,
+      password:"",
+      deleteModalTitle:"게시글 삭제",
+      modalSubtext:"게시글 비밀번호를 입력해주세요",
+      updateModalTitle:"게시글 수정",
     }
   },
   computed: {
@@ -100,13 +114,42 @@ export default {
     select(e) {
       this.categoryValue = e.target.value
     },
-    async deleteConti(contiId) {
-      deleteContiAPI(contiId)
+    openDeletePasswordModal(contiId){
+      this.contiIndex = contiId
+      this.deletePasswordModal = true;
+    },
+    openUpdatePasswordModal(contiId){
+      this.contiIndex = contiId
+      this.updatePasswordModal = true;
+    },
+    contiPasswordCheck(password){
+      console.log(password);
+      contiPasswordAPI(this.contiIndex, password)
+        .then((res) => {
+          // console.log(res.result.result)
+          if(res.result.result == true) {
+            console.log("비밀번호 확인")
+            return true
+          }
+          else{
+            console.log("비밀번호 틀림")
+            alert("비밀번호가 틀렸습니다.")
+            return false
+          }
+        })
+        .catch((err)=>console.log(err))
+        return false
+    },
+    async deleteConti() {
+      if(this.contiPasswordCheck()){
+        deleteContiAPI(this.contiIndex)
         .then((res) => {
         console.log(res)
+        this.deletePasswordModal = false;
       })
       .catch((err) => console.log(err))
     }
+      }
   }
 }
 </script>

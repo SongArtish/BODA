@@ -29,7 +29,7 @@ export default {
       // .catch((err) => console.log(err))
     },
     updateConti() {
-
+      this.$emit('updateConti')
     },
     // toDetail() {
     //   this.$router.push({ path: `/admin/${this.conti.contiId}` })

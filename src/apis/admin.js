@@ -28,6 +28,18 @@ export async function getContiListAPI(year, month) {
   }
 }
 
+export async function getContiDetailAPI(contiId) {
+  try {
+    let res = await axios({
+      url: `/api/admin/conti/${contiId}`,
+      method: "GET",
+    });
+    return res.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 // login
 export async function loginAPI(password) {
     try {
@@ -42,6 +54,21 @@ export async function loginAPI(password) {
     } catch (error) {
       throw new Error(error)
     }
+}
+
+export async function contiPasswordAPI(contiId, password) {
+  try {
+    let res = await axios({
+      url: `/api/admin/conti/password/${contiId}`,
+      method: "POST",
+      data: {
+        password: password,
+      },
+    });
+    return res.data
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 // 콘티 등록
