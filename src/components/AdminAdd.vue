@@ -131,13 +131,13 @@
         <div class="image-preview">
           <div class="image-preview-container">
             <div class="image-preview-container-image" v-for="(file,index) in bottomModalData.updateFileList" :key="`update_${index}`">
-              <div class="image-preview-close-btn" @click="fileDeleteButton(file)" :name=file.sheetList>
+              <div class="image-preview-close-btn" @click="deleteUpdateFile(index)" :name=file.sheetList>
                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
               </div>
               <img class="image-preview-image" :src="file.preview"/>
             </div>
             <div class="image-preview-container-image" v-for="(file,index) in bottomModalData.addFileList" :key="`add_${index}`">
-              <div class="image-preview-close-btn" @click="fileDeleteButton(file)" :name=file.sheetList>
+              <div class="image-preview-close-btn" @click="deleteAddFile(index)" :name=file.sheetList>
                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
               </div>
               <img class="image-preview-image" :src="file.preview"/>
@@ -394,6 +394,7 @@ export default {
     async uploadFile() {
       const frm = new FormData();
       console.log("addFileList.length", this.bottomModalData.addFileList.length)
+      let fileResult = [];
       if (this.bottomModalData.addFileList.length > 0) {
         for (let i = 0; i < this.bottomModalData.addFileList.length; i++) {
           const imageForm = this.bottomModalData.addFileList[i].file
@@ -405,25 +406,24 @@ export default {
             .then((res) => {
               if (res.data.status === 200) {
                 this.sheetList = [];
-                const fileResult = res.data.result;
-                fileResult.forEach(file => {
-                  file.preview = file.downloadUrl;
-                })
-                this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex].concat(fileResult)
-                this.tempResultData = this.bottomModalData.updateFileList.concat(fileResult);
-                for (let i = 0; i <= this.tempResultData.length; i++) {
-                  this.sheetList =
-                      [...this.sheetList, {
-                        fileId    : this.tempResultData[i].fileId,
-                        sheetOrder: i
-                      }];
-                }
+                fileResult = res.data.result;
               } else {
                 alert("업로드 실패");
               }
             })
             .catch((err) => console.log(err));
       }
+      fileResult.forEach(file => {
+        file.preview = file.downloadUrl;
+      })
+      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex].concat(fileResult)
+      this.tempResultData = this.bottomModalData.updateFileList.concat(fileResult);
+      this.tempResultData.forEach((temp, index) => {
+        this.sheetList.push({
+              fileId    : temp.fileId,
+              sheetOrder: index
+            });
+      })
     },
     updateSongModal(index) { //곡 수정을 위한 위한 모달창 준비
       this.updateModal = true;
@@ -475,6 +475,12 @@ export default {
       this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
       // console.log("addFileList:",this.bottomModalData.addFileList);
       // console.log(this.filesPreview);
+    },
+    deleteUpdateFile(index) {
+      this.bottomModalData.updateFileList.splice(index, 1);
+    },
+    deleteAddFile(index) {
+      this.bottomModalData.addFileList.splice(index, 1);
     },
     fileDeleteButton(file) {
       console.log('file', file);
