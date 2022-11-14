@@ -7,9 +7,9 @@
             <input 
             type="radio" 
             :id="item.val" 
-            :value="item.val"
             @change="onRadioChange"
             :name="name"
+            :checked = "item.val == name"
             />
             <label :for="item.val">{{item.txt}}</label>
         </div>
@@ -28,11 +28,15 @@ export default {
         selections: {
             default: () => ({})
         },
-        name:{}
+        name:{},
+        value: {
+            type: String,
+            default: ''
+        }
         },
     methods: {
     onRadioChange(event) {
-        this.$emit('change', event.target.value);
+        this.$emit('change', event.target.id);
     }
     },
 };

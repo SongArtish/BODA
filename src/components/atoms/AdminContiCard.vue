@@ -3,11 +3,13 @@
     <div>
       <small v-if="conti.depart === 'Y'" class="conti-category conti-category-1">청년부 {{ conti.categoryName }}</small>
       <small v-else class="conti-category conti-category-2">대학부 {{ conti.categoryName }}</small>
-      <div class="conti-date">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
     </div>
-    <div>
-      <button class="button-update button" @click="updateConti">수정</button>
-      <button class="button-delete button" @click="deleteConti">삭제</button>
+    <div class="conti-date-wrapper">
+      <div class="conti-date">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
+      <div class="conti-button-wrapper">
+        <img src="../../assets/pencil_icon.svg" class="button-update icon" @click="updateConti" />
+        <img src="../../assets/close_icon.svg" class="button-delete icon" @click="deleteConti" />
+      </div>
     </div>
   </div>
 </template>
@@ -29,7 +31,7 @@ export default {
       // .catch((err) => console.log(err))
     },
     updateConti() {
-
+      this.$emit('updateConti')
     },
     // toDetail() {
     //   this.$router.push({ path: `/admin/${this.conti.contiId}` })
@@ -48,9 +50,19 @@ export default {
     margin-bottom: 2rem;
     padding: 1rem;
 
-    display: flex;
+    /*display: flex;*/
     justify-content: space-between;
 }
+.buttons {
+  display: flex;
+  align-items: center;
+}
+.button {
+  align-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 .conti-1 {
     border-left: .7rem solid var(--color-blue);
 }
@@ -63,6 +75,10 @@ export default {
 .conti-category-2 {
     color: var(--color-green);
 }
+.conti-date-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
 .conti-date {
     font-size: 1.1rem;
     font-weight: bold;
@@ -71,5 +87,8 @@ export default {
 .conti-content {
     font-size: .8rem;
     color: var(--color-light2);
+}
+.icon:last-child {
+  margin-left: 0.5rem;
 }
 </style>
