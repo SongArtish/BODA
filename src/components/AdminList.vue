@@ -47,7 +47,7 @@
         @modalCloseClick="deletePasswordModal = false"
         @modalButtonClick="deleteConti"
       />
-    <button class="button-add">+</button>
+    <button class="button-add" @click="toAddPage">+</button>
     </div>
   </div>
 </template>
@@ -123,37 +123,42 @@ export default {
       this.contiIndex = contiId
       this.updatePasswordModal = true;
     },
-    contiPasswordCheck(password){
-      console.log("2");
-      contiPasswordAPI(this.contiIndex, password)
+    toAddPage(){
+      this.$router.push({ path: "/admin/add" })
+    },
+    async contiPasswordCheck(password){
+      // console.log("2");
+      return contiPasswordAPI(this.contiIndex, password)
         .then((res) => {
           // console.log(res.result.result)
           if(res.result.result == true) {
             console.log("비밀번호 확인")
-            this.passwordCheck = true
-            console.log(this.passwordCheck)
+            // this.passwordCheck = true
+            // console.log(this.passwordCheck)
+            return true;
           }
           else{
             console.log("비밀번호 틀림")
             alert("비밀번호가 틀렸습니다.")
-            this.passwordCheck = false
+            // this.passwordCheck = false
+            return false;
           }
         })
         .catch((err)=>console.log(err))
     },
     async deleteConti(password) {
       console.log(password)
-      await this.contiPasswordCheck(password)
+      
       console.log("비밀번호 확인 완료")
-      if(this.passwordCheck == true){
+      if(this.contiPasswordCheck(password)){
         deleteContiAPI(this.contiIndex)
           .then((res) => {
           console.log(res)
           this.deletePasswordModal = false;
+          this.$router.go();
         })
         .catch((err) => console.log(err))
       }
-      console.log("done")
     }
   }
 }
