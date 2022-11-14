@@ -76,7 +76,7 @@ export default {
               `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
           link: {
             mobileWebUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path,
-            webUrl: `${window.location.href}`
+            webUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path
           },
         });
     },
