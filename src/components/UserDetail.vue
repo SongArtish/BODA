@@ -2,7 +2,7 @@
   <div class="UserDetail">
     <div v-if="isLoaded" class="wrapper" @mouseup="closeList()">
       <div class="navbar">
-        <div class="navbar-home" @click="toHome()">↩</div>
+        <div class="navbar-home" @click="toHome()">〈</div>
         <div class="navbar-title">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
         <div class="navbar-button" @click="share()"><img class="navbar-button-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>

@@ -29,11 +29,14 @@ export default {
       this.isOpen = !this.isOpen
     },
     selectSong(songId) {
-      if (this.songOrder != songId-1) {
+      if (this.songOrder != songId) {
         // this.closeList()
-        this.$emit('selectSong', songId)
+        this.$emit('selectSong', songId+1)
         // window.location.reload(true);
       }
+      // else if (this.songOrder != songOrder-2){
+      //   this.$emit('selectSong', songOrder-2)
+      // }
     },
     toPrevious() {
       this.$emit('selectSong', this.songOrder)
