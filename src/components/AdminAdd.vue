@@ -207,7 +207,7 @@ export default {
             sheetList: [],
             song_title:"",
             songList:[],
-            songOrder:0,
+            songOrder:1,
             title:"",
             updateIndex: 0,
             updateFileList:[],

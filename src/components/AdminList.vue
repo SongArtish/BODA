@@ -45,7 +45,7 @@
         :modalTitle="deleteModalTitle"
         :modalSubtext="modalSubtext"
         @modalCloseClick="deletePasswordModal = false"
-        @modalButtonClick="contiPasswordCheck"
+        @modalButtonClick="deleteConti"
       />
     <button class="button-add">+</button>
     </div>
@@ -83,9 +83,10 @@ export default {
       },
       contiIndex:"",
       isLoaded: false,
-      deletepasswordModal: false,
-      updatepasswordModal: false,
+      deletePasswordModal: false,
+      updatePasswordModal: false,
       password:"",
+      passwordCheck:false,
       deleteModalTitle:"게시글 삭제",
       modalSubtext:"게시글 비밀번호를 입력해주세요",
       updateModalTitle:"게시글 수정",
@@ -109,7 +110,7 @@ export default {
         this.isLoaded = true
       })
       .catch((err) => console.log(err))
-  },
+  }, 
   methods: {
     select(e) {
       this.categoryValue = e.target.value
@@ -123,33 +124,37 @@ export default {
       this.updatePasswordModal = true;
     },
     contiPasswordCheck(password){
-      console.log(password);
+      console.log("2");
       contiPasswordAPI(this.contiIndex, password)
         .then((res) => {
           // console.log(res.result.result)
           if(res.result.result == true) {
             console.log("비밀번호 확인")
-            return true
+            this.passwordCheck = true
+            console.log(this.passwordCheck)
           }
           else{
             console.log("비밀번호 틀림")
             alert("비밀번호가 틀렸습니다.")
-            return false
+            this.passwordCheck = false
           }
         })
         .catch((err)=>console.log(err))
-        return false
     },
-    async deleteConti() {
-      if(this.contiPasswordCheck()){
+    async deleteConti(password) {
+      console.log(password)
+      await this.contiPasswordCheck(password)
+      console.log("비밀번호 확인 완료")
+      if(this.passwordCheck == true){
         deleteContiAPI(this.contiIndex)
-        .then((res) => {
-        console.log(res)
-        this.deletePasswordModal = false;
-      })
-      .catch((err) => console.log(err))
-    }
+          .then((res) => {
+          console.log(res)
+          this.deletePasswordModal = false;
+        })
+        .catch((err) => console.log(err))
       }
+      console.log("done")
+    }
   }
 }
 </script>
