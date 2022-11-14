@@ -10,7 +10,7 @@
         <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="checkValidity" />
         <div class="login-alert-message" v-if="message">{{ message }}</div>
     </div>
-    <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" @buttonClick="checkValidity" />
+    <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" :click-button="checkValidity" />
   </div>
 </template>
 <script>
