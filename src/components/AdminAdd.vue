@@ -13,7 +13,7 @@
         />
         <div class="conti">
             <!--date-picker-->
-            <AdminCalendar @input='onDateChange'/>
+            <AdminCalendar @input='onDateChange' :date='date'/>
             <!-- 라디오 버튼 -->
             <div class="radio-btn">
                 <!-- 부서 선택 -->
@@ -259,7 +259,7 @@ export default {
             .then((res) =>{
                 console.log(res.result)
                 this.depart = res.result.depart;
-                this.date = res.result.date.join('-');
+                this.date = this.toDate(res.result.date)
                 this.songList = res.result.songList;
                 if(res.result.categoryName == "주일"){
                     this.categoryId = 1
@@ -306,6 +306,12 @@ export default {
         openBottomModal() {
             this.bottomModal = true;
             // console.log(this.bottomModal)
+        },
+        toDate(dateArr) {
+            dateArr[1] = dateArr[1] > 9 ? dateArr[1] : "0" + dateArr[1];
+            dateArr[2]  = dateArr[2] > 9 ? dateArr[2] : "0" + dateArr[2];
+            
+            return dateArr.join('-')
         },
         onSubmitConti(){
             let conti = JSON.stringify({
