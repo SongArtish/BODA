@@ -75,7 +75,7 @@ export default {
           text:
               `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
           link: {
-            mobileWebUrl: `${window.location.href}`,
+            mobileWebUrl: process.env.VUE_APP_SERVER_URL+ getContiDetailAPI(this.$route.params.id),
             webUrl: `${window.location.href}`
           },
         });
