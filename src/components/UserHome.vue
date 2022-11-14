@@ -5,8 +5,10 @@
       <div class="header">
           <h1 class="header-title">{{ date.year }}년
             <div class="semiannual-dropdown-wrapper">
-              <select class="semiannual-dropdown" @change="selectSemiannual" :value="semiannual.id" @focus="focusSemiannualSelect">
+              <select class="semiannual-dropdown" @change="selectSemiannual" :value="semiannual.id">
+              <!-- @focus="focusSemiannualSelect" -->
                 <option
+                class="semiannual-dropdown-option"
                 v-for="item in semiannualList"
                 :key="item.id"
                 :value="item.id"
@@ -45,7 +47,14 @@
       <footer class="footer">
           03136 서울특별시 종로구 창경궁로 129-11 <br />
           TEL 02-765-7761~2 | FAX 02-765-7763 <br /><br />
-          중앙프로젝트 우리팀이름 뭐라할까
+          <div class="team">
+            중앙프로젝트
+            <span class="team-tooltip">
+              Credits<br/>
+              구평모 국채림 김아진 김재훈 박다은<br/>
+              오건영 윤이영 이송영 이예영 이주아
+            </span>
+          </div>
       </footer>
     </div>
   </div>
@@ -79,25 +88,6 @@ export default {
         month: null,
       },
       isLoaded: false,
-      season: "",
-      seasonList: {
-        "spring": {
-          "seasonName": "봄",
-          "seasonNumList": [3, 4, 5]
-        },
-        "summer": {
-          "seasonName": "여름",
-          "seasonNumList": [6, 7, 8]
-        },
-        "fall": {
-          "seasonName": "가을",
-          "seasonNumList": [9, 10, 11]
-        },
-        "winter": {
-          "seasonName": "겨울",
-          "seasonNumList": [12, 1, 2]
-        }
-      },
       semiannual: 0,
       semiannualList: [
         {
@@ -126,11 +116,6 @@ export default {
     this.date.year = today.getFullYear();
     this.date.month = today.getMonth() + 1;
 
-    // 계절 구하기
-    // if (3 <= this.date.month && this.date.month <= 5) this.season = this.seasonList.spring.seasonName
-    // else if (6 <= this.date.month && this.date.month <= 8) this.season = this.seasonList.summer.seasonName
-    // else if (9 <= this.date.month && this.date.month <= 11) this.season = this.seasonList.fall.seasonName
-    // else this.season = this.seasonList.winter.seasonName
     this.semiannual = this.semiannualList.find(semi => {return semi.months.includes(this.date.month)});
     this.getContiList(this.semiannual.id);
   },
@@ -154,9 +139,9 @@ export default {
           })
           .catch((err) => console.log(err))
     },
-    focusSemiannualSelect (e) {
-      console.log('e', e);
-    }
+    // focusSemiannualSelect (e) {
+    //   console.log('e', e);
+    // }
   }
 }
 </script>
@@ -170,26 +155,29 @@ export default {
 }
 .header-content {
   /* color: #D4D4D4; */
-  font-size: .5rem;
+  font-size: .8rem;
 }
 .semiannual-dropdown-wrapper {
   position: relative;
-  width: 90px;
-  height: inherit;
+  /* width: 90px; */
+  /* height: inherit; */
   display: inline-block;
 }
 .semiannual-dropdown {
   background: inherit;
-  width: inherit;
-  height: inherit;
+  /* width: inherit; */
+  /* height: inherit; */
   border: 0;
   color: var(--color-light-1);
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 80%;
   /*-o-appearance: none;*/
   /*-webkit-appearance: none;*/
   /*-moz-appearance: none;*/
   /*appearance: none;*/
+}
+.semiannual-dropdown-option {
+  background: #6E707F;
 }
 /* https://wazacs.tistory.com/34 */
 .semiannual-select-icon {
@@ -209,7 +197,8 @@ export default {
 }
 .category-title {
   /* color: #D4D4D4; */
-  font-size: .5rem;
+  font-size: 1rem;
+  margin-left: .4rem;
 }
 .category-dropdown {
   background: #6E707F;
@@ -242,8 +231,48 @@ export default {
 }
 .footer {
   bottom: 0;
-  font-size: .3rem;
+  font-size: .8rem;
   /* position: absolute; */
   margin: 2rem;
+}
+.team {
+  cursor: initial;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+.team .team-tooltip {
+  visibility: hidden;
+  width: 15rem;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.team .team-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+.team:hover .team-tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

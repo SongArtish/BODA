@@ -8,7 +8,7 @@ export default function setup () {
 
   axios.interceptors.request.use(
     async config => {
-      console.log('config', config);
+      // console.log('config', config);
       if (config.url.includes('/api/admin') && !config.url.includes('auth')) {
         const accessToken = localStorage.getItem('accessToken');
         if (!accessToken) {

@@ -7,7 +7,7 @@
     </div>
     <div class="login">
         <div class="login-label">관리자 로그인</div>
-        <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="checkValidity" />
+        <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="checkValidity" autocomplete="on" />
         <div class="login-alert-message" v-if="message">{{ message }}</div>
     </div>
     <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" :click-button="checkValidity" />

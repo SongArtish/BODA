@@ -183,7 +183,7 @@ export default {
 }
 .category-title {
   /* color: #D4D4D4; */
-  font-size: .5rem;
+  font-size: 1rem;
 }
 .category-dropdown {
   background: #6E707F;
