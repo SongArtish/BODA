@@ -5,7 +5,7 @@
     <div class="dropup" >
         <div class="item item-enabled item-bold" @click="toggleList()">찬양 목록</div>
         <div v-if="isOpen" class="dropup-content">
-            <div class="dropup-item" v-for="song in songList" :key="song.songId" @click="selectSong(song.songOrder)">[{{song.songOrder}}] {{ song.title }}</div>
+            <div class="dropup-item" v-for="song in songList" :key="song.songId" @click="selectSong(song.songOrder)">{{ song.title }}</div>
         </div>
     </div>
     <div v-if="songList && songOrder >= songList.length-1" class="item">다음 곡</div>
@@ -22,8 +22,8 @@ export default {
     }
   },
   methods: {
-    closeList() {
-      if (this.isOpen) this.isOpen = false
+    closeList:function() {
+        this.isOpen = !this.isOpen;
     },
     toggleList() {
       this.isOpen = !this.isOpen
@@ -34,9 +34,7 @@ export default {
         this.$emit('selectSong', songId+1)
         // window.location.reload(true);
       }
-      // else if (this.songOrder != songOrder-2){
-      //   this.$emit('selectSong', songOrder-2)
-      // }
+      this.isOpen = !this.isOpen;
     },
     toPrevious() {
       this.$emit('selectSong', this.songOrder)
