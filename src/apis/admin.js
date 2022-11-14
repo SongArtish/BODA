@@ -28,7 +28,7 @@ export async function getContiListAPI(year, month) {
   }
 }
 
-export async function getContiDetailAPI(contiId) {
+export async function getAdminContiAPI(contiId) {
   try {
     let res = await axios({
       url: `/api/admin/conti/${contiId}`,

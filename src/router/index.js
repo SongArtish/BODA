@@ -31,7 +31,7 @@ const routes = [
     component: AdminDetail
   },
   {
-    path: '/admin/add/:contiId?',
+    path: '/admin/add/:id?',
     name: 'AdminAdd',
     component: AdminAdd
   }

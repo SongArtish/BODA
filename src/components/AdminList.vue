@@ -36,7 +36,7 @@
         :modalTitle="updateModalTitle"
         :modalSubtext="modalSubtext"
         @modalCloseClick="updatePasswordModal = false"
-        @modalButtonClick="contiPasswordCheck"
+        @modalButtonClick="updateConti"
       />
       <!-- 삭제 -->
       <AdminPasswordModal 
@@ -147,9 +147,8 @@ export default {
         .catch((err)=>console.log(err))
     },
     async deleteConti(password) {
-      console.log(password)
-      
-      console.log("비밀번호 확인 완료")
+      // console.log(password)
+      // console.log("비밀번호 확인 완료")
       if(this.contiPasswordCheck(password)){
         deleteContiAPI(this.contiIndex)
           .then((res) => {
@@ -158,6 +157,12 @@ export default {
           this.$router.go();
         })
         .catch((err) => console.log(err))
+      }
+    },
+    async updateConti(password) {
+      const id = this.contiIndex
+      if(this.contiPasswordCheck(password)){
+        this.$router.push({path: `/admin/add/${id}`})
       }
     }
   }

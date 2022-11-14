@@ -176,7 +176,7 @@
 </template>
 <script>
 import { AdminAddSongBtn, AdminBottomModal, AdminCalendar, AdminHeaderModal, AdminSelect, AdminPasswordModal, BottomButton} from './atoms'
-import { postFileAPI, postContiAPI } from '../apis/admin'
+import { postFileAPI, postContiAPI, getAdminContiAPI } from '../apis/admin'
 import Login from "@/mixins/login";
 
 export default {
@@ -196,7 +196,9 @@ export default {
     },
     mixins: [Login],
     data() {
+        const contiId = this.$route.params.id
         return {
+            contiId: contiId,
             categoryId:"",
             date:null,
             depart: "",
@@ -251,6 +253,25 @@ export default {
             return [this.bottomModal, this.updateModal]
         },
     },
+    created(){
+        if(this.$route.params.id){
+            getAdminContiAPI(this.$route.params.id)
+            .then((res) =>{
+                console.log(res.result)
+                this.depart = res.result.depart;
+                this.date = res.result.date.join('-');
+                this.songList = res.result.songList;
+                if(res.result.categoryName == "주일"){
+                    this.categoryId = 1
+                }
+                if(res.result.categoryName == "행사"){
+                    this.categoryId = 2
+                }
+            })
+            .catch((err)=> console.log(err))
+        }
+
+    },
     watch : {
         updating(newValue, oldValue) {
             if (newValue[0] == false && oldValue[1] == true){
@@ -263,8 +284,6 @@ export default {
         //         this.sheetList = this.fileList 
         //     }
         // }
-            
-        
     },
     methods: {
         onDateChange(value){
@@ -297,7 +316,6 @@ export default {
                 "password":this.password,
                 "songList": this.songList
             });
-
             postContiAPI(conti)
             .then((res) => {
                 console.log(res);
