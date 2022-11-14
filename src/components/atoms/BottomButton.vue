@@ -1,5 +1,5 @@
 <template>
-  <div class="BottomButton" @click="buttonClick">
+  <div class="BottomButton" @click="clickButton">
     {{ textButton }}
   </div>
 </template>
@@ -7,13 +7,16 @@
 
 export default {
   name: 'BottomButton',
-  props: ['textButton'],
-  components: {
-  },
-  methods: {
-    buttonClick() {
-      this.$emit('buttonClick')
+  props: {
+    textButton: {
+      type: String
+    },
+    clickButton: {
+      type: Function,
+      default: () => {}
     }
+  },
+  components: {
   }
 }
 </script>

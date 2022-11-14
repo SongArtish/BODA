@@ -86,6 +86,21 @@ export async function postContiAPI(conti){
   }
 }
 
+//콘티 수정
+export async function updateContiAPI(conti){
+  try {
+      let res = await axios({
+          headers: {'Content-Type': 'application/json'},
+          url: "/api/admin/conti",
+          method: "PUT",
+          data: conti
+      });
+      return res
+  } catch (error) {
+      throw new Error(error)
+  }
+}
+
 //파일 업로드
 export async function postFileAPI(fileList){
   try{
