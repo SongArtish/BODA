@@ -1,21 +1,21 @@
 <template>
   <div class="BottomBar">
-    <div v-if="songOrder <= 0" class="item">이전 곡</div>
+    <div v-if="songIndex <= 0" class="item">이전 곡</div>
     <div v-else class="item item-enabled" @click="toPrevious()">이전 곡</div>
     <div class="dropup" >
         <div class="item item-enabled item-bold" @click="toggleList()">찬양 목록</div>
         <div v-if="isOpen" class="dropup-content">
-            <div class="dropup-item" v-for="song in songList" :key="song.songId" @click="selectSong(song.songOrder)">{{ song.title }}</div>
+            <div class="dropup-item" v-for="(song, index) in songList" :key="song.songId" @click="selectSong(index)">{{ song.title }}</div>
         </div>
     </div>
-    <div v-if="songList && songOrder >= songList.length-1" class="item">다음 곡</div>
+    <div v-if="songList && songIndex >= songList.length-1" class="item">다음 곡</div>
     <div v-else class="item item-enabled" @click="toNext()">다음 곡</div>
   </div>
 </template>
 <script>
 export default {
   name: 'BottomBar',
-  props: ['songList', 'songOrder'],
+  props: ['songList', 'songIndex'],
   data() {
     return {
       isOpen: false
@@ -23,24 +23,24 @@ export default {
   },
   methods: {
     closeList:function() {
-        this.isOpen = !this.isOpen;
+        this.isOpen = false
     },
     toggleList() {
       this.isOpen = !this.isOpen
     },
-    selectSong(songId) {
-      if (this.songOrder != songId) {
+    selectSong(songIndex) {
+      if (this.songIndex != songIndex) {
         // this.closeList()
-        this.$emit('selectSong', songId+1)
+        this.$emit('selectSong', songIndex + 1)
         // window.location.reload(true);
       }
       this.isOpen = !this.isOpen;
     },
     toPrevious() {
-      this.$emit('selectSong', this.songOrder)
+      this.$emit('selectSong', this.songIndex)
     },
     toNext() {
-      this.$emit('selectSong', this.songOrder+2)
+      this.$emit('selectSong', this.songIndex+2)
     },
   }
 }
