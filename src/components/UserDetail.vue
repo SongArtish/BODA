@@ -2,7 +2,7 @@
   <div class="UserDetail">
     <div v-if="isLoaded" class="wrapper" @mouseup="closeList()">
       <div class="navbar">
-        <div class="navbar-home" @click="toHome()">↩</div>
+        <div class="navbar-home" @click="toHome()">〈</div>
         <div class="navbar-title">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
         <div class="navbar-button" @click="share()"><img class="navbar-button-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
@@ -10,16 +10,16 @@
         <small v-if="conti.depart == 'Y'" class="category-1">청년부 {{ conti.categoryName }}</small>
         <small v-else class="category-2">대학부 {{ conti.categoryName }}</small>
 
-        <div class="title">{{ conti.songList[songOrder].title }}</div>
+        <div class="title">{{ conti.songList[songIndex].title }}</div>
         <div class="sheet">
-          <img class="sheet-image" v-for="sheet in conti.songList[songOrder].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
+          <img class="sheet-image" v-for="sheet in conti.songList[songIndex].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
         <div v-if="getVideoLink !== null" class="video">
           <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
-    <BottomBar :songList="conti.songList" :songOrder="songOrder" @selectSong="selectSong" ref="bottombar" />
+    <BottomBar :songList="conti.songList" :songIndex="songIndex" @selectSong="selectSong" ref="bottombar" />
   </div>
 </template>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.0/kakao.min.js" integrity="sha384-PFHeU/4gvSH8kpvhrigAPfZGBDPs372JceJq3jAXce11bVA6rMvGWzvP4fMQuBGL" crossorigin="anonymous" />
@@ -37,6 +37,7 @@ export default {
       conti: {},
       contiId: this.$route.params.id,
       songOrder: 0,
+      songIndex: 0,
       videoLink: '',
       isLoaded: false,
     }
@@ -55,6 +56,12 @@ export default {
     getContiDetailAPI(this.$route.params.id)
         .then((res) => {
           this.conti = res.result
+          const zero = this.conti.songList.find(song => {
+            song.songOrder == 0
+          });
+          if (!zero) {
+            this.songOrder = 1
+          }
           this.isLoaded = true
         })
         .catch((err) => console.log(err))
@@ -70,18 +77,18 @@ export default {
       if (!Kakao.isInitialized()) {
         window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY)
       }
-        Kakao.Share.sendDefault({
-          objectType: 'text',
-          text:
-              `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
-          link: {
-            mobileWebUrl: `${window.location.href}`,
-            webUrl: `${window.location.href}`
-          },
-        });
+      Kakao.Share.sendDefault({
+        objectType: 'text',
+        text:
+            `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
+        link: {
+          mobileWebUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path,
+          webUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path
+        },
+      });
     },
-    selectSong(songOrder) {
-      this.songOrder = songOrder-1
+    selectSong(songIndex) {
+      this.songIndex = songIndex-1
     },
   }
 }
