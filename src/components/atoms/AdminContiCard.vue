@@ -5,10 +5,14 @@
       <small v-else class="conti-category conti-category-2">대학부 {{ conti.categoryName }}</small>
       <div class="conti-date">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
     </div>
-    <div>
-      <button class="button-update button" @click="updateConti">수정</button>
-      <button class="button-delete button" @click="deleteConti">삭제</button>
-    </div>
+      <div class="buttons">
+        <div class="button-update button" @click="updateConti">
+        <img src="../../assets/pencil_icon.svg" alt="수정"/>
+        </div>
+        <div class="button-delete button" @click="deleteConti">
+          <img src="../../assets/close_icon.svg" alt="수정"/>
+        </div>
+      </div>
   </div>
 </template>
 <script>
@@ -51,6 +55,16 @@ export default {
     display: flex;
     justify-content: space-between;
 }
+.buttons {
+  display: flex;
+  align-items: center;
+}
+.button {
+  align-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 .conti-1 {
     border-left: .7rem solid var(--color-blue);
 }
