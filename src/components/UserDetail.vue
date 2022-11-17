@@ -80,7 +80,7 @@ export default {
       Kakao.Share.sendDefault({
         objectType: 'text',
         text:
-            `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
+            `${this.conti.songList[this.songIndex].title}를 공유하셨습니다.`,
         link: {
           mobileWebUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path,
           webUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path
