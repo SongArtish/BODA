@@ -110,7 +110,7 @@ export default {
         this.isLoaded = true
       })
       .catch((err) => console.log(err))
-  }, 
+  },
   methods: {
     select(e) {
       this.categoryValue = e.target.value
@@ -126,30 +126,23 @@ export default {
     toAddPage(){
       this.$router.push({ path: "/admin/add" })
     },
-    async contiPasswordCheck(password){
-      // console.log("2");
+    contiPasswordCheck(password){
       return contiPasswordAPI(this.contiIndex, password)
         .then((res) => {
-          // console.log(res.result.result)
           if(res.result.result == true) {
-            console.log("비밀번호 확인")
-            // this.passwordCheck = true
-            // console.log(this.passwordCheck)
+            // console.log("비밀번호 확인")
             return true;
           }
           else{
-            console.log("비밀번호 틀림")
+            // console.log("비밀번호 틀림")
             alert("비밀번호가 틀렸습니다.")
-            // this.passwordCheck = false
             return false;
           }
         })
         .catch((err)=>console.log(err))
     },
     async deleteConti(password) {
-      // console.log(password)
-      // console.log("비밀번호 확인 완료")
-      if(this.contiPasswordCheck(password)){
+      if(await this.contiPasswordCheck(password)){
         deleteContiAPI(this.contiIndex)
           .then((res) => {
           console.log(res)
@@ -161,7 +154,7 @@ export default {
     },
     async updateConti(password) {
       const id = this.contiIndex
-      if(this.contiPasswordCheck(password)){
+      if(await this.contiPasswordCheck(password)){
         this.$router.push({path: `/admin/add/${id}`})
       }
     }
