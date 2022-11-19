@@ -384,7 +384,7 @@ export default {
 
       // console.log("2songList:",this.songList);
       if (this.bottomModalData.addFileList.length == 0) {
-        this.updateFileList.push([{}])
+        this.updateFileList.push([])
         // console.log(this.updateFileList.length);
       }
 
@@ -417,9 +417,9 @@ export default {
       fileResult.forEach(file => {
         file.preview = file.downloadUrl;
       })
-      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex].concat(fileResult)
-      this.tempResultData = this.bottomModalData.updateFileList.concat(fileResult);
-      this.tempResultData.forEach((temp, index) => {
+      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex]?.concat(fileResult)
+      this.tempResultData = this.bottomModalData.updateFileList?.concat(fileResult);
+      this.tempResultData?.forEach((temp, index) => {
         this.sheetList.push({
               fileId    : temp.fileId,
               sheetOrder: index
@@ -514,8 +514,8 @@ export default {
 <style scoped>
 
 .AdminAdd {
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .header {
