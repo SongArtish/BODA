@@ -47,20 +47,20 @@
           <!--사진/링크가 있는 경우 체크 표시-->
           <div class="song-detail-txt">
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.sheetList.length < 0}">
+              <div class="check-icon" :class="{'check-disabled': item.sheetList.length == 0}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              첨부사진 {{ item.sheetList.length }}장
+              {{item.sheetList.length>0 ? `첨부사진 ${ item.sheetList.length}장` : '첨부사진 없음'}}
             </div>
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.link.length > 0}">
+              <div class="check-icon" :class="{'check-disabled': item.link.length == 0}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              링크 없음
+              {{item.link.length > 0 ? '링크 추가' : '링크 없음'}}
             </div>
           </div>
         </div>
