@@ -10,7 +10,7 @@
         <small v-if="conti.depart == 'Y'" class="category-1">청년부 {{ conti.categoryName }}</small>
         <small v-else class="category-2">대학부 {{ conti.categoryName }}</small>
 
-        <div class="title">{{ conti.songList[songIndex].title }}</div>
+        <div class="title">{{ conti.songList[songIndex].songOrder }}. {{ conti.songList[songIndex].title }}</div>
         <div class="sheet">
           <img class="sheet-image" v-for="sheet in conti.songList[songIndex].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
