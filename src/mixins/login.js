@@ -1,6 +1,11 @@
 import {loginAPI} from "@/apis/admin";
 
 export default {
+  data(){
+    return {
+      loginFail: false
+    }
+  },
   methods: {
     login (password) {
       loginAPI(password)
@@ -12,7 +17,8 @@ export default {
           }
           else {
             // TODO 로그인 실패 얼럿
-            alert('로그인 실패');
+            // alert('로그인 실패');
+            this.loginFail = true;
           }
         })
         .catch((err) => console.log(err))

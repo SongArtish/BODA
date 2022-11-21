@@ -9,6 +9,7 @@
         <div class="login-label">관리자 로그인</div>
         <input class="login-input" type="password" placeholder="비밀번호를 입력하세요" autofocus v-model="password" @keyup.enter="checkValidity" autocomplete="on" />
         <div class="login-alert-message" v-if="message">{{ message }}</div>
+        <div class ="login-fail-message" v-if="loginFail==true">비밀번호를 확인해주세요</div>
     </div>
     <BottomButton :class="{'disabled': !isNotNull }" :textButton="textButton" :click-button="checkValidity" />
   </div>
@@ -110,7 +111,10 @@ export default {
   color: var(--color-alert);
   margin-top: .3rem;
 }
-
+.login-fail-message{
+  margin-top: .8rem;
+  color: var(--color-alert);
+}
 .disabled {
   background: #505062;
   color: gray;
