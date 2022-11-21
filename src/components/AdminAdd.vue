@@ -516,6 +516,7 @@ export default {
 .AdminAdd {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
+  margin-bottom: 3.2rem;
 }
 
 .header {

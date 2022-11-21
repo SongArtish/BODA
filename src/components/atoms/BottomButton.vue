@@ -30,7 +30,7 @@ export default {
     padding: 13px 0px;
     gap: 10px;
 
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 3rem;
     bottom: 0;
