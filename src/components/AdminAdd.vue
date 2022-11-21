@@ -341,6 +341,7 @@ export default {
       this.passwordModal = false;
       this.contiId !== undefined ? this.onUpdateConti(this.contiId) : this.onSubmitConti()
       this.$router.push({path: "/admin/list"});
+      location.reload();
     },
     onUpdateConti(contiId){
       let conti = JSON.stringify({
