@@ -17,6 +17,8 @@
         <div v-if="getVideoLink !== null" class="video">
           <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
+        <div v-if="getNothing == null"> </div>
+        <div v-if="getVideoLink == null" class="nullVideo"></div>
       </div>
     </div>
     <BottomBar :songList="conti.songList" :songIndex="songIndex" @selectSong="selectSong" ref="bottombar" />
@@ -46,12 +48,15 @@ export default {
     getVideoLink() {
       if (this.isLoaded) {
         let url = this.conti.songList[this.songOrder].link
-        if (url.includes("/embed/")) return url
-        else return "https://www.youtube.com/embed/" + url.slice(-11)
+        if (url.includes("/embed/"))
+          return url
+        else
+          return "https://www.youtube.com/embed/" + url.slice(-11)
       }
       else return null
     }
   },
+
   created() {
     getContiDetailAPI(this.$route.params.id)
         .then((res) => {
