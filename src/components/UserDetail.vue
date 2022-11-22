@@ -49,7 +49,7 @@ export default {
   computed: {
     getVideoLink() {
       if (this.isLoaded) {
-        let url = this.conti.songList[this.songOrder].link
+        let url = this.conti.songList[this.songIndex].link
         if (url.includes("/embed/"))
           return url
         else
