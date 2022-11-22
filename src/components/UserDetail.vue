@@ -53,7 +53,8 @@ export default {
         if (url.includes("/embed/"))
           return url
         else
-          return "https://www.youtube.com/embed/" + url.slice(-11)
+          // return "https://www.youtube.com/embed/" + url.slice(-11)
+          return null
       }
       else return null
     }
