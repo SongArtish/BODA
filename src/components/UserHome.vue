@@ -157,6 +157,10 @@ export default {
   /* color: #D4D4D4; */
   font-size: .8rem;
 }
+
+select::-ms-expand { 
+  display: none;
+}
 .semiannual-dropdown-wrapper {
   position: relative;
   /* width: 90px; */
@@ -170,11 +174,13 @@ export default {
   border: 0;
   color: var(--color-light-1);
   font-weight: bold;
-  font-size: 80%;
-  /*-o-appearance: none;*/
-  /*-webkit-appearance: none;*/
-  /*-moz-appearance: none;*/
-  /*appearance: none;*/
+  font-size: 100%;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url('../assets/vector.svg') no-repeat 100% 50%;
+  background-size: 20px;
 }
 .semiannual-dropdown-option {
   background: #6E707F;
@@ -190,8 +196,8 @@ export default {
   align-items: center;
 }
 .semiannual-dropdown-wrapper:focus + .semiannual-select-icon img {
-   transform: rotate(180deg);
- }
+  transform: rotate(180deg);
+}
 .category {
   margin: 2rem;
 }
@@ -203,7 +209,7 @@ export default {
 .category-dropdown {
   background: #6E707F;
   border: 1px solid #505062;
-  border-radius: .5rem;
+  border-radius: 7px;
   color: var(--color-light-1);
   height: 3rem;
   padding-left: 10px;

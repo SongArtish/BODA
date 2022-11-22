@@ -47,7 +47,7 @@
         @modalCloseClick="deletePasswordModal = false"
         @modalButtonClick="deleteConti"
       />
-    <button class="button-add" @click="toAddPage">+</button>
+    <img src="@/assets/plus-circle.svg" class="button-add" @click="toAddPage"/>
     </div>
   </div>
 </template>
@@ -215,15 +215,8 @@ export default {
   margin: auto;
 }
 .button-add {
-  background: var(--color-main);
-  border: .15rem solid #436172;
-  border-radius: 2rem;
   bottom: 1.5rem;
-  color: white;
-  font-size: 2rem;
-  height: 3.5rem;
-  position: absolute;
   right: 1.5rem;
-  width: 3.5rem;
+  position: fixed;
 }
 </style>
