@@ -7,7 +7,7 @@
     <div class="conti-date-wrapper">
       <div class="conti-date">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
       <div class="conti-button-wrapper">
-        <img src="../../assets/pencil_icon.svg" class="button-update icon" @click="updateConti" />
+<!--        <img src="../../assets/pencil_icon.svg" class="button-update icon" @click="updateConti" />-->
         <img src="../../assets/close_icon.svg" class="button-delete icon" @click="deleteConti" />
       </div>
     </div>
