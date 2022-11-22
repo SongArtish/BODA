@@ -19,6 +19,9 @@
 body {
   background: var(--color-bg);
   user-select: none;
+  max-width: 375px;
+  margin: 0 auto;
+  /* position: absolute; */
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

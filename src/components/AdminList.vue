@@ -235,7 +235,7 @@ export default {
   color: white;
   font-size: 2rem;
   height: 3.5rem;
-  position: absolute;
+  position: fixed;
   right: 1.5rem;
   width: 3.5rem;
 }
