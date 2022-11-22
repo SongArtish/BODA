@@ -3,16 +3,16 @@
     <div v-if="isLoaded" class="wrapper">
       <NavBar :textNavbar='textNavbar' />
       <div class="header">
-          <h1 class="header-title">{{ date.year }}년
+          <h1 class="header-title">
             <div class="semiannual-dropdown-wrapper">
-              <select class="semiannual-dropdown" @change="selectSemiannual" :value="semiannual.id">
+              <select class="semiannual-dropdown" @change="selectSemiannual" :value="semiannual">
               <!-- @focus="focusSemiannualSelect" -->
                 <option
                 class="semiannual-dropdown-option"
-                v-for="item in semiannualList"
+                v-for="item in monthFilterList"
                 :key="item.id"
                 :value="item.id"
-                >{{item.name}}</option>
+                >{{`${item.year} ${semiannualList[item.semiannual].name}`}}</option>
               </select>
 <!--              <img class="semiannual-select-icon" src="../assets/chevron_down_icon.svg"/>-->
             </div>
@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-import { UserContiCard, NavBar } from './atoms'
+import {NavBar, UserContiCard} from './atoms'
 import {getContiListByHalfYearAPI} from '../apis/user'
 
 export default {
@@ -86,6 +86,7 @@ export default {
       date: {
         year: null,
         month: null,
+        semiannual: null
       },
       isLoaded: false,
       semiannual: 0,
@@ -101,6 +102,7 @@ export default {
           months: [7,8,9,10,11,12]
         }
       ],
+      monthFilterList: [],
       textNavbar: '찬양공유',
     }
   },
@@ -112,14 +114,34 @@ export default {
     }
   },
   created() {
-    let today = new Date()
-    this.date.year = today.getFullYear();
-    this.date.month = today.getMonth() + 1;
-
-    this.semiannual = this.semiannualList.find(semi => {return semi.months.includes(this.date.month)});
-    this.getContiList(this.semiannual.id);
+    this.init();
+    this.getContiList();
   },
   methods: {
+    init() {
+      let today = new Date()
+      this.date.year = today.getFullYear();
+      this.date.month = today.getMonth() + 1;
+
+      this.date.semiannual = this.semiannualList.find(semi => {return semi.months.includes(this.date.month)});
+      let year = 2020;
+      let id = 0;
+      this.monthFilterList.push({year, semiannual: 1, id}); this.semiannual = id; id++;
+      year++;
+      for (; year <= this.date.year; year++) {
+        if (year < this.date.year) {
+          this.monthFilterList.push({year, semiannual: 0, id}); id++;
+          this.monthFilterList.push({year, semiannual: 1, id}); this.semiannual = id; id++;
+        } else {
+          if (this.date.semiannual === 0) {
+            this.monthFilterList.push({year, semiannual: 0, id}); this.semiannual = id; id++;
+          } else {
+            this.monthFilterList.push({year, semiannual: 0, id}); id++;
+            this.monthFilterList.push({year, semiannual: 1, id}); this.semiannual = id; id++;
+          }
+        }
+      }
+    },
     toDetail(id) {
       this.$router.push({ path: `/conti/${id}` })
     },
@@ -127,12 +149,12 @@ export default {
       this.categoryValue = e.target.value
     },
     selectSemiannual(e) {
-      this.semiannual = this.semiannualList[e.target.value];
-      this.getContiList(e.target.value);
+      this.semiannual = e.target.value;
+      this.getContiList();
     },
-    getContiList(semiannual) {
+    getContiList() {
       // getContiListAPI(this.date.year, this.date.month)
-      getContiListByHalfYearAPI(this.date.year, semiannual)
+      getContiListByHalfYearAPI(this.monthFilterList[this.semiannual].year, this.monthFilterList[this.semiannual].semiannual)
           .then((res) => {
             this.contiList = res.result.contents
             this.isLoaded = true
