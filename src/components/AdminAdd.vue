@@ -110,6 +110,7 @@
             v-model="bottomModalData.link"
             placeholder="유튜브 링크를 입력하세요"
         />
+        <div class="youtube-warning-txt" v-if="youtubeLinkCheck == true">유튜브 링크를 입력해주세요.</div>
       </div>
       <!-- 악보 첨부 기능 -->
       <div class="image-upload">
@@ -124,6 +125,7 @@
               type="file"
               @change="onUploadImage"
               ref="fileList"
+              accept="image/*" 
               multiple/>
         </div>
 
@@ -220,6 +222,7 @@ export default {
       passwordModal       : false,
       updateModal         : false,
       deleteImage         : false,
+      youtubeLinkCheck: false,
       radioSelectDepart   : "소속",
       radioSelectCategory : "분류",
       textButton          : "완료",
@@ -343,29 +346,34 @@ export default {
       this.$router.push({path: "/admin/list"});
       location.reload();
     },
-    onUpdateConti(contiId){
+    async onUpdateConti(contiId){
       let conti = JSON.stringify({
         "categoryId":this.categoryId,
         "contiId": contiId,
         "depart": this.depart,
         "date": this.date,
         "title": this.title,
-        "password":this.password,
         "songList": this.songList
       });
-      updateContiAPI(conti)
+      await updateContiAPI(conti)
           .then((res) => {
             console.log(res);
           })
           .catch((err) => {
             console.log(err);
-          })
+          });
+      this.$router.push({path: "/admin/list"});
+      location.reload();
     },
     closeBottomModal() {
       this.bottomModal = false;
     },
     async addSong() {     //곡 추가
       if (this.bottomModalData.songTitle.length <= 0) {
+        return false;
+      }
+      if (this.bottomModalData.link.length !== 0 && this.bottomModalData.link.includes('youtu') == false ){
+        this.youtubeLinkCheck = true;
         return false;
       }
       //파일 업로드
@@ -512,9 +520,10 @@ export default {
       this.bottomModalData.songTitle = "";
       this.bottomModalData.link = "";
       this.bottomModalData.addFileList = [];
+      this.youtubeLinkCheck = false;
     },
     onClickCompleteButton () {
-      this.passwordModal = true;
+      this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
     }
   }
 }
@@ -640,10 +649,15 @@ export default {
   border-bottom: 2px solid #90E5FA;
 }
 
+
 .titlelength-warning,
 .titlelength-warning:focus {
   color: var(--color-alert);
   border-bottom: 2px solid var(--color-alert);
+}
+
+.youtube-warning-txt{
+  color: var(--color-alert);
 }
 
 .titlelength-warning-txt {
@@ -693,6 +707,7 @@ export default {
 .image-upload {
   display: flex;
   gap: 12px;
+  margin-top: 1rem;
 }
 
 .image-upload-input {
