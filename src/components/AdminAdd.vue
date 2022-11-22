@@ -124,6 +124,7 @@
               type="file"
               @change="onUploadImage"
               ref="fileList"
+              accept="image/*" 
               multiple/>
         </div>
 
@@ -343,23 +344,24 @@ export default {
       this.$router.push({path: "/admin/list"});
       location.reload();
     },
-    onUpdateConti(contiId){
+    async onUpdateConti(contiId){
       let conti = JSON.stringify({
         "categoryId":this.categoryId,
         "contiId": contiId,
         "depart": this.depart,
         "date": this.date,
         "title": this.title,
-        "password":this.password,
         "songList": this.songList
       });
-      updateContiAPI(conti)
+      await updateContiAPI(conti)
           .then((res) => {
             console.log(res);
           })
           .catch((err) => {
             console.log(err);
-          })
+          });
+      this.$router.push({path: "/admin/list"});
+      location.reload();
     },
     closeBottomModal() {
       this.bottomModal = false;
@@ -504,7 +506,7 @@ export default {
       this.bottomModalData.addFileList = [];
     },
     onClickCompleteButton () {
-      this.passwordModal = true;
+      this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
     }
   }
 }
