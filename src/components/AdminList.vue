@@ -110,7 +110,7 @@ export default {
         this.isLoaded = true
       })
       .catch((err) => console.log(err))
-  }, 
+  },
   methods: {
     select(e) {
       this.categoryValue = e.target.value
@@ -136,7 +136,7 @@ export default {
             return true;
           }
           else{
-            console.log("비밀번호 틀림")
+            // console.log("비밀번호 틀림")
             alert("비밀번호가 틀렸습니다.")
             return false;
           }
@@ -216,6 +216,10 @@ export default {
 }
 .button-add {
   bottom: 1.5rem;
+  color: white;
+  font-size: 2rem;
+  height: 3.5rem;
+  position: fixed;
   right: 1.5rem;
   position: fixed;
 }

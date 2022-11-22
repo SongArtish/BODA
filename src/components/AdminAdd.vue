@@ -47,7 +47,7 @@
           <!--사진/링크가 있는 경우 체크 표시-->
           <div class="song-detail-txt">
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.sheetList.length == 0}">
+              <div class="check-icon" :class="{'check-disabled': item.sheetList.length < 1}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -55,7 +55,7 @@
               {{item.sheetList.length>0 ? `첨부사진 ${ item.sheetList.length}장` : '첨부사진 없음'}}
             </div>
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.link.length == 0}">
+              <div class="check-icon" :class="{'check-disabled': item.link.length < 1}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -380,9 +380,6 @@ export default {
         sheetList: this.sheetList,
         songOrder: this.songOrder,
       });
-      console.log("push")
-
-      // console.log("2songList:",this.songList);
       if (this.bottomModalData.addFileList.length == 0) {
         this.updateFileList.push([])
         // console.log(this.updateFileList.length);
@@ -394,8 +391,10 @@ export default {
     },
     async uploadFile() {
       const frm = new FormData();
-      console.log("addFileList.length", this.bottomModalData.addFileList.length)
+      // console.log("addFileList.length", this.bottomModalData.addFileList.length)
       let fileResult = [];
+      console.log('uploadFile 함수 실행 중!!')
+      console.log(this.bottomModalData.addFileList)
       if (this.bottomModalData.addFileList.length > 0) {
         for (let i = 0; i < this.bottomModalData.addFileList.length; i++) {
           const imageForm = this.bottomModalData.addFileList[i].file
@@ -436,13 +435,18 @@ export default {
       this.updateIndex = index;
     },
     async updateSong() {     //곡 수정
-      console.log('?');
+      console.log('곡 수정!!!!!!!!!!!');
+      console.log(this.sheetList)
+      // 여기서 삭제한 곡을 다시 생성함!!!!!!!!!!!!
       await this.uploadFile();
+      console.log(this.sheetList)
+      
       if (this.updateModal) {
+        console.log(this.sheetList)
         this.songList[this.updateIndex].title = this.bottomModalData.songTitle;
         this.songList[this.updateIndex].link = this.bottomModalData.link;
         this.songList[this.updateIndex].sheetList = this.sheetList;
-
+        console.log(this.sheetList)
         this.updateModal = false;
         await this.removeDatas();
 
@@ -478,10 +482,16 @@ export default {
       // console.log(this.filesPreview);
     },
     deleteUpdateFile(index) {
+      console.log('삭제!!')
+      console.log(this.sheetList)
       this.bottomModalData.updateFileList.splice(index, 1);
+      this.sheetList.splice(index, 1)
+      this.bottomModalData.addFileList.splice(index, 1)
+      console.log(this.sheetList)
     },
     deleteAddFile(index) {
       this.bottomModalData.addFileList.splice(index, 1);
+      // this.sheetList.splice(index, 1)
     },
     fileDeleteButton(file) {
       console.log('file', file);
@@ -723,5 +733,4 @@ export default {
 /* .image-input-button::-webkit-file-upload-button {
 visibility: hidden;
 } */
-
 </style>
