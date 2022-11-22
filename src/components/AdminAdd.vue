@@ -110,6 +110,7 @@
             v-model="bottomModalData.link"
             placeholder="유튜브 링크를 입력하세요"
         />
+        <div class="youtube-warning-txt" v-if="youtubeLinkCheck == true">유튜브 링크를 입력해주세요.</div>
       </div>
       <!-- 악보 첨부 기능 -->
       <div class="image-upload">
@@ -221,6 +222,7 @@ export default {
       passwordModal       : false,
       updateModal         : false,
       deleteImage         : false,
+      youtubeLinkCheck: false,
       radioSelectDepart   : "소속",
       radioSelectCategory : "분류",
       textButton          : "완료",
@@ -370,6 +372,10 @@ export default {
       if (this.bottomModalData.songTitle.length <= 0) {
         return false;
       }
+      if (this.bottomModalData.link.length !== 0 && this.bottomModalData.link.includes('youtu') == false ){
+        this.youtubeLinkCheck = true;
+        return false;
+      }
       //파일 업로드
       console.log("sheetlist length", this.sheetList.length)
       await this.uploadFile();
@@ -504,6 +510,7 @@ export default {
       this.bottomModalData.songTitle = "";
       this.bottomModalData.link = "";
       this.bottomModalData.addFileList = [];
+      this.youtubeLinkCheck = false;
     },
     onClickCompleteButton () {
       this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
@@ -632,10 +639,15 @@ export default {
   border-bottom: 2px solid #90E5FA;
 }
 
+
 .titlelength-warning,
 .titlelength-warning:focus {
   color: var(--color-alert);
   border-bottom: 2px solid var(--color-alert);
+}
+
+.youtube-warning-txt{
+  color: var(--color-alert);
 }
 
 .titlelength-warning-txt {
@@ -685,6 +697,7 @@ export default {
 .image-upload {
   display: flex;
   gap: 12px;
+  margin-top: 1rem;
 }
 
 .image-upload-input {
