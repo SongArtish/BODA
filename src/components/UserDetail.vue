@@ -10,13 +10,15 @@
         <small v-if="conti.depart == 'Y'" class="category-1">청년부 {{ conti.categoryName }}</small>
         <small v-else class="category-2">대학부 {{ conti.categoryName }}</small>
 
-        <div class="title">{{ conti.songList[songIndex].title }}</div>
+        <div class="title">{{ conti.songList[songIndex].songOrder }}. {{ conti.songList[songIndex].title }}</div>
         <div class="sheet">
           <img class="sheet-image" v-for="sheet in conti.songList[songIndex].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
         <div v-if="getVideoLink !== null" class="video">
           <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
+        <div v-if="getNothing == null"> </div>
+        <div v-if="getVideoLink == null" class="nullVideo"></div>
       </div>
     </div>
     <BottomBar :songList="conti.songList" :songIndex="songIndex" @selectSong="selectSong" ref="bottombar" />
@@ -46,12 +48,15 @@ export default {
     getVideoLink() {
       if (this.isLoaded) {
         let url = this.conti.songList[this.songOrder].link
-        if (url.includes("/embed/")) return url
-        else return "https://www.youtube.com/embed/" + url.slice(-11)
+        if (url.includes("/embed/"))
+          return url
+        else
+          return "https://www.youtube.com/embed/" + url.slice(-11)
       }
       else return null
     }
   },
+
   created() {
     getContiDetailAPI(this.$route.params.id)
         .then((res) => {
@@ -80,7 +85,7 @@ export default {
       Kakao.Share.sendDefault({
         objectType: 'text',
         text:
-            `${this.conti.songList[this.songOrder].title}를 공유하셨습니다.`,
+            `${this.conti.songList[this.songIndex].title}를 공유하셨습니다.`,
         link: {
           mobileWebUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path,
           webUrl: process.env.VUE_APP_SERVER_URL+ this.$route.path

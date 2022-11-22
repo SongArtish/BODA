@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { AdminDetail, AdminHome, AdminList, AdminAdd, UserDetail, UserHome } from '../components'
+import { AdminDetail, AdminHome, AdminList, AdminAdd, UserDetail, UserHome} from '../components'
 
 Vue.use(VueRouter)
 

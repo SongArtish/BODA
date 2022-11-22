@@ -33,14 +33,17 @@ export default {
         // this.closeList()
         this.$emit('selectSong', songIndex + 1)
         // window.location.reload(true);
+        window.scrollTo(0,0)
       }
       this.isOpen = !this.isOpen;
     },
     toPrevious() {
       this.$emit('selectSong', this.songIndex)
+      window.scrollTo(0,0)
     },
     toNext() {
       this.$emit('selectSong', this.songIndex+2)
+      window.scrollTo(0,0)
     },
   }
 }
