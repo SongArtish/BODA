@@ -2,7 +2,9 @@
   <div class="UserDetail">
     <div v-if="isLoaded" class="wrapper" @mouseup="closeList()">
       <div class="navbar">
-        <div class="navbar-btn-back" @click="toHome()">〈</div>
+        <div class="navbar-btn-back" @click="toHome()">
+          <img class="navbar-btn-back-img" src="../assets/to_list.png" alt="목록으로" style="width: .6rem;"/>
+        </div>
         <div class="navbar-title">{{ conti.date[0] }}년 {{ conti.date[1] }}월 {{ conti.date[2] }}일</div>
         <div class="navbar-btn-share" @click="share()"><img class="navbar-btn-share-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
@@ -47,11 +49,13 @@ export default {
   computed: {
     getVideoLink() {
       if (this.isLoaded) {
-        let url = this.conti.songList[this.songOrder].link
+        let url = this.conti.songList[this.songIndex].link
         if (url.includes("/embed/"))
           return url
-        else
+        else if (url.includes("youtube"))
           return "https://www.youtube.com/embed/" + url.slice(-11)
+        else
+          return null
       }
       else return null
     }
@@ -111,8 +115,14 @@ export default {
 .navbar-btn-back {
   cursor: pointer;
 }
+.navbar-btn-back-img{
+  width: .5rem;
+}
 .navbar-btn-share {
   cursor: pointer;
+}
+.navbar-btn-back-img{
+  width: 1rem;
 }
 .navbar-btn-share-img {
   width: 1rem;
