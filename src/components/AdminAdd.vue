@@ -52,7 +52,7 @@
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              첨부사진 {{ item.sheetList.length }}장
+              {{item.sheetList.length>0 ? `첨부사진 ${ item.sheetList.length}장` : '첨부사진 없음'}}
             </div>
             <div class="song-detail-check">
               <div class="check-icon" :class="{'check-disabled': item.link.length < 1}">
@@ -60,7 +60,7 @@
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              링크
+              {{item.link.length > 0 ? '링크 추가' : '링크 없음'}}
             </div>
           </div>
         </div>
@@ -381,7 +381,8 @@ export default {
         songOrder: this.songOrder,
       });
       if (this.bottomModalData.addFileList.length == 0) {
-        this.updateFileList.push([{}])
+        this.updateFileList.push([])
+        // console.log(this.updateFileList.length);
       }
 
       await this.removeDatas()
@@ -415,9 +416,9 @@ export default {
       fileResult.forEach(file => {
         file.preview = file.downloadUrl;
       })
-      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex].concat(fileResult)
-      this.tempResultData = this.bottomModalData.updateFileList.concat(fileResult);
-      this.tempResultData.forEach((temp, index) => {
+      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex]?.concat(fileResult)
+      this.tempResultData = this.bottomModalData.updateFileList?.concat(fileResult);
+      this.tempResultData?.forEach((temp, index) => {
         this.sheetList.push({
               fileId    : temp.fileId,
               sheetOrder: index
@@ -523,9 +524,9 @@ export default {
 <style scoped>
 
 .AdminAdd {
-  margin-left: 2rem;
-  margin-right: 2rem;
-  margin-bottom: 5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  margin-bottom: 3.2rem;
 }
 
 .header {

@@ -126,12 +126,13 @@ export default {
     toAddPage(){
       this.$router.push({ path: "/admin/add" })
     },
-    contiPasswordCheck(password){
-      return contiPasswordAPI(this.contiIndex, password)
+    async contiPasswordCheck(password){
+      // console.log("2");
+      return await contiPasswordAPI(this.contiIndex, password)
         .then((res) => {
           console.log(res.result.result)
           if(res.result.result == true) {
-            // console.log("비밀번호 확인")
+            console.log("비밀번호 확인")
             return true;
           }
           else{
@@ -143,17 +144,6 @@ export default {
         .catch((err)=>console.log(err))
     },
     async deleteConti(password) {
-      // console.log(password)
-      // console.log("비밀번호 확인 완료")
-      // if(this.contiPasswordCheck(password)){
-      //   deleteContiAPI(this.contiIndex)
-      //     .then((res) => {
-      //     console.log(res)
-      //     this.deletePasswordModal = false;
-      //     this.$router.go();
-      //   })
-      //   .catch((err) => console.log(err))
-      // }
       this.contiPasswordCheck(password)
       .then(bool => {
         if(bool==true){
@@ -169,13 +159,10 @@ export default {
           this.deletePasswordModal = false;
         }
       })
+      
     },
     async updateConti(password) {
       const id = this.contiIndex
-      // console.log(this.contiPasswordCheck(password))
-      // if(this.contiPasswordCheck(password) == true){
-      //   this.$router.push({path: `/admin/add/${id}`})
-      // }
       this.contiPasswordCheck(password)
       .then(bool => {
         if(bool == true){

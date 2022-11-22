@@ -65,8 +65,7 @@ export default {
 }
 
 .modal-card {
-    position: relative;
-    position: absolute;
+    position: fixed;
     z-index: 4;
     left: calc(50% - 327px/2 + 1px);
     top: calc(50% - 220px/2);
