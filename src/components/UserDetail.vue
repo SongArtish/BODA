@@ -52,7 +52,7 @@ export default {
         let url = this.conti.songList[this.songIndex].link
         if (url.includes("/embed/"))
           return url
-        else if (url.includes("http"))
+        else if (url.includes("youtube"))
           return "https://www.youtube.com/embed/" + url.slice(-11)
         else
           return null
