@@ -487,7 +487,8 @@ export default {
       this.sheetList = [];
     },
     onClickCompleteButton () {
-      this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
+      // this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
+      this.passwordModal = true;
     }
   }
 }
