@@ -56,7 +56,7 @@ export default {
   border-style: solid;
   border-color: hsl(240, 10%, 35%);
   border-radius: .5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   padding: 1rem;
   position: relative;
 

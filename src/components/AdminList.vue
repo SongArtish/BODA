@@ -268,7 +268,7 @@ export default {
   height: inherit;
   color: var(--color-light-1);
   font-weight: bold;
-  font-size: 100%;
+  font-size: 2rem;
   -o-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -289,7 +289,7 @@ export default {
 .semiannual-select-icon {
   position: absolute;
   top: 0;
-  right: 0;
+  right: -10px;
   z-index: 1;
   width: 35px;
   height: 35px;
