@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {getContiMaxMinDate} from '@/apis/user';
 
 Vue.use(Vuex)
 
@@ -52,48 +53,92 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    INIT_MONTH_FILTER({commit}) {
-      let today = new Date()
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1;
-      const semiannualList = [
-        {
-          id: 0,
-          name: '상반기',
-          months: [1,2,3,4,5,6]
-        },
-        {
-          id: 1,
-          name: '하반기',
-          months: [7,8,9,10,11,12]
-        }
-      ];
-      const monthFilterList = [];
-      let semiannual = 0;
+    async INIT_MONTH_FILTER({commit}) {
+      await getContiMaxMinDate()
+        .then(async res => {
+          const today = new Date();
+          const nowYear = today.getFullYear();
+          const nowMonth = today.getMonth() + 1;
+          const semiannualList = [
+            {
+              id: 0,
+              name: '상반기',
+              months: [1, 2, 3, 4, 5, 6]
+            },
+            {
+              id: 1,
+              name: '하반기',
+              months: [7, 8, 9, 10, 11, 12]
+            }
+          ];
+          const monthFilterList = [];
+          let nowSemiannual = 0;
+          let minSemiannual = 0;
+          let maxSemiannual = 0;
 
-      semiannual = semiannualList.find(semi => {return semi.months.includes(month)});
-      let startYear = 2021;
-      let id = 0;
-      monthFilterList.push({year: startYear, semiannual: 1, id});id++;
-      startYear++;
-      for (; startYear <= year; startYear++) {
-        if (startYear < year) {
-          monthFilterList.push({year: startYear, semiannual: 0, id}); id++;
-          monthFilterList.push({year: startYear, semiannual: 1, id});id++;
-        } else {
-          if (semiannual === 0) {
-            monthFilterList.push({year: startYear, semiannual: 0, id});id++;
-          } else {
-            monthFilterList.push({year: startYear, semiannual: 0, id}); id++;
-            monthFilterList.push({year: startYear, semiannual: 1, id});id++;
+          let minYear;
+          let minMonth;
+          let maxYear;
+          let maxMonth;
+          const minMaxDate = res.result;
+          minYear = minMaxDate.minContiDate[0];
+          minMonth = minMaxDate.minContiDate[1];
+          maxYear = minMaxDate.maxContiDate[0];
+          maxMonth = minMaxDate.maxContiDate[1];
+
+          nowSemiannual = semiannualList.find(semi => {
+            return semi.months.includes(nowMonth)
+          }).id;
+          minSemiannual = semiannualList.find(semi => {
+            return semi.months.includes(minMonth)
+          }).id;
+          maxSemiannual = semiannualList.find(semi => {
+            return semi.months.includes(maxMonth)
+          }).id;
+
+          let id = 0;
+          let nowId = 0;
+
+          if (minSemiannual === 0) {
+            monthFilterList.push({year: minYear, semiannual: 0, id});
+            if (minYear === nowYear && nowSemiannual === 0) nowId = id;
+            id++;
           }
-        }
-      }
-      commit('SET_MONTH_FILTER_LIST', monthFilterList);
-      commit('SET_USER_FILTER_MONTH_FILTER', id - 1);
-      commit('SET_ADMIN_FILTER_MONTH_FILTER', id - 1);
+          monthFilterList.push({year: minYear, semiannual: 1, id});
+          if (minYear === nowYear && nowSemiannual === 1) nowId = id;
+          id++;
+          minYear++;
+          for (; minYear <= maxYear; minYear++) {
+            if (minYear < maxYear) {
+              monthFilterList.push({year: minYear, semiannual: 0, id});
+              if (minYear === nowYear && nowSemiannual === 0) nowId = id;
+              id++;
+              monthFilterList.push({year: minYear, semiannual: 1, id});
+              if (minYear === nowYear && nowSemiannual === 1) nowId = id;
+              id++;
+            } else {
+              if (maxSemiannual === 0) {
+                monthFilterList.push({year: minYear, semiannual: 0, id});
+                if (minYear === nowYear && nowSemiannual === 0) nowId = id;
+                id++;
+              } else {
+                monthFilterList.push({year: minYear, semiannual: 0, id});
+                if (minYear === nowYear && nowSemiannual === 0) nowId = id;
+                id++;
+                monthFilterList.push({year: minYear, semiannual: 1, id});
+                if (minYear === nowYear && nowSemiannual === 1) nowId = id;
+                id++;
+              }
+            }
+          }
+          await commit('SET_MONTH_FILTER_LIST', monthFilterList);
+          await commit('SET_USER_FILTER_MONTH_FILTER', nowId);
+          await commit('SET_ADMIN_FILTER_MONTH_FILTER', nowId);
+        })
+        .catch(e => {
+          console.log('e', e);
+        });
     }
   },
-  modules: {
-  }
+  modules: {}
 })

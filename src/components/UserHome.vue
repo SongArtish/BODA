@@ -123,9 +123,9 @@ export default {
       this.SET_USER_FILTER_MONTH_FILTER(val);
     }
   },
-  created() {
-    this.init();
-    this.getContiList();
+  async created() {
+    await this.init();
+    await this.getContiList();
   },
   methods: {
     ...mapMutations({
@@ -135,8 +135,8 @@ export default {
     ...mapActions({
       INIT_MONTH_FILTER: 'INIT_MONTH_FILTER'
     }),
-    init() {
-      this.INIT_MONTH_FILTER();
+    async init() {
+      await this.INIT_MONTH_FILTER();
       this.semiannual = this.GET_USER_FILTER.monthFilter;
       this.categoryValue = this.GET_USER_FILTER.category;
     },
@@ -150,9 +150,8 @@ export default {
       this.semiannual = e.target.value;
       this.getContiList();
     },
-    getContiList() {
-      // getContiListAPI(this.date.year, this.date.month)
-      getContiListByHalfYearAPI(this.GET_MONTH_FILTER_LIST[this.semiannual].year, this.GET_MONTH_FILTER_LIST[this.semiannual].semiannual)
+    async getContiList() {
+      await getContiListByHalfYearAPI(await this.GET_MONTH_FILTER_LIST[this.semiannual].year, await this.GET_MONTH_FILTER_LIST[this.semiannual].semiannual)
           .then((res) => {
             this.contiList = res.result.contents
             this.isLoaded = true

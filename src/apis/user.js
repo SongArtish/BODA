@@ -43,3 +43,15 @@ export async function getContiDetailAPI(contiId) {
     throw new Error(error)
   }
 }
+
+export async function getContiMaxMinDate () {
+  try {
+    let res = await axios({
+      url: '/api/user/conti/min-max',
+      method: 'GET'
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
