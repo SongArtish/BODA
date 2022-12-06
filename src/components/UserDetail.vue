@@ -136,6 +136,7 @@ export default {
 .title {
   font-weight: bold;
   margin: .5rem 0;
+  text-align: center;
 }
 .sheet-image {
   margin: 1rem 0;
