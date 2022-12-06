@@ -9,15 +9,17 @@
         <div class="navbar-btn-share" @click="share()"><img class="navbar-btn-share-img" src="../assets/share_button.png" alt="공유하기" /></div>
       </div>
       <div class="content">
-        <small v-if="conti.depart == 'Y'" class="category-1">청년부 {{ conti.categoryName }}</small>
-        <small v-else class="category-2">대학부 {{ conti.categoryName }}</small>
+        <div class = "center">
+          <small v-if="conti.depart == 'Y'" class="category-1" style="text-align:center;">청년부 {{ conti.categoryName }}</small>
+          <small v-else class="category-2" style="text-align:center;">대학부 {{ conti.categoryName }}</small>
+        </div>
 
         <div class="title">{{ conti.songList[songIndex].songOrder }}. {{ conti.songList[songIndex].title }}</div>
         <div class="sheet">
           <img class="sheet-image" v-for="sheet in conti.songList[songIndex].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
         <div v-if="getVideoLink !== null" class="video">
-          <iframe class="video-content" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe class="video-content center" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div v-if="getNothing == null"> </div>
         <div v-if="getVideoLink == null" class="nullVideo"></div>
@@ -111,6 +113,9 @@ export default {
   width: 100%;
   left: 0px;
   margin: 3rem 0;
+}
+.center{
+  text-align: center;
 }
 .navbar-btn-back {
   cursor: pointer;
