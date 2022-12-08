@@ -174,11 +174,17 @@ export default {
 
 }
 .bibleVerse{
-  text-align: center;
-  display: flex;
-  font-size: 11px;
   font-weight: 400;
+  font-size: 11px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.025em;
   color: #ACACAE;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
 }
 .bible{
   text-align: center;
