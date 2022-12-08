@@ -21,7 +21,11 @@
         <div v-if="getVideoLink !== null" class="video">
           <iframe class="video-content center" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <div v-if="getNothing == null"> </div>
+        <div v-if="getNothing == null">
+          <div class = "nullView"> 악보와 영상이 등록되지 않았습니다. </div>
+          <div class = "bibleVerse"> 하나님이여 내 마음이 확정되었고 내 마음이 확정되었사오니 내가 노래하고 내가 찬송하리이다 </div>
+          <div class = "bible"> (시편52:7)</div>
+        </div>
         <div v-if="getVideoLink == null" class="nullVideo"></div>
       </div>
     </div>
@@ -159,5 +163,27 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+.nullView{
+  padding-top: 5rem;
+  text-align: center;
+  color: #D4D4D4;
+  font-weight: 400;
+  font-size: 13px;
+  margin-bottom: .5rem;
+
+}
+.bibleVerse{
+  text-align: center;
+  display: flex;
+  font-size: 11px;
+  font-weight: 400;
+  color: #ACACAE;
+}
+.bible{
+  text-align: center;
+  font-size: 11px;
+  font-weight: 400;
+  color: #ACACAE;
 }
 </style>
