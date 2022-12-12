@@ -47,7 +47,7 @@
           <!--사진/링크가 있는 경우 체크 표시-->
           <div class="song-detail-txt">
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.sheetList.length == 0}">
+              <div class="check-icon" :class="{'check-disabled': item.sheetList.length < 1}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -55,7 +55,7 @@
               {{item.sheetList.length>0 ? `첨부사진 ${ item.sheetList.length}장` : '첨부사진 없음'}}
             </div>
             <div class="song-detail-check">
-              <div class="check-icon" :class="{'check-disabled': item.link.length == 0}">
+              <div class="check-icon" :class="{'check-disabled': item.link.length < 1}">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="#FFFFFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -110,6 +110,7 @@
             v-model="bottomModalData.link"
             placeholder="유튜브 링크를 입력하세요"
         />
+        <div class="youtube-warning-txt" v-if="youtubeLinkCheck == true">유튜브 링크를 입력해주세요.</div>
       </div>
       <!-- 악보 첨부 기능 -->
       <div class="image-upload">
@@ -124,18 +125,13 @@
               type="file"
               @change="onUploadImage"
               ref="fileList"
+              accept="image/*" 
               multiple/>
         </div>
 
         <!--이미지 미리보기-->
         <div class="image-preview">
           <div class="image-preview-container">
-            <div class="image-preview-container-image" v-for="(file,index) in bottomModalData.updateFileList" :key="`update_${index}`">
-              <div class="image-preview-close-btn" @click="deleteUpdateFile(index)" :name=file.sheetList>
-                <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
-              </div>
-              <img class="image-preview-image" :src="file.preview"/>
-            </div>
             <div class="image-preview-container-image" v-for="(file,index) in bottomModalData.addFileList" :key="`add_${index}`">
               <div class="image-preview-close-btn" @click="deleteAddFile(index)" :name=file.sheetList>
                 <img src="../assets/close_icon.svg" alt="삭제" style="width: 16px; height: 16px;">
@@ -173,9 +169,8 @@
 </template>
 <script>
 import {AdminAddSongBtn, AdminBottomModal, AdminCalendar, AdminHeaderModal, AdminPasswordModal, AdminSelect, BottomButton} from './atoms'
-import {getAdminContiAPI, postContiAPI, postFileAPI, updateContiAPI} from '../apis/admin'
+import {postContiAPI, postFileAPI} from '../apis/admin'
 import Login from "@/mixins/login";
-
 export default {
   name      : 'AdminAdd',
   emits     : [
@@ -220,6 +215,7 @@ export default {
       passwordModal       : false,
       updateModal         : false,
       deleteImage         : false,
+      youtubeLinkCheck: false,
       radioSelectDepart   : "소속",
       radioSelectCategory : "분류",
       textButton          : "완료",
@@ -264,33 +260,11 @@ export default {
     //     }
     // }
   },
-  created() {
-    this.contiId = this.$route.params.id
-    this.getContiDetail();
-  },
+  // created() {
+  //   this.contiId = this.$route.params.id
+  //   this.getContiDetail();
+  // },
   methods: {
-    getContiDetail() {
-      getAdminContiAPI(this.contiId)
-          .then((res) => {
-            console.log(res.result)
-            this.depart = res.result.depart;
-            this.date = res.result.date.join('-');
-            this.songList = res.result.songList;
-            if (res.result.categoryName == "주일") {
-              this.categoryId = 1
-            }
-            if (res.result.categoryName == "행사") {
-              this.categoryId = 2
-            }
-            res.result.songList.forEach(song => {
-              song.sheetList.forEach(sheet => {
-                sheet.preview = sheet.downloadUrl;
-              })
-              this.updateFileList.push(song.sheetList);
-            })
-          })
-          .catch((err) => console.log(err))
-    },
     onDateChange(value){
       this.date= value;
       console.log(this.date);
@@ -315,7 +289,6 @@ export default {
     toDate(dateArr) {
       dateArr[1] = dateArr[1] > 9 ? dateArr[1] : "0" + dateArr[1];
       dateArr[2] = dateArr[2] > 9 ? dateArr[2] : "0" + dateArr[2];
-
       return dateArr.join('-')
     },
     onSubmitConti() {
@@ -339,27 +312,9 @@ export default {
       this.password = password;
       console.log(this.password);
       this.passwordModal = false;
-      this.contiId !== undefined ? this.onUpdateConti(this.contiId) : this.onSubmitConti()
+      this.onSubmitConti()
       this.$router.push({path: "/admin/list"});
       location.reload();
-    },
-    onUpdateConti(contiId){
-      let conti = JSON.stringify({
-        "categoryId":this.categoryId,
-        "contiId": contiId,
-        "depart": this.depart,
-        "date": this.date,
-        "title": this.title,
-        "password":this.password,
-        "songList": this.songList
-      });
-      updateContiAPI(conti)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
     },
     closeBottomModal() {
       this.bottomModal = false;
@@ -368,34 +323,37 @@ export default {
       if (this.bottomModalData.songTitle.length <= 0) {
         return false;
       }
+      if (this.bottomModalData.link.length !== 0 && this.bottomModalData.link.includes('youtu') == false ){
+        this.youtubeLinkCheck = true;
+        return false;
+      }
       //파일 업로드
       console.log("sheetlist length", this.sheetList.length)
       await this.uploadFile();
       console.log("uploadFile")
       console.log("sheetlist length", this.sheetList.length)
-
       this.songList.push({
         title    : this.bottomModalData.songTitle,
         link     : this.bottomModalData.link,
         sheetList: this.sheetList,
         songOrder: this.songOrder,
       });
-      console.log("push")
-
-      // console.log("2songList:",this.songList);
-      if (this.bottomModalData.addFileList.length == 0) {
-        this.updateFileList.push([])
-        // console.log(this.updateFileList.length);
-      }
-
+      // if (this.bottomModalData.addFileList.length == 0) {
+      //   this.updateFileList.push([])
+      //   // console.log(this.updateFileList.length);
+      // }
       await this.removeDatas()
       this.songOrder++;
       await this.closeBottomModal();
     },
     async uploadFile() {
       const frm = new FormData();
-      console.log("addFileList.length", this.bottomModalData.addFileList.length)
+      // !!!!!이게 문제!!!!!!!!!!
+      this.updateFileList.push(this.bottomModalData.addFileList);
+      // console.log("addFileList.length", this.bottomModalData.addFileList.length)
       let fileResult = [];
+      console.log('uploadFile 함수 실행 중!!')
+      console.log(this.bottomModalData.addFileList)
       if (this.bottomModalData.addFileList.length > 0) {
         for (let i = 0; i < this.bottomModalData.addFileList.length; i++) {
           const imageForm = this.bottomModalData.addFileList[i].file
@@ -417,7 +375,7 @@ export default {
       fileResult.forEach(file => {
         file.preview = file.downloadUrl;
       })
-      this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex]?.concat(fileResult)
+      // this.updateFileList[this.updateIndex] = this.updateFileList[this.updateIndex]?.concat;
       this.tempResultData = this.bottomModalData.updateFileList?.concat(fileResult);
       this.tempResultData?.forEach((temp, index) => {
         this.sheetList.push({
@@ -427,31 +385,42 @@ export default {
       })
     },
     updateSongModal(index) { //곡 수정을 위한 위한 모달창 준비
+      console.log("곡 수정 모달창 준비!")
       this.updateModal = true;
       this.bottomModal = true;
       // this.openUpdateModal(index);
       this.bottomModalData.songTitle = this.songList[index].title
       this.bottomModalData.link = this.songList[index].link
-      this.bottomModalData.updateFileList = this.updateFileList[index]
+      this.bottomModalData.addFileList = this.updateFileList[index]
       this.updateIndex = index;
     },
     async updateSong() {     //곡 수정
-      console.log('?');
+      console.log('곡 수정!!!!!!!!!!!');
+      console.log(this.sheetList)
+      // 여기서 삭제한 곡을 다시 생성함!!!!!!!!!!!!
       await this.uploadFile();
+      console.log(this.sheetList)
       if (this.updateModal) {
+        console.log(this.sheetList)
         this.songList[this.updateIndex].title = this.bottomModalData.songTitle;
         this.songList[this.updateIndex].link = this.bottomModalData.link;
         this.songList[this.updateIndex].sheetList = this.sheetList;
-
+        console.log(this.sheetList)
+        this.updateFileList.splice(this.updateIndex, 1, this.updateFileList[this.songOrder-1]);
+        this.updateFileList.splice(this.songOrder-1, 1);
         this.updateModal = false;
         await this.removeDatas();
-
         await this.closeBottomModal();
       }
     },
     deleteSong(index) {
       this.songList.splice(index, 1);
       this.updateFileList.splice(index, 1);
+      this.songOrder = this.songList.length+1;
+      console.log(this.songList.length)
+      for(let i=0; i<this.songList.length;i++){
+        this.songList[i].songOrder= i+1;
+      }
     },
     onUploadImage() {    //이미지 업로드
       this.uploadReady = true;
@@ -472,16 +441,28 @@ export default {
         ];
         num = i;
       }
-      this.updateFileList.push(this.bottomModalData.addFileList);
+      // for (let i = 0; i < this.$refs.fileList.files.length; i++) {
+      //   this.updateFileList = [
+      //     this.bottomModalData.addFileList
+      //   ];
+      //   num = i;
+      // }
+      // this.updateFileList.push(this.bottomModalData.addFileList);
       this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
       // console.log("addFileList:",this.bottomModalData.addFileList);
       // console.log(this.filesPreview);
     },
     deleteUpdateFile(index) {
+      console.log('삭제!!')
+      console.log(this.sheetList)
       this.bottomModalData.updateFileList.splice(index, 1);
+      this.sheetList.splice(index, 1)
+      this.bottomModalData.addFileList.splice(index, 1)
+      console.log(this.sheetList)
     },
     deleteAddFile(index) {
       this.bottomModalData.addFileList.splice(index, 1);
+      // this.sheetList.splice(index, 1)
     },
     fileDeleteButton(file) {
       console.log('file', file);
@@ -502,17 +483,17 @@ export default {
       this.bottomModalData.songTitle = "";
       this.bottomModalData.link = "";
       this.bottomModalData.addFileList = [];
+      this.youtubeLinkCheck = false;
+      this.sheetList = [];
     },
     onClickCompleteButton () {
+      // this.contiId !== undefined ? this.onUpdateConti(this.contiId) :this.passwordModal = true;
       this.passwordModal = true;
     }
   }
 }
 </script>
-
-
 <style scoped>
-
 .AdminAdd {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
@@ -534,13 +515,11 @@ export default {
   gap: 16px;
   align-items: center;
 }
-
 .radio-btn {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .line {
   width: 100%;
   height: 5px;
@@ -548,14 +527,12 @@ export default {
   background-color: var(--color-line);
   margin: 32px 0px;
 }
-
 /*곡 정보 표시 카드*/
 .song-info {
   margin: 10px 0px;
   display: flex;
   flex-direction: column;
 }
-
 .song-detail {
   margin: 5px 0px;
   background: #5a5a6d;
@@ -564,58 +541,48 @@ export default {
   justify-content: space-between;
   height: 84px;
 }
-
 .song-detail-title {
   display: flex;
   justify-content: flext-start;
   margin-bottom: 4px;
   font-size: 16px;
 }
-
 .song-detail-check {
   display: flex;
   align-items: center;
   gap: 2px;
   color: #ACACAE;
 }
-
 .check-icon svg path {
   width: 16px;
   height: 16px;
   stroke: #90E5FA;
 }
-
 .check-disabled svg path {
   stroke: #ACACAE;
 }
-
 .song-detail-txt {
   display: flex;
   font-size: 12px;
   gap: 8px;
 }
-
 .song-detail-icons {
   display: flex;
   align-items: center;
 }
-
 .song-detail-icon {
   width: 20px;
   height: 20px;
   gap: 8px;
 }
-
 /*바텀업 모달*/
 .bottom-modal-input {
   margin-top: 12px;
   height: 94px;
 }
-
 .bottom-modal-txt {
   display: flex;
 }
-
 .bottom-modal-input-text {
   background: #48495B;
   border: 0;
@@ -626,23 +593,22 @@ export default {
   width: 100%;
   font-size: 16px;
 }
-
 .bottom-modal-input-text::placeholder {
   color: var(--color-bg-text);
 }
-
 .bottom-modal-input-text:focus {
   outline: none !important;
   color: #FFFFFD;
   border-bottom: 2px solid #90E5FA;
 }
-
 .titlelength-warning,
 .titlelength-warning:focus {
   color: var(--color-alert);
   border-bottom: 2px solid var(--color-alert);
 }
-
+.youtube-warning-txt{
+  color: var(--color-alert);
+}
 .titlelength-warning-txt {
   color: var(--color-alert);
   margin-top: 4px;
@@ -651,19 +617,16 @@ export default {
   font-weight: 400;
   font-size: 12px;
 }
-
 /*이미지 프리뷰*/
 .image-preview-container {
   display: flex;
   gap: 12px;
 }
-
 .image-preview-container-image {
   position: relative;
   width: 65px;
   height: 65px;
 }
-
 .image-preview-close-btn {
   position: absolute;
   top: 2px;
@@ -674,24 +637,21 @@ export default {
   opacity: 0.5;
   border-radius: 5px;
 }
-
 .image-preview-image {
   width: 65px;
   height: 65px;
   border-radius: 8px;
 }
-
 .disabledbtn {
   background: #505062;
   color: var(--color-bg-text);
   cursor: none;
 }
-
 .image-upload {
   display: flex;
   gap: 12px;
+  margin-top: 1rem;
 }
-
 .image-upload-input {
   border-style: none;
   position: relative;
@@ -704,7 +664,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .image-upload-input input {
   opacity: 0;
   filter: alpha (opacity=0);
@@ -716,19 +675,15 @@ export default {
   top: 0;
   gap: 3px;
 }
-
 .image-input-txt {
   font-weight: 700;
   font-size: 10px;
 }
-
 .image-input-camera {
   width: 24px;
   height: 24px;
 }
-
 /* .image-input-button::-webkit-file-upload-button {
 visibility: hidden;
 } */
-
 </style>

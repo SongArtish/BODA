@@ -3,6 +3,13 @@
     <router-view/>
   </div>
 </template>
+<script>
+function checkMobile () {
+  document.body.dataset.is_mobile = navigator.userAgent.includes('Mobi');
+}
+checkMobile();
+console.log('is mobile? ', document.body.dataset.is_mobile);
+</script>
 
 <style>
 :root {
@@ -19,6 +26,11 @@
 body {
   background: var(--color-bg);
   user-select: none;
+  margin: 0 auto;
+  /* position: absolute; */
+}
+body[data-is_mobile = false] {
+  max-width: 375px;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

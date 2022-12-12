@@ -1,7 +1,7 @@
 <template>
   <div class="BottomBar">
     <div v-if="songIndex <= 0" class="item">이전 곡</div>
-    <div v-else class="item item-enabled" @click="toPrevious()">이전 곡</div>
+    <div v-else class="item item-enabled item-bold" @click="toPrevious()">이전 곡</div>
     <div class="dropup" >
         <div class="item item-enabled item-bold" @click="toggleList()">찬양 목록</div>
         <div v-if="isOpen" class="dropup-content">
@@ -9,7 +9,7 @@
         </div>
     </div>
     <div v-if="songList && songIndex >= songList.length-1" class="item">다음 곡</div>
-    <div v-else class="item item-enabled" @click="toNext()">다음 곡</div>
+    <div v-else class="item item-enabled item-bold" @click="toNext()">다음 곡</div>
   </div>
 </template>
 <script>
@@ -33,14 +33,18 @@ export default {
         // this.closeList()
         this.$emit('selectSong', songIndex + 1)
         // window.location.reload(true);
+        scrollTo(0,0)
       }
       this.isOpen = !this.isOpen;
     },
     toPrevious() {
       this.$emit('selectSong', this.songIndex)
+      scrollTo(0,0)
     },
     toNext() {
+
       this.$emit('selectSong', this.songIndex+2)
+      scrollTo(0,0)
     },
   }
 }
