@@ -44,7 +44,7 @@ export default {
 
 @media all and (min-width:421px){
   .BottomButton{
-    width: 375px;
+    max-width: 375px;
     margin-left: calc(50% - 375px/2);
   }
 }

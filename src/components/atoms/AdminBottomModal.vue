@@ -29,7 +29,6 @@ export default {
 </script>
 
 <style>
-
 .AdminBottomModal {
     display: flex;
     bottom: 0;
@@ -46,7 +45,6 @@ export default {
     height: 430px;
     border-radius: 30px 30px 0px 0px;
 }
-
 .bottom-modal-overlay {
     display: flex;
     position: fixed;
@@ -56,7 +54,6 @@ export default {
     width: 100%;
     background: rgba(37, 37, 44, 0.85);
 }
-
 @media all and (min-width:421px) {
     .bottom-modal-overlay{
         width: 375px;
@@ -87,5 +84,4 @@ export default {
     background: #FFFFFF;
     border-radius: 50px;
 }
-
 </style>

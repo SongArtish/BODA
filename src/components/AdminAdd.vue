@@ -497,7 +497,7 @@ export default {
 
 @media all and (min-width:421px){
   .AdminAdd{
-    width: 370px;
+    max-width: 370px;
     margin-left: calc(50% - 370px/2);
   }
 }
@@ -564,7 +564,7 @@ export default {
 .song-detail-icons {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 .song-detail-icon {
   width: 20px;
