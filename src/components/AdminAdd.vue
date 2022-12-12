@@ -144,7 +144,7 @@
       <!--footer 콘텐츠-->
       <template slot="footer">
         <BottomButton :click-button="updateModal ? updateSong : addSong" :class="{'disabledbtn': bottomModalData.songTitle.length < 1}"
-                      :textButton="textButton"/>
+                      :textButton="textButton" ref = "bottomButton"/>
       </template>
       <!-- /footer -->
     </AdminBottomModal>
@@ -330,6 +330,7 @@ export default {
       //파일 업로드
       console.log("sheetlist length", this.sheetList.length)
       await this.uploadFile();
+      this.$refs.bottomButton.disabled = true;
       console.log("uploadFile")
       console.log("sheetlist length", this.sheetList.length)
       this.songList.push({
@@ -492,8 +493,15 @@ export default {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   margin-bottom: 3.2rem;
-  max-width: 375px;
 }
+
+@media all and (min-width:421px){
+  .AdminAdd{
+    width: 370px;
+    margin-left: calc(50% - 370px/2);
+  }
+}
+
 .header {
   display: flex;
   width: 375px;

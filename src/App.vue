@@ -40,5 +40,6 @@ body[data-is_mobile = false] {
   color: var(--color-light-1);
   text-align: left;
   overflow: hidden;
+  height: 100%;
 }
 </style>

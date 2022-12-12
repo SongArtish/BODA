@@ -34,16 +34,38 @@ export default {
     display: flex;
     bottom: 0;
     overflow: hidden;
-    width: 100%;
 }
+.bottom-modal-card {
+    background: #48495b;
+    display: flex;
+    color: #fffffd;
+    position: fixed;
+    bottom: 0;
+    left:0;
+    right: 0;
+    height: 430px;
+    border-radius: 30px 30px 0px 0px;
+}
+
 .bottom-modal-overlay {
     display: flex;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
     height: 100%;
+    width: 100%;
     background: rgba(37, 37, 44, 0.85);
+}
+
+@media all and (min-width:421px) {
+    .bottom-modal-overlay{
+        width: 375px;
+        left: calc(50% - 375px/2);
+    }
+    .bottom-modal-card {
+        width: 375px;
+        left: calc(50% - 375px/2);
+    }
 }
 .bottom-modal-content {
     display: flex;
@@ -65,16 +87,5 @@ export default {
     background: #FFFFFF;
     border-radius: 50px;
 }
-.bottom-modal-card {
-    background: #48495b;
-    display: flex;
-    color: #fffffd;
-    position: fixed;
-    bottom: 0;
-    left:0;
-    right: 0;
-    width: 100%;
-    height: 430px;
-    border-radius: 30px 30px 0px 0px;
-}
+
 </style>
