@@ -5,7 +5,7 @@
       <div class="header-icon" @click="isModalViewed = true">
         <img src="../assets/chevron_left_icon.svg"/>
       </div>
-      <span>게시글 작성</span>
+      <span>콘티 작성</span>
     </div>
     <AdminHeaderModal
         v-if="isModalViewed"
@@ -125,7 +125,7 @@
               type="file"
               @change="onUploadImage"
               ref="fileList"
-              accept="image/*" 
+              accept="image/*, .pdf" 
               multiple/>
         </div>
 
@@ -219,7 +219,7 @@ export default {
       radioSelectDepart   : "소속",
       radioSelectCategory : "분류",
       textButton          : "완료",
-      passwordModalTitle  : "게시글 작성",
+      passwordModalTitle  : "콘티 작성",
       passwordModalSubtext: "비밀번호를 설정해주세요",
       selectionsDepart    : [{
         txt: '대학부',
@@ -441,16 +441,9 @@ export default {
         ];
         num = i;
       }
-      // for (let i = 0; i < this.$refs.fileList.files.length; i++) {
-      //   this.updateFileList = [
-      //     this.bottomModalData.addFileList
-      //   ];
-      //   num = i;
-      // }
       // this.updateFileList.push(this.bottomModalData.addFileList);
       this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
-      // console.log("addFileList:",this.bottomModalData.addFileList);
-      // console.log(this.filesPreview);
+      
     },
     deleteUpdateFile(index) {
       console.log('삭제!!')
@@ -494,10 +487,12 @@ export default {
 }
 </script>
 <style scoped>
+
 .AdminAdd {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   margin-bottom: 3.2rem;
+  max-width: 375px;
 }
 .header {
   display: flex;
@@ -561,11 +556,12 @@ export default {
 .song-detail-icons {
   display: flex;
   align-items: center;
+  gap: 18px;
 }
 .song-detail-icon {
   width: 20px;
   height: 20px;
-  gap: 8px;
+  
 }
 /*바텀업 모달*/
 .bottom-modal-input {

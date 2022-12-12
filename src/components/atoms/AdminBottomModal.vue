@@ -28,11 +28,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
 .AdminBottomModal {
     display: flex;
     bottom: 0;
     overflow: hidden;
+    width: 100%;
 }
 .bottom-modal-overlay {
     display: flex;
