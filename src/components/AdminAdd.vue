@@ -569,11 +569,12 @@ export default {
 .song-detail-icons {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 .song-detail-icon {
   width: 20px;
   height: 20px;
-  gap: 8px;
+  
 }
 /*바텀업 모달*/
 .bottom-modal-input {
