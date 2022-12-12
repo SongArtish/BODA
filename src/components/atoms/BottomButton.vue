@@ -41,4 +41,12 @@ export default {
     background: var(--color-main);
     cursor: pointer;
 }
+
+@media all and (min-width:421px){
+  .BottomButton{
+    max-width: 375px;
+    margin-left: calc(50% - 375px/2);
+  }
+}
+
 </style>

@@ -519,6 +519,13 @@ export default {
   margin-bottom: 3.2rem;
 }
 
+@media all and (min-width:421px){
+  .AdminAdd{
+    max-width: 370px;
+    margin-left: calc(50% - 370px/2);
+  }
+}
+
 .header {
   display: flex;
   width: 375px;
