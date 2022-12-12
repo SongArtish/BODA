@@ -18,13 +18,14 @@
         <div class="sheet">
           <img class="sheet-image" v-for="sheet in conti.songList[songIndex].sheetList" :key="sheet.sheetId" :src="sheet.downloadUrl"  />
         </div>
-        <div v-if="getVideoLink !== null" class="video">
+        <div v-if="getVideoLink != null" class="video">
           <iframe class="video-content center" :src="getVideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <div v-if="getNothing == null">
-          <div class = "nullView"> 악보와 영상이 등록되지 않았습니다. </div>
-          <div class = "bibleVerse"> 하나님이여 내 마음이 확정되었고 내 마음이 확정되었사오니 내가 노래하고 내가 찬송하리이다 </div>
-          <div class = "bible"> (시편52:7)</div>
+        <div v-if="true"></div>
+        <div v-if="getImgFile == null && getVideoLink == null" >
+            <div class = "nullView"> 악보와 영상이 등록되지 않았습니다. </div>
+            <div class = "bibleVerse"> 하나님이여 내 마음이 확정되었고 내 마음이 확정되었사오니 내가 노래하고 내가 찬송하리이다 </div>
+            <div class = "bible"> (시편52:7)</div>
         </div>
         <div v-if="getVideoLink == null" class="nullVideo"></div>
       </div>
@@ -62,11 +63,21 @@ export default {
           return "https://www.youtube.com/embed/" + url.slice(-11)
         else
           return null
+      } else return null
+    },
+    getImgFile() {
+      if (this.isLoaded) {
+        let imgFile = this.conti.songList[this.songIndex].sheetList[this.songIndex]
+        if (this.isLoaded){
+          if (this.conti.songList[this.songIndex].sheetList[this.songIndex] != null)
+            return true
+          else
+            return null
+        }
       }
       else return null
     }
   },
-
   created() {
     getContiDetailAPI(this.$route.params.id)
         .then((res) => {
