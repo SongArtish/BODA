@@ -110,7 +110,7 @@ export default {
   display: inline;
   font-size: 1.1rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 24px;
 }
 
 .conti-content {

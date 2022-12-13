@@ -43,7 +43,7 @@ export default {
   border-style: solid;
   border-color: hsl(240, 10%, 35%);
   border-radius: .5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 24px;
   padding: 1rem;
 }
 
