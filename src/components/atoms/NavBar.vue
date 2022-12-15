@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="navbar">
-      <div class="navbar-title">찬양공유 <span v-if="isAdmin">관리자시스템</span></div>
+      <div class="navbar-title">BODA <span v-if="isAdmin">관리자시스템</span></div>
       <div class="navbar-button" v-if="isAdmin">
         <button class="navbar-button-logout" @click="logout"><small>로그아웃</small></button>
       </div>
