@@ -19,16 +19,20 @@
 
 ## Contributors
 
-<a href = "https://github.com/Tanu-N-Prabhu/Python/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo = GitHub_username/repository_name"/>
-</a>
-
 @drjsdud7
+
 @happyylee
+
 @HelloAhJin
+
 @ijua9774
+
 @kookchaerim
+
 @piamenia
+
 @pyeongmo
+
 @y20ng
+
 @SongArtish
