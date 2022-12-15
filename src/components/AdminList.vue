@@ -51,7 +51,7 @@
         03136 서울특별시 종로구 창경궁로 129-11 <br/>
         TEL 02-765-7761~2 | FAX 02-765-7763 <br/><br/>
         <div class="team">
-          서울중앙교회 청대학부 찬양목록
+          서울중앙교회 청대학부 찬양 BODA
           <span class="team-tooltip">
               Credits<br/>
               구평모 국채림 김아진 김재훈 박다은<br/>
