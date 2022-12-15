@@ -1,18 +1,34 @@
-# README
+# BODA
 
-## 해결해야 할 이슈
+## Table of Contents
 
-### UserHome
-- 계절 처리하기(select 창, API)
-- 곡 제목 표시하기(API 변경)
-## UserDetail
-- 카카오톡 공유 API
-- 이미지 클릭 시 확대
-- dropup에서 item 선택 후 창이 닫히지 않는 현상
+- [Overview](#Overview)
+- [Features](#Features)
+- [Contributors](#Contributors)
 
-### AdminHome
-- Validation 체크(기획 문서 참고)
-### AdminList
-- 로그아웃(모달창, API)
-- 삭제 버튼(모달창)
-- 수정, 삭제 버튼 API 처리
+## Overview
+
+[콘티 공유 서비스](http://conti.jungang.org/)
+- 기간: 2022.09.10 - 2022.12.16
+
+## Features
+
+- 콘티 리스트 조회
+- 콘티 상세 조회
+- 관리자 페이지
+
+## Contributors
+
+<a href = "https://github.com/Tanu-N-Prabhu/Python/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo = GitHub_username/repository_name"/>
+</a>
+
+@drjsdud7
+@happyylee
+@HelloAhJin
+@ijua9774
+@kookchaerim
+@piamenia
+@pyeongmo
+@y20ng
+@SongArtish
