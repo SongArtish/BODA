@@ -81,10 +81,17 @@ export default new Vuex.Store({
           let maxYear;
           let maxMonth;
           const minMaxDate = res.result;
-          minYear = minMaxDate.minContiDate[0];
-          minMonth = minMaxDate.minContiDate[1];
-          maxYear = minMaxDate.maxContiDate[0];
-          maxMonth = minMaxDate.maxContiDate[1];
+          if (minMaxDate.minContiDate) {
+            minYear = minMaxDate.minContiDate[0];
+            minMonth = minMaxDate.minContiDate[1];
+            maxYear = minMaxDate.maxContiDate[0];
+            maxMonth = minMaxDate.maxContiDate[1];
+          } else {
+            minYear = nowYear;
+            minMonth = nowMonth;
+            maxYear = nowYear;
+            maxMonth = nowMonth;
+          }
 
           nowSemiannual = semiannualList.find(semi => {
             return semi.months.includes(nowMonth)
